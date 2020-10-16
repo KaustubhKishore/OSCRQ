@@ -23,8 +23,12 @@ class Debian(Helper):
         "varlogaudit_1_1_12",
         "home_1_1_13",
         "nodevhome_1_1_14",
-        "nodevdevshm_1_1_15"
-
+        "nodevdevshm_1_1_15",
+        "nosuiddevshm_1_1_16",
+        "noexecdevshm_1_1_17",
+        "removable_1_1_18_and_19_and_20",
+        "stickybitwwd_1_1_21"
+        
     ]
     
     
@@ -136,7 +140,6 @@ class Debian(Helper):
         if outputOne != '':
             print("Ensure FAT filesystem is used only where appropirate:\n" + outputOne)
 
-
     def tmp_1_1_2(self):
         cmdOne = r"mount | grep -E '\s/tmp\s'"
         cmdTwo = r"grep -E '\s/tmp\s' /etc/fstab | grep -E -v '^\s*#'"
@@ -150,7 +153,6 @@ class Debian(Helper):
         else:
             self.NotCompliant("Ensure /tmp is configured (Scored)")
     
-
     def nodev_1_1_3(self):
         cmdOne = r"mount | grep -E '\s/tmp\s'"
         cmdTwo = r"mount | grep -E '\s/tmp\s' | grep -v nodev"
@@ -164,7 +166,6 @@ class Debian(Helper):
         else:
             self.NotCompliant("Ensure nodev option set on /tmp partition (Scored)")
             
-
     def nosuid_1_1_4(self):
         cmdOne = r"mount | grep -E '\s/tmp\s'"
         cmdTwo = r"mount | grep -E '\s/tmp\s' | grep -v nosuid"
@@ -250,8 +251,7 @@ class Debian(Helper):
         elif outputTwo == "":
             self.Compliant("Ensure noexec option set on /var/tmp partition (Scored)")
         else:
-            self.NotCompliant("Ensure noexec option set on /var/tmp partition (Scored)")
-    
+            self.NotCompliant("Ensure noexec option set on /var/tmp partition (Scored)")  
     
     def varlog_1_1_11(self):
         cmdOne = r"mount | grep /var/log"
@@ -307,3 +307,50 @@ class Debian(Helper):
             self.Compliant("Ensure nodev option set on /dev/shm partition (Scored)")
         else:
             self.NotCompliant("Ensure nodev option set on /dev/shm partition (Scored)")
+
+    def nosuiddevshm_1_1_16(self):
+        cmdOne = r"mount | grep -E '\s/dev/shm\s'"
+        cmdTwo = r"mount | grep -E '\s/dev/shm\s' | grep -v nosuid"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if outputOne == "":
+            self.NotCompliant("Ensure nosuid option set on /dev/shm partition (Scored)")
+        elif outputTwo == "":
+            self.Compliant("Ensure nosuid option set on /dev/shm partition (Scored)")
+        else:
+            self.NotCompliant("Ensure nosuid option set on /dev/shm partition (Scored)")
+    
+    def noexecdevshm_1_1_17(self):
+        cmdOne = r"mount | grep -E '\s/dev/shm\s'"
+        cmdTwo = r"mount | grep -E '\s/dev/shm\s' | grep -v noexec"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if outputOne == "":
+            self.NotCompliant("Ensure noexec option set on /dev/shm partition (Scored)")
+        elif outputTwo == "":
+            self.Compliant("Ensure noexec option set on /dev/shm partition (Scored)")
+        else:
+            self.NotCompliant("Ensure noexec option set on /dev/shm partition (Scored)")
+    
+    def removable_1_1_18_and_19_and_20(self):
+        cmdOne = r"mount"
+        outputOne = self.caller(cmdOne)
+
+        self.InfoNotSure("Ensure nodev,nosuid and noexec option set on removable media partitions (Not Scored)")
+
+        if outputOne != "":
+            print("Verify manually that all removable media has nodev,nosuid and noexec option set:\n" + outputOne)
+    
+    def stickybitwwd_1_1_21(self):
+        cmdOne = r"df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null"
+        outputOne = self.caller(cmdOne)
+
+        if outputOne == "":
+            self.Compliant("Ensure sticky bit is set on all world-writable directories (Scored)")
+        else:
+            self.NotCompliant("Ensure sticky bit is set on all world-writable directories (Scored)")
+    

@@ -4,6 +4,7 @@ class Helper:
     nc = '\033[91m' + "[NC]" + '\033[0m' + " "
     c = '\33[32m' + "[C]" + '\033[0m' + " "
     info = '\33[94m' + "[INFO]" + '\033[0m' + " "
+    
 
     def __init__(self):
         self.id = "unique id"
@@ -35,6 +36,10 @@ class Helper:
         print("-----------------")
         self.ncInfoScore += 1   
     
+    def InfoNotSure(self, audit):
+        print("\n" +self.info + self.nc + audit)
+        print("-----------------")
+
     def score_getter(self):
         return self.score
     
