@@ -28,11 +28,12 @@ class Debian(Helper):
     def freevxfs_1_1_1_1(self):
         cmdOne = r"modprobe -n -v freevxfs"
         cmdTwo = r"lsmod | grep freevxfs"
+        cmdThree = r"/sbin/modprobe -n -v freevxfs"
         outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        
+        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
 
-        if(outputOne == 'install /bin/true \n' and outputTwo == ""):
+        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of freevxfs filesystems is disabled (Scored)")
         else:
             self.NotCompliant("Ensure mounting of freevxfs filesystems is disabled (Scored)")
