@@ -1,4 +1,3 @@
-import subprocess as sp
 from helper import Helper
 
 class Debian(Helper):
@@ -18,8 +17,8 @@ class Debian(Helper):
         "sepvar_1_1_6",
         "sepvartmp_1_1_7",
         "nodevvartemp_1_1_8",
-        "nosuidvartmp_1_1_9"
-        "noexecvartmp_1_1_10"
+        "nosuidvartmp_1_1_9",
+        "noexecvartmp_1_1_10",
 
     ]
     
@@ -247,5 +246,4 @@ class Debian(Helper):
             self.Compliant("Ensure noexec option set on /var/tmp partition (Scored)")
         else:
             self.NotCompliant("Ensure noexec option set on /var/tmp partition (Scored)")
-    
     
