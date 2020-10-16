@@ -27,7 +27,10 @@ class Debian(Helper):
         "nosuiddevshm_1_1_16",
         "noexecdevshm_1_1_17",
         "removable_1_1_18_and_19_and_20",
-        "stickybitwwd_1_1_21"
+        "stickybitwwd_1_1_21",
+        "automounting_1_1_22",
+        "usbstorage_1_1_23",
+
         
     ]
     
@@ -354,3 +357,28 @@ class Debian(Helper):
         else:
             self.NotCompliant("Ensure sticky bit is set on all world-writable directories (Scored)")
     
+    def automounting_1_1_22(self):
+        cmdOne = r"systemctl is-enabled autofs"
+        cmdTwo = r"dpkg -s autofs"
+
+        outputOne = self.caller(cmdOne).strip()
+        outputTwo = self.caller(cmdTwo)
+
+        if outputOne == "disabled" or "package 'autofs' is not installed" in outputTwo:
+            self.Compliant("Disable Automounting (Scored)")
+        else:
+            self.NotCompliant("Disable Automounting (Scored)")
+
+    def usbstorage_1_1_23(self):
+        cmdOne = r"modprobe -n -v usb-storage"
+        cmdTwo = r"lsmod | grep usb-storage"
+        cmdThree = r"/sbin/modprobe -n -v usb-storage"
+
+        outputOne = self.caller(cmdOne).strip()
+        outputTwo = self.caller(cmdTwo).strip()
+        outputThree = self.caller(cmdThree).strip()
+
+        if (outputOne == "install /bin/true" or outputThree == "install /bin/true") and outputTwo == "":
+            self.Compliant("Disable USB Storage (Scored)")
+        else:
+            self.NotCompliant("Disable USB Storage (Scored)")
