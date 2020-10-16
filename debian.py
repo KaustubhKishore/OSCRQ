@@ -1,45 +1,29 @@
 import os
+from helper import Helper
 
-class Debian:
-    nc = '\033[91m' + "[NC]" + '\033[0m' + " "
-    c = '\33[32m' + "[C]" + '\033[0m' + " "
-    info = '\33[94m' + "[INFO]" + '\033[0m' + " "
+class Debian(Helper):
+
+    profile = [
+        "freevxfs_1_1_1_1", 
+        "jffs2_1_1_1_2",
+        "hfs_1_1_1_3", 
+        "hfsplus_1_1_1_4", 
+        "squashfs_1_1_1_5", 
+        "udf_1_1_1_6"
+    ]
+    
     
     def __init__(self):
+        super().__init__()
         self.id = "unique id"
-        self.score = 0
-        self.infoScore = 0
-
-        self.ncScore = 0
-        self.ncInfoScore = 0
-
-    def score_getter(self):
-        return self.score
+        
 
     def runner(self):
-        self.freevxfs_1_1_1_1()
-        self.jffs2_1_1_1_2()
-        self.hfs_1_1_1_3()
-        self.hfsplus_1_1_1_4()
-        self.squashfs_1_1_1_5()
-        self.udf_1_1_1_6()
-        return 1
-
-    def Compliant(self, audit):
-        print(Debian.c + audit)
-        self.score += 1
-    
-    def NotCompliant(self, audit):
-        print(Debian.nc + audit)
-        self.ncScore += 1
-
-    def InfoCompliant(self, audit):
-        print(Debian.info + Debian.c + audit)
-        self.infoScore +=1
-    
-    def InfoNotCompliant(self, audit):
-        print(Debian.info + Debian.nc + audit)
-        self.ncInfoScore += 1
+        allfuncs = dir(Debian)
+        for f in allfuncs:
+            if f in self.profile:
+                call = getattr(Debian, f)
+                call(self)
 
 
     def freevxfs_1_1_1_1(self):
@@ -111,7 +95,3 @@ class Debian:
         else:
             self.NotCompliant("Ensure mounting of udf filesystems is disabled (Scored)")
         
-
-# if __name__ == "__main__":
-#     obj = Debian()
-#     obj.runner()

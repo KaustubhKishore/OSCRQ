@@ -15,10 +15,10 @@ Tasks:
          and expected output in that json our engine gets the score. This will complicate stuff but might reduce our code size
 
 5. TODO: Maybe a good idea to shift helper functions which will be common for all operating systems to another class and then classes like Debian can extend those classes
-
+6. TODO: Rather than calling all the functions manually in runner we can use dir(Debian) which will give a list of all functions. Extract list of functions and then auto run.
 """)
 
 obj = debian.Debian()
 obj.runner()
 print("Score: " + str(obj.score_getter()))
-print("Non Compliant Score loss: " + str(obj.ncScore))
+print("Non Compliant Score loss: " + str(obj.ncScore_getter()))
