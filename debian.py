@@ -18,7 +18,8 @@ class Debian(Helper):
         "sepvar_1_1_6",
         "sepvartmp_1_1_7",
         "nodevvartemp_1_1_8",
-
+        "nosuidvartmp_1_1_9"
+        "noexecvartmp_1_1_10"
 
     ]
     
@@ -125,10 +126,12 @@ class Debian(Helper):
 
         if( (outputTwo == 'install /bin/true \n' or outputFour == 'install /bin/true \n' ) and outputThree == ""):
             self.InfoCompliant("Ensure mounting of FAT filesystems is limited (Not Scored)")
-            print("Ensure FAT filesystem is used only where appropirate:\n" + outputOne)
         else:
             self.InfoNotCompliant("Ensure mounting of FAT filesystems is limited (Not Scored)")
+
+        if outputOne != '':
             print("Ensure FAT filesystem is used only where appropirate:\n" + outputOne)
+
 
     def tmp_1_1_2(self):
         cmdOne = r"mount | grep -E '\s/tmp\s'"
@@ -218,4 +221,31 @@ class Debian(Helper):
             self.Compliant("Ensure nodev option set on /var/tmp partition (Scored)")
         else:
             self.NotCompliant("Ensure nodev option set on /var/tmp partition (Scored)")
+    
+    def nosuidvartmp_1_1_9(self):
+        cmdOne = r"mount | grep -E '\s/var/tmp\s'"
+        cmdTwo = r"mount | grep -E '\s/var/tmp\s' | grep -v nosuid"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if outputOne == "":
+            self.NotCompliant("Ensure nosuid option set on /var/tmp partition (Scored)")
+        elif outputTwo == "":
+            self.Compliant("Ensure nosuid option set on /var/tmp partition (Scored)")
+        else:
+            self.NotCompliant("Ensure nosuid option set on /var/tmp partition (Scored)")
+    
+    def noexecvartmp_1_1_10(self):
+        cmdOne = r"mount | grep -E '\s/var/tmp\s'"
+        cmdTwo = r"mount | grep -E '\s/var/tmp\s' | grep -v noexec"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if outputOne == "":
+            self.NotCompliant("Ensure noexec option set on /var/tmp partition (Scored)")
+        elif outputTwo == "":
+            self.Compliant("Ensure noexec option set on /var/tmp partition (Scored)")
+        else:
+            self.NotCompliant("Ensure noexec option set on /var/tmp partition (Scored)")
+    
     
