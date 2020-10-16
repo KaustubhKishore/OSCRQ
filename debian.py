@@ -37,9 +37,6 @@ class Debian(Helper):
         cmdOne = r"modprobe -n -v freevxfs"
         cmdTwo = r"lsmod | grep freevxfs"
         cmdThree = r"/sbin/modprobe -n -v freevxfs"
-        # outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        # outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        # outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
         outputThree = self.caller(cmdThree)
@@ -53,9 +50,9 @@ class Debian(Helper):
         cmdOne = r"modprobe -n -v jffs2 | grep -E '(jffs2|install)'"
         cmdTwo = r"lsmod | grep jffs2"
         cmdThree = r"/sbin/modprobe -n -v jffs2 | grep -E '(jffs2|install)'"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
 
         if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of jffs2 filesystems is disabled (Scored)")
@@ -66,9 +63,9 @@ class Debian(Helper):
         cmdOne = r"modprobe -n -v hfs"
         cmdTwo = r"lsmod | grep hfs"
         cmdThree = r"/sbin/modprobe -n -v hfs"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
 
         if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of hfs filesystems is disabled (Scored)")
@@ -79,9 +76,9 @@ class Debian(Helper):
         cmdOne = r"modprobe -n -v hfsplus"
         cmdTwo = r"lsmod | grep hfsplus"
         cmdThree = r"/sbin/modprobe -n -v hfsplus"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
 
         if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of hfsplus filesystems is disabled (Scored)")
@@ -92,10 +89,10 @@ class Debian(Helper):
         cmdOne = r"modprobe -n -v squashfs | grep -E '(squashfs|install)'"
         cmdTwo = r"lsmod | grep squashfs"
         cmdThree = r"/sbin/modprobe -n -v squashfs | grep -E '(squashfs|install)'"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree) 
+
         if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of squashfs filesystems is disabled (Scored)")
             
@@ -106,9 +103,9 @@ class Debian(Helper):
         cmdOne = r"modprobe -n -v udf | grep -E '(udf|install)'"
         cmdTwo = r"lsmod | grep udf"
         cmdThree = r"/sbin/modprobe -n -v udf | grep -E '(udf|install)'"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
 
         if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of udf filesystems is disabled (Scored)")
@@ -120,10 +117,11 @@ class Debian(Helper):
         cmdTwo = r"modprobe -n -v vfat | grep -E '(vfat|install)'"
         cmdThree = r"lsmod | grep vfat"
         cmdFour = r"/sbin/modprobe -n -v vfat | grep -E '(vfat|install)'"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputFour = sp.Popen(cmdFour, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
 
         if( (outputTwo == 'install /bin/true \n' or outputFour == 'install /bin/true \n' ) and outputThree == ""):
             self.InfoCompliant("Ensure mounting of FAT filesystems is limited (Not Scored)")
@@ -136,10 +134,9 @@ class Debian(Helper):
         cmdOne = r"mount | grep -E '\s/tmp\s'"
         cmdTwo = r"grep -E '\s/tmp\s' /etc/fstab | grep -E -v '^\s*#'"
         cmdThree = r"systemctl is-enabled tmp.mount"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
 
         if outputOne != "" and (outputTwo != "" or outputThree == "enabled\n"):
             self.Compliant("Ensure /tmp is configured (Scored)")
@@ -150,9 +147,9 @@ class Debian(Helper):
     def nodev_1_1_3(self):
         cmdOne = r"mount | grep -E '\s/tmp\s'"
         cmdTwo = r"mount | grep -E '\s/tmp\s' | grep -v nodev"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        
         if outputOne == "":
             self.NotCompliant("Ensure nodev option set on /tmp partition (Scored)")
         elif outputTwo == "":
@@ -164,9 +161,9 @@ class Debian(Helper):
     def nosuid_1_1_4(self):
         cmdOne = r"mount | grep -E '\s/tmp\s'"
         cmdTwo = r"mount | grep -E '\s/tmp\s' | grep -v nosuid"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        
         if outputOne == "":
             self.NotCompliant("Ensure nosuid option set on /tmp partition (Scored)")
         elif outputTwo == "":
@@ -177,8 +174,8 @@ class Debian(Helper):
     def noexec_1_1_5(self):
         cmdOne = r"mount | grep -E '\s/tmp\s'"
         cmdTwo = r"mount | grep -E '\s/tmp\s' | grep -v noexec"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
 
         if outputOne == "":
             self.NotCompliant("Ensure noexec option set on /tmp partition (Scored)")
@@ -189,8 +186,8 @@ class Debian(Helper):
 
     def sepvar_1_1_6(self):
         cmdOne = r"mount | grep -E '\s/var\s'"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-
+        outputOne = self.caller(cmdOne)
+        
         if(outputOne == ""):
             self.NotCompliant("Ensure separate partition exists for /var (Scored)")
         elif "/var" in outputOne:
@@ -200,7 +197,7 @@ class Debian(Helper):
 
     def sepvartmp_1_1_7(self):
         cmdOne = r"mount | grep -E '\s/var/tmp\s'"
-        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputOne = self.caller(cmdOne)
         
         if(outputOne == ""):
             self.NotCompliant("Ensure separate partition exists for /var/tmp (Scored)")
