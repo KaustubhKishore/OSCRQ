@@ -11,7 +11,15 @@ class Debian(Helper):
         "squashfs_1_1_1_5", 
         "udf_1_1_1_6",
         "fat_1_1_1_7",
-        "tmp_1_1_2" # Requires testing.
+        "tmp_1_1_2", # Requires testing.
+        "nodev_1_1_3", # Might need testing
+        "nosuid_1_1_4",
+        "noexec_1_1_5",
+        "sepvar_1_1_6",
+        "sepvartmp_1_1_7",
+        "nodevvartemp_1_1_8",
+
+
     ]
     
     
@@ -130,7 +138,84 @@ class Debian(Helper):
         outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
 
 
-        if outputOne == "tmpfs on /tmp type tmpfs (rw,nosuid,nodev,noexec,relatime)" and (outputTwo == "tmpfs  /tmp    tmpfs   defaults,noexec,nosuid,nodev 0   0" or outputThree == "enabled"):
+        if outputOne != "" and (outputTwo != "" or outputThree == "enabled\n"):
             self.Compliant("Ensure /tmp is configured (Scored)")
         else:
             self.NotCompliant("Ensure /tmp is configured (Scored)")
+    
+
+    def nodev_1_1_3(self):
+        cmdOne = r"mount | grep -E '\s/tmp\s'"
+        cmdTwo = r"mount | grep -E '\s/tmp\s' | grep -v nodev"
+        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+
+        if outputOne == "":
+            self.NotCompliant("Ensure nodev option set on /tmp partition (Scored)")
+        elif outputTwo == "":
+            self.Compliant("Ensure nodev option set on /tmp partition (Scored)")
+        else:
+            self.NotCompliant("Ensure nodev option set on /tmp partition (Scored)")
+            
+
+    def nosuid_1_1_4(self):
+        cmdOne = r"mount | grep -E '\s/tmp\s'"
+        cmdTwo = r"mount | grep -E '\s/tmp\s' | grep -v nosuid"
+        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+
+        if outputOne == "":
+            self.NotCompliant("Ensure nosuid option set on /tmp partition (Scored)")
+        elif outputTwo == "":
+            self.Compliant("Ensure nosuid option set on /tmp partition (Scored)")
+        else:
+            self.NotCompliant("Ensure nosuid option set on /tmp partition (Scored)")
+
+    def noexec_1_1_5(self):
+        cmdOne = r"mount | grep -E '\s/tmp\s'"
+        cmdTwo = r"mount | grep -E '\s/tmp\s' | grep -v noexec"
+        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+
+        if outputOne == "":
+            self.NotCompliant("Ensure noexec option set on /tmp partition (Scored)")
+        elif outputTwo == "":
+            self.Compliant("Ensure noexec option set on /tmp partition (Scored)")
+        else:
+            self.NotCompliant("Ensure noexec option set on /tmp partition (Scored)")
+
+    def sepvar_1_1_6(self):
+        cmdOne = r"mount | grep -E '\s/var\s'"
+        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+
+        if(outputOne == ""):
+            self.NotCompliant("Ensure separate partition exists for /var (Scored)")
+        elif "/var" in outputOne:
+            self.Compliant("Ensure separate partition exists for /var (Scored)")
+        else:
+            self.NotCompliant("Ensure separate partition exists for /var (Scored)")
+
+    def sepvartmp_1_1_7(self):
+        cmdOne = r"mount | grep -E '\s/var/tmp\s'"
+        outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        
+        if(outputOne == ""):
+            self.NotCompliant("Ensure separate partition exists for /var/tmp (Scored)")
+        elif "/var/tmp" in outputOne:
+            self.Compliant("Ensure separate partition exists for /var/tmp (Scored)")
+        else:
+            self.NotCompliant("Ensure separate partition exists for /var/tmp (Scored)")
+
+    def nodevvartemp_1_1_8(self):
+        cmdOne = r"mount | grep -E '\s/var/tmp\s'"
+        cmdTwo = r"mount | grep -E '\s/var/tmp\s' | grep -v nodev"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if outputOne == "":
+            self.NotCompliant("Ensure nodev option set on /var/tmp partition (Scored)")
+        elif outputTwo == "":
+            self.Compliant("Ensure nodev option set on /var/tmp partition (Scored)")
+        else:
+            self.NotCompliant("Ensure nodev option set on /var/tmp partition (Scored)")
+    

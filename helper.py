@@ -1,3 +1,4 @@
+import subprocess as sp
 class Helper:
 
     nc = '\033[91m' + "[NC]" + '\033[0m' + " "
@@ -45,3 +46,6 @@ class Helper:
     
     def ncInfoScore_getter(self):
         return self.ncInfoScore
+    
+    def caller(self, cmd):
+        return sp.Popen(cmd, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
