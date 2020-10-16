@@ -19,6 +19,11 @@ class Debian(Helper):
         "nodevvartemp_1_1_8",
         "nosuidvartmp_1_1_9",
         "noexecvartmp_1_1_10",
+        "varlog_1_1_11",
+        "varlogaudit_1_1_12",
+        "home_1_1_13",
+        "nodevhome_1_1_14",
+        "nodevdevshm_1_1_15"
 
     ]
     
@@ -247,3 +252,58 @@ class Debian(Helper):
         else:
             self.NotCompliant("Ensure noexec option set on /var/tmp partition (Scored)")
     
+    
+    def varlog_1_1_11(self):
+        cmdOne = r"mount | grep /var/log"
+        outputOne = self.caller(cmdOne)
+
+        if "/var/log" in outputOne:
+            self.Compliant("Ensure separate partition exists for /var/log (Scored)")
+        else:
+            self.NotCompliant("Ensure separate partition exists for /var/log (Scored)")
+        
+    def varlogaudit_1_1_12(self):
+        cmdOne = r"mount | grep /var/log/audit"
+        outputOne = self.caller(cmdOne)
+
+        if "/var/log/audit" in outputOne:
+            self.Compliant("Ensure separate partition exists for /var/log/audit (Scored)")
+        else:
+            self.NotCompliant("Ensure separate partition exists for /var/log/audit (Scored)")
+
+    def home_1_1_13(self):
+        cmdOne = r"mount | grep /home"
+        outputOne = self.caller(cmdOne)
+
+        if "/home" in outputOne:
+            self.Compliant("Ensure separate partition exists for /home (Scored)")
+        else:
+            self.NotCompliant("Ensure separate partition exists for /home (Scored)")
+
+    def nodevhome_1_1_14(self):
+        cmdOne = r"mount | grep -E '\s/home\s'"
+        cmdTwo = r"mount | grep -E '\s/home\s' | grep -v nodev"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if outputOne == "":
+            self.NotCompliant("Ensure nodev option set on /home partition (Scored)")
+        elif outputTwo == "":
+            self.Compliant("Ensure nodev option set on /home partition (Scored)")
+        else:
+            self.NotCompliant("Ensure nodev option set on /home partition (Scored)")
+    
+    def nodevdevshm_1_1_15(self):
+        cmdOne = r"mount | grep -E '\s/dev/shm\s'"
+        cmdTwo = r"mount | grep -E '\s/dev/shm\s' | grep -v nodev"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if outputOne == "":
+            self.NotCompliant("Ensure nodev option set on /dev/shm partition (Scored)")
+        elif outputTwo == "":
+            self.Compliant("Ensure nodev option set on /dev/shm partition (Scored)")
+        else:
+            self.NotCompliant("Ensure nodev option set on /dev/shm partition (Scored)")
