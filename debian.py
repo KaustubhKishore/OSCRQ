@@ -41,11 +41,12 @@ class Debian(Helper):
     def jffs2_1_1_1_2(self):
         cmdOne = r"modprobe -n -v jffs2 | grep -E '(jffs2|install)'"
         cmdTwo = r"lsmod | grep jffs2"
-
+        cmdThree = r"/sbin/modprobe -n -v jffs2 | grep -E '(jffs2|install)'"
         outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
 
-        if(outputOne == 'install /bin/true \n' and outputTwo == ""):
+        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of jffs2 filesystems is disabled (Scored)")
         else:
             self.NotCompliant("Ensure mounting of jffs2 filesystems is disabled (Scored)")
@@ -53,10 +54,12 @@ class Debian(Helper):
     def hfs_1_1_1_3(self):
         cmdOne = r"modprobe -n -v hfs"
         cmdTwo = r"lsmod | grep hfs"
+        cmdThree = r"/sbin/modprobe -n -v hfs"
         outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
 
-        if(outputOne == 'install /bin/true \n' and outputTwo == ""):
+        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of hfs filesystems is disabled (Scored)")
         else:
             self.NotCompliant("Ensure mounting of hfs filesystems is disabled (Scored)")
@@ -64,10 +67,12 @@ class Debian(Helper):
     def hfsplus_1_1_1_4(self):
         cmdOne = r"modprobe -n -v hfsplus"
         cmdTwo = r"lsmod | grep hfsplus"
+        cmdThree = r"/sbin/modprobe -n -v hfsplus"
         outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
-        
-        if(outputOne == 'install /bin/true \n' and outputTwo == ""):
+        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+
+        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of hfsplus filesystems is disabled (Scored)")
         else:
             self.NotCompliant("Ensure mounting of hfsplus filesystems is disabled (Scored)")
@@ -75,10 +80,12 @@ class Debian(Helper):
     def squashfs_1_1_1_5(self):
         cmdOne = r"modprobe -n -v squashfs | grep -E '(squashfs|install)'"
         cmdTwo = r"lsmod | grep squashfs"
+        cmdThree = r"/sbin/modprobe -n -v squashfs | grep -E '(squashfs|install)'"
         outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         
-        if(outputOne == 'install /bin/true \n' and outputTwo == ""):
+        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of squashfs filesystems is disabled (Scored)")
             
         else:
@@ -87,10 +94,12 @@ class Debian(Helper):
     def udf_1_1_1_6(self):
         cmdOne = r"modprobe -n -v udf | grep -E '(udf|install)'"
         cmdTwo = r"lsmod | grep udf"
+        cmdThree = r"/sbin/modprobe -n -v udf | grep -E '(udf|install)'"
         outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
 
-        if(outputOne == 'install /bin/true \n' and outputTwo == ""):
+        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
             self.Compliant("Ensure mounting of udf filesystems is disabled (Scored)")
         else:
             self.NotCompliant("Ensure mounting of udf filesystems is disabled (Scored)")
@@ -99,11 +108,13 @@ class Debian(Helper):
         cmdOne = r"grep -E -i '\svfat\s' /etc/fstab"
         cmdTwo = r"modprobe -n -v vfat | grep -E '(vfat|install)'"
         cmdThree = r"lsmod | grep vfat"
+        cmdFour = r"/sbin/modprobe -n -v vfat | grep -E '(vfat|install)'"
         outputOne = sp.Popen(cmdOne, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         outputTwo = sp.Popen(cmdTwo, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         outputThree = sp.Popen(cmdThree, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        outputFour = sp.Popen(cmdFour, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
 
-        if(outputTwo == 'install /bin/true \n' and outputThree == ""):
+        if( (outputTwo == 'install /bin/true \n' or outputFour == 'install /bin/true \n' ) and outputThree == ""):
             self.InfoCompliant("Ensure mounting of FAT filesystems is limited (Not Scored)")
             print("Ensure FAT filesystem is used only where appropirate:\n" + outputOne)
         else:
