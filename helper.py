@@ -15,19 +15,23 @@ class Helper:
     
 
     def Compliant(self, audit):
-        print(self.c + audit)
+        print("\n" + self.c + audit)
+        print("-----------------")
         self.score += 1
     
     def NotCompliant(self, audit):
-        print(self.nc + audit)
+        print("\n" +self.nc + audit)
+        print("-----------------")
         self.ncScore += 1
 
     def InfoCompliant(self, audit):
-        print(self.info + self.c + audit)
+        print("\n" +self.info + self.c + audit)
+        print("-----------------")
         self.infoScore +=1
     
     def InfoNotCompliant(self, audit):
-        print(self.info + self.nc + audit)
+        print("\n" +self.info + self.nc + audit)
+        print("-----------------")
         self.ncInfoScore += 1   
     
     def score_getter(self):
