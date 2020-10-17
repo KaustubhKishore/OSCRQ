@@ -36,6 +36,7 @@ class Debian(Helper):
         "sudopty_1_3_2",
         "sudolog_1_3_3",
         "aide_1_4_1",
+        "fsintegrity_1_4_2"
         
     ]
     
@@ -442,4 +443,19 @@ class Debian(Helper):
             self.Compliant("Ensure AIDE is installed (Scored)")
         else:
             self.NotCompliant("Ensure AIDE is installed (Scored)")
+    
+    def fsintegrity_1_4_2(self):
+        cmdOne = r"systemctl is-enabled aidecheck.service"
+        cmdTwo = r"systemctl is-enabled aidecheck.timer"
+        cmdThree = r"systemctl status aidecheck.timer"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if "enabled" in outputOne and "enabled" in outputTwo and "active (running)" in outputThree:
+            self.Compliant("Ensure filesystemintegrity is regularly checked (Scored)")
+        else:
+            self.NotCompliant("Ensure filesystemintegrity is regularly checked (Scored)")
+
     
