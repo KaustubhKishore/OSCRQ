@@ -37,7 +37,7 @@ class Helper:
         self.ncInfoScore += 1   
     
     def InfoNotSure(self, audit):
-        print("\n" +self.info + self.nc + audit)
+        print("\n" +self.info + audit)
         print("-----------------")
 
     def score_getter(self):

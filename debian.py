@@ -454,8 +454,7 @@ class Debian(Helper):
         outputThree = self.caller(cmdThree)
 
         if "enabled" in outputOne and "enabled" in outputTwo and "active (running)" in outputThree:
-            self.Compliant("Ensure filesystemintegrity is regularly checked (Scored)")
+            self.Compliant("Ensure filesystem integrity is regularly checked (Scored)")
         else:
-            self.NotCompliant("Ensure filesystemintegrity is regularly checked (Scored)")
+            self.NotCompliant("Ensure filesystem integrity is regularly checked (Scored)")
 
-    
