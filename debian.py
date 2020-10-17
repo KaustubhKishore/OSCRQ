@@ -30,7 +30,12 @@ class Debian(Helper):
         "stickybitwwd_1_1_21",
         "automounting_1_1_22",
         "usbstorage_1_1_23",
-
+        "packagemanager_1_2_1",
+        "gpgkeys_1_2_2",
+        "sudoinstalled_1_3_1",
+        "sudopty_1_3_2",
+        "sudolog_1_3_3",
+        "aide_1_4_1",
         
     ]
     
@@ -382,3 +387,59 @@ class Debian(Helper):
             self.Compliant("Disable USB Storage (Scored)")
         else:
             self.NotCompliant("Disable USB Storage (Scored)")
+
+    def packagemanager_1_2_1(self):
+        cmdOne = r"apt-cache policy"
+        outputOne = self.caller(cmdOne)
+        
+        self.InfoNotSure("Ensure package manager repositories are configured (Not Scored)")
+        if outputOne != "":
+            print("verify the package repositories: \n" + outputOne)
+    
+    def gpgkeys_1_2_2(self):
+        cmdOne = r"apt-key list"
+        outputOne = self.caller(cmdOne)
+
+        self.InfoNotSure("Ensure GPG keys are configured (Not Scored)")
+        if outputOne != "":
+            print("Verify GPG keys are configured correctly:\n" + outputOne)
+    
+    def sudoinstalled_1_3_1(self):
+        cmdOne = r"dpkg -s sudo"
+        cmdTwo = r"dpkg -s sudo-ldap"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if "install ok installed" in outputOne:
+            self.Compliant("Ensure sudo is installed (Scored)")
+        else:
+            self.NotCompliant("Ensure sudo is installed (Scored)")
+    
+    def sudopty_1_3_2(self):
+        cmdOne = r"grep -Ei '^\s*Defaults\s+([^#]+,\s*)?use_pty(,\s+\S+\s*)*(\s+#.*)?$' /etc/sudoers /etc/sudoers.d/*"
+        outputOne = self.caller(cmdOne)
+
+        if "use_pty" in outputOne:
+            self.Compliant("Ensure sudo commands use pty (Scored)")
+        else:
+            self.NotCompliant("Ensure sudo commands use pty (Scored)")
+    
+    def sudolog_1_3_3(self):
+        cmdOne = r"grep -Ei '^\s*Defaults\s+logfile=\S+' /etc/sudoers /etc/sudoers.d/*"
+        outputOne = self.caller(cmdOne)
+
+        if "logfile=" in outputOne:
+            self.Compliant("Ensure sudo log file exists (Scored)")
+        else:
+            self.NotCompliant("Ensure sudo log file exists (Scored)")
+    
+    def aide_1_4_1(self):
+        cmdOne = r"dpkg -s aide"
+        outputOne = self.caller(cmdOne)
+
+        if "install ok installed" in outputOne:
+            self.Compliant("Ensure AIDE is installed (Scored)")
+        else:
+            self.NotCompliant("Ensure AIDE is installed (Scored)")
+    
