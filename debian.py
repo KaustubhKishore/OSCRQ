@@ -41,7 +41,8 @@ class Debian(Helper):
         "bootloaderpassword_1_5_2",
         "authroot_1_5_3",
         "xdnx_1_6_1", #Leaving out one check which shouldn't be a problem
-        "aslr_1_6_2"
+        "aslr_1_6_2",
+        "prelink_1_6_3"
     ]
     
     
@@ -411,10 +412,10 @@ class Debian(Helper):
     
     def sudoinstalled_1_3_1(self):
         cmdOne = r"dpkg -s sudo"
-        cmdTwo = r"dpkg -s sudo-ldap"
+        # cmdTwo = r"dpkg -s sudo-ldap"
 
         outputOne = self.caller(cmdOne)
-        outputTwo = self.caller(cmdTwo)
+        # outputTwo = self.caller(cmdTwo)
 
         if "install ok installed" in outputOne:
             self.Compliant("Ensure sudo is installed (Scored)")
@@ -518,3 +519,12 @@ class Debian(Helper):
         else:
             self.NotCompliant("Ensure address space layout randomization (ASLR) is enabled (Scored)")
         
+    def prelink_1_6_3(self):
+        cmdOne = r"dpkg -s prelink"
+        outputOne = self.caller(cmdOne)
+
+        if "is not installed" in outputOne:
+            self.Compliant("Ensure prelink is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure prelink is disabled (Scored)")
+    
