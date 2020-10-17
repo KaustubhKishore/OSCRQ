@@ -36,8 +36,12 @@ class Debian(Helper):
         "sudopty_1_3_2",
         "sudolog_1_3_3",
         "aide_1_4_1",
-        "fsintegrity_1_4_2"
-        
+        "fsintegrity_1_4_2",
+        "bootloaderconfig_1_5_1",
+        "bootloaderpassword_1_5_2",
+        "authroot_1_5_3",
+        "xdnx_1_6_1", #Leaving out one check which shouldn't be a problem
+        "aslr_1_6_2"
     ]
     
     
@@ -458,3 +462,59 @@ class Debian(Helper):
         else:
             self.NotCompliant("Ensure filesystem integrity is regularly checked (Scored)")
 
+    def bootloaderconfig_1_5_1(self):
+        cmdOne = r"stat /boot/grub/grub.cfg"
+        outputOne = self.caller(cmdOne)
+
+        if "Uid: (    0/    root)" in outputOne and "Gid: (    0/    root)" in outputOne and "-r--------" in outputOne:
+            self.Compliant("Ensure permissions on bootloader config are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on bootloader config are configured (Scored)")
+
+    
+    def bootloaderpassword_1_5_2(self):
+        cmdOne = r'grep "^set superusers" /boot/grub/grub.cfg'
+        cmdTwo = r'grep "^password" /boot/grub/grub.cfg'
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if "set superusers" in outputOne and "password" in outputTwo:
+            self.Compliant("Ensure bootloader password is set (Scored)")
+        else:
+            self.NotCompliant("Ensure bootloader password is set (Scored)")
+    
+    def authroot_1_5_3(self):
+        cmdOne = r"grep ^root:[*\!]: /etc/shadow"
+        outputOne = self.caller(cmdOne)
+
+        if outputOne == "":
+            self.Compliant("Ensure authentication required for single user mode (Scored)")
+        else:
+            self.NotCompliant("Ensure authentication required for single user mode (Scored)")
+    
+
+    def xdnx_1_6_1(self):
+        cmdOne = r"journalctl | grep 'protection: active'"
+        outputOne = self.caller(cmdOne)
+
+        if "NX (Execute Disable) protection: active" in outputOne:
+            self.Compliant("Ensure XD/NX support is enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure XD/NX support is enabled (Scored)")
+    
+
+    def aslr_1_6_2(self):
+        cmdOne = r"sysctl kernel.randomize_va_space"
+        cmdTwo = r"/usr/sbin/sysctl kernel.randomize_va_space"
+        cmdThree = r'grep "kernel\.randomize_va_space" /etc/sysctl.conf /etc/sysctl.d/*'
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if ("kernel.randomize_va_space = 2" in outputOne or "kernel.randomize_va_space = 2" in outputTwo) and "kernel.randomize_va_space = 2" in outputThree:
+            self.Compliant("Ensure address space layout randomization (ASLR) is enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure address space layout randomization (ASLR) is enabled (Scored)")
+        
