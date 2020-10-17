@@ -32,7 +32,7 @@ class Debian(Helper):
         "usbstorage_1_1_23",
         "packagemanager_1_2_1",
         "gpgkeys_1_2_2",
-        "sudoinstalled_1_3_1",
+        "sudoinstalled_1_3_1", # Left optional LDAP check for now
         "sudopty_1_3_2",
         "sudolog_1_3_3",
         "aide_1_4_1",
