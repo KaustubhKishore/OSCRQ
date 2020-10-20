@@ -1,17 +1,18 @@
 from helper import Helper
 
+
 class Debian(Helper):
 
     profile = [
-        "freevxfs_1_1_1_1", 
+        "freevxfs_1_1_1_1",
         "jffs2_1_1_1_2",
-        "hfs_1_1_1_3", 
-        "hfsplus_1_1_1_4", 
-        "squashfs_1_1_1_5", 
+        "hfs_1_1_1_3",
+        "hfsplus_1_1_1_4",
+        "squashfs_1_1_1_5",
         "udf_1_1_1_6",
         "fat_1_1_1_7",
-        "tmp_1_1_2", # Requires testing.
-        "nodev_1_1_3", # Might need testing
+        "tmp_1_1_2",  # Requires testing.
+        "nodev_1_1_3",  # Might need testing
         "nosuid_1_1_4",
         "noexec_1_1_5",
         "sepvar_1_1_6",
@@ -32,7 +33,7 @@ class Debian(Helper):
         "usbstorage_1_1_23",
         "packagemanager_1_2_1",
         "gpgkeys_1_2_2",
-        "sudoinstalled_1_3_1", # Left optional LDAP check for now
+        "sudoinstalled_1_3_1",  # Left optional LDAP check for now
         "sudopty_1_3_2",
         "sudolog_1_3_3",
         "aide_1_4_1",
@@ -40,16 +41,14 @@ class Debian(Helper):
         "bootloaderconfig_1_5_1",
         "bootloaderpassword_1_5_2",
         "authroot_1_5_3",
-        "xdnx_1_6_1", #Leaving out one check which shouldn't be a problem
+        "xdnx_1_6_1",  # Leaving out one check which shouldn't be a problem
         "aslr_1_6_2",
-        "prelink_1_6_3"
+        "prelink_1_6_3",
     ]
-    
-    
+
     def __init__(self):
         super().__init__()
         self.id = "unique id"
-        
 
     def runner(self):
         for p in self.profile:
@@ -64,11 +63,17 @@ class Debian(Helper):
         outputTwo = self.caller(cmdTwo)
         outputThree = self.caller(cmdThree)
 
-        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
-            self.Compliant("Ensure mounting of freevxfs filesystems is disabled (Scored)")
+        if (
+            outputOne == "install /bin/true \n" or outputThree == "install /bin/true \n"
+        ) and outputTwo == "":
+            self.Compliant(
+                "Ensure mounting of freevxfs filesystems is disabled (Scored)"
+            )
         else:
-            self.NotCompliant("Ensure mounting of freevxfs filesystems is disabled (Scored)")
-        
+            self.NotCompliant(
+                "Ensure mounting of freevxfs filesystems is disabled (Scored)"
+            )
+
     def jffs2_1_1_1_2(self):
         cmdOne = r"modprobe -n -v jffs2 | grep -E '(jffs2|install)'"
         cmdTwo = r"lsmod | grep jffs2"
@@ -77,10 +82,14 @@ class Debian(Helper):
         outputTwo = self.caller(cmdTwo)
         outputThree = self.caller(cmdThree)
 
-        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
+        if (
+            outputOne == "install /bin/true \n" or outputThree == "install /bin/true \n"
+        ) and outputTwo == "":
             self.Compliant("Ensure mounting of jffs2 filesystems is disabled (Scored)")
         else:
-            self.NotCompliant("Ensure mounting of jffs2 filesystems is disabled (Scored)")
+            self.NotCompliant(
+                "Ensure mounting of jffs2 filesystems is disabled (Scored)"
+            )
 
     def hfs_1_1_1_3(self):
         cmdOne = r"modprobe -n -v hfs"
@@ -90,7 +99,9 @@ class Debian(Helper):
         outputTwo = self.caller(cmdTwo)
         outputThree = self.caller(cmdThree)
 
-        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
+        if (
+            outputOne == "install /bin/true \n" or outputThree == "install /bin/true \n"
+        ) and outputTwo == "":
             self.Compliant("Ensure mounting of hfs filesystems is disabled (Scored)")
         else:
             self.NotCompliant("Ensure mounting of hfs filesystems is disabled (Scored)")
@@ -103,10 +114,16 @@ class Debian(Helper):
         outputTwo = self.caller(cmdTwo)
         outputThree = self.caller(cmdThree)
 
-        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
-            self.Compliant("Ensure mounting of hfsplus filesystems is disabled (Scored)")
+        if (
+            outputOne == "install /bin/true \n" or outputThree == "install /bin/true \n"
+        ) and outputTwo == "":
+            self.Compliant(
+                "Ensure mounting of hfsplus filesystems is disabled (Scored)"
+            )
         else:
-            self.NotCompliant("Ensure mounting of hfsplus filesystems is disabled (Scored)")
+            self.NotCompliant(
+                "Ensure mounting of hfsplus filesystems is disabled (Scored)"
+            )
 
     def squashfs_1_1_1_5(self):
         cmdOne = r"modprobe -n -v squashfs | grep -E '(squashfs|install)'"
@@ -114,13 +131,19 @@ class Debian(Helper):
         cmdThree = r"/sbin/modprobe -n -v squashfs | grep -E '(squashfs|install)'"
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
-        outputThree = self.caller(cmdThree) 
+        outputThree = self.caller(cmdThree)
 
-        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
-            self.Compliant("Ensure mounting of squashfs filesystems is disabled (Scored)")
-            
+        if (
+            outputOne == "install /bin/true \n" or outputThree == "install /bin/true \n"
+        ) and outputTwo == "":
+            self.Compliant(
+                "Ensure mounting of squashfs filesystems is disabled (Scored)"
+            )
+
         else:
-            self.NotCompliant("Ensure mounting of squashfs filesystems is disabled (Scored)")
+            self.NotCompliant(
+                "Ensure mounting of squashfs filesystems is disabled (Scored)"
+            )
 
     def udf_1_1_1_6(self):
         cmdOne = r"modprobe -n -v udf | grep -E '(udf|install)'"
@@ -130,11 +153,13 @@ class Debian(Helper):
         outputTwo = self.caller(cmdTwo)
         outputThree = self.caller(cmdThree)
 
-        if( (outputOne == 'install /bin/true \n' or outputThree == 'install /bin/true \n') and outputTwo == ""):
+        if (
+            outputOne == "install /bin/true \n" or outputThree == "install /bin/true \n"
+        ) and outputTwo == "":
             self.Compliant("Ensure mounting of udf filesystems is disabled (Scored)")
         else:
             self.NotCompliant("Ensure mounting of udf filesystems is disabled (Scored)")
-        
+
     def fat_1_1_1_7(self):
         cmdOne = r"grep -E -i '\svfat\s' /etc/fstab"
         cmdTwo = r"modprobe -n -v vfat | grep -E '(vfat|install)'"
@@ -146,12 +171,18 @@ class Debian(Helper):
         outputThree = self.caller(cmdThree)
         outputFour = self.caller(cmdFour)
 
-        if( (outputTwo == 'install /bin/true \n' or outputFour == 'install /bin/true \n' ) and outputThree == ""):
-            self.InfoCompliant("Ensure mounting of FAT filesystems is limited (Not Scored)")
+        if (
+            outputTwo == "install /bin/true \n" or outputFour == "install /bin/true \n"
+        ) and outputThree == "":
+            self.InfoCompliant(
+                "Ensure mounting of FAT filesystems is limited (Not Scored)"
+            )
         else:
-            self.InfoNotCompliant("Ensure mounting of FAT filesystems is limited (Not Scored)")
+            self.InfoNotCompliant(
+                "Ensure mounting of FAT filesystems is limited (Not Scored)"
+            )
 
-        if outputOne != '':
+        if outputOne != "":
             print("Ensure FAT filesystem is used only where appropirate:\n" + outputOne)
 
     def tmp_1_1_2(self):
@@ -166,26 +197,26 @@ class Debian(Helper):
             self.Compliant("Ensure /tmp is configured (Scored)")
         else:
             self.NotCompliant("Ensure /tmp is configured (Scored)")
-    
+
     def nodev_1_1_3(self):
         cmdOne = r"mount | grep -E '\s/tmp\s'"
         cmdTwo = r"mount | grep -E '\s/tmp\s' | grep -v nodev"
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
-        
+
         if outputOne == "":
             self.NotCompliant("Ensure nodev option set on /tmp partition (Scored)")
         elif outputTwo == "":
             self.Compliant("Ensure nodev option set on /tmp partition (Scored)")
         else:
             self.NotCompliant("Ensure nodev option set on /tmp partition (Scored)")
-            
+
     def nosuid_1_1_4(self):
         cmdOne = r"mount | grep -E '\s/tmp\s'"
         cmdTwo = r"mount | grep -E '\s/tmp\s' | grep -v nosuid"
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
-        
+
         if outputOne == "":
             self.NotCompliant("Ensure nosuid option set on /tmp partition (Scored)")
         elif outputTwo == "":
@@ -209,8 +240,8 @@ class Debian(Helper):
     def sepvar_1_1_6(self):
         cmdOne = r"mount | grep -E '\s/var\s'"
         outputOne = self.caller(cmdOne)
-        
-        if(outputOne == ""):
+
+        if outputOne == "":
             self.NotCompliant("Ensure separate partition exists for /var (Scored)")
         elif "/var" in outputOne:
             self.Compliant("Ensure separate partition exists for /var (Scored)")
@@ -220,8 +251,8 @@ class Debian(Helper):
     def sepvartmp_1_1_7(self):
         cmdOne = r"mount | grep -E '\s/var/tmp\s'"
         outputOne = self.caller(cmdOne)
-        
-        if(outputOne == ""):
+
+        if outputOne == "":
             self.NotCompliant("Ensure separate partition exists for /var/tmp (Scored)")
         elif "/var/tmp" in outputOne:
             self.Compliant("Ensure separate partition exists for /var/tmp (Scored)")
@@ -240,7 +271,7 @@ class Debian(Helper):
             self.Compliant("Ensure nodev option set on /var/tmp partition (Scored)")
         else:
             self.NotCompliant("Ensure nodev option set on /var/tmp partition (Scored)")
-    
+
     def nosuidvartmp_1_1_9(self):
         cmdOne = r"mount | grep -E '\s/var/tmp\s'"
         cmdTwo = r"mount | grep -E '\s/var/tmp\s' | grep -v nosuid"
@@ -253,7 +284,7 @@ class Debian(Helper):
             self.Compliant("Ensure nosuid option set on /var/tmp partition (Scored)")
         else:
             self.NotCompliant("Ensure nosuid option set on /var/tmp partition (Scored)")
-    
+
     def noexecvartmp_1_1_10(self):
         cmdOne = r"mount | grep -E '\s/var/tmp\s'"
         cmdTwo = r"mount | grep -E '\s/var/tmp\s' | grep -v noexec"
@@ -265,8 +296,8 @@ class Debian(Helper):
         elif outputTwo == "":
             self.Compliant("Ensure noexec option set on /var/tmp partition (Scored)")
         else:
-            self.NotCompliant("Ensure noexec option set on /var/tmp partition (Scored)")  
-    
+            self.NotCompliant("Ensure noexec option set on /var/tmp partition (Scored)")
+
     def varlog_1_1_11(self):
         cmdOne = r"mount | grep /var/log"
         outputOne = self.caller(cmdOne)
@@ -275,15 +306,19 @@ class Debian(Helper):
             self.Compliant("Ensure separate partition exists for /var/log (Scored)")
         else:
             self.NotCompliant("Ensure separate partition exists for /var/log (Scored)")
-        
+
     def varlogaudit_1_1_12(self):
         cmdOne = r"mount | grep /var/log/audit"
         outputOne = self.caller(cmdOne)
 
         if "/var/log/audit" in outputOne:
-            self.Compliant("Ensure separate partition exists for /var/log/audit (Scored)")
+            self.Compliant(
+                "Ensure separate partition exists for /var/log/audit (Scored)"
+            )
         else:
-            self.NotCompliant("Ensure separate partition exists for /var/log/audit (Scored)")
+            self.NotCompliant(
+                "Ensure separate partition exists for /var/log/audit (Scored)"
+            )
 
     def home_1_1_13(self):
         cmdOne = r"mount | grep /home"
@@ -307,7 +342,7 @@ class Debian(Helper):
             self.Compliant("Ensure nodev option set on /home partition (Scored)")
         else:
             self.NotCompliant("Ensure nodev option set on /home partition (Scored)")
-    
+
     def nodevdevshm_1_1_15(self):
         cmdOne = r"mount | grep -E '\s/dev/shm\s'"
         cmdTwo = r"mount | grep -E '\s/dev/shm\s' | grep -v nodev"
@@ -335,7 +370,7 @@ class Debian(Helper):
             self.Compliant("Ensure nosuid option set on /dev/shm partition (Scored)")
         else:
             self.NotCompliant("Ensure nosuid option set on /dev/shm partition (Scored)")
-    
+
     def noexecdevshm_1_1_17(self):
         cmdOne = r"mount | grep -E '\s/dev/shm\s'"
         cmdTwo = r"mount | grep -E '\s/dev/shm\s' | grep -v noexec"
@@ -349,25 +384,34 @@ class Debian(Helper):
             self.Compliant("Ensure noexec option set on /dev/shm partition (Scored)")
         else:
             self.NotCompliant("Ensure noexec option set on /dev/shm partition (Scored)")
-    
+
     def removable_1_1_18_and_19_and_20(self):
         cmdOne = r"mount"
         outputOne = self.caller(cmdOne)
 
-        self.InfoNotSure("Ensure nodev,nosuid and noexec option set on removable media partitions (Not Scored)")
+        self.InfoNotSure(
+            "Ensure nodev,nosuid and noexec option set on removable media partitions (Not Scored)"
+        )
 
         if outputOne != "":
-            print("Verify manually that all removable media has nodev,nosuid and noexec option set:\n" + outputOne)
-    
+            print(
+                "Verify manually that all removable media has nodev,nosuid and noexec option set:\n"
+                + outputOne
+            )
+
     def stickybitwwd_1_1_21(self):
         cmdOne = r"df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type d \( -perm -0002 -a ! -perm -1000 \) 2>/dev/null"
         outputOne = self.caller(cmdOne)
 
         if outputOne == "":
-            self.Compliant("Ensure sticky bit is set on all world-writable directories (Scored)")
+            self.Compliant(
+                "Ensure sticky bit is set on all world-writable directories (Scored)"
+            )
         else:
-            self.NotCompliant("Ensure sticky bit is set on all world-writable directories (Scored)")
-    
+            self.NotCompliant(
+                "Ensure sticky bit is set on all world-writable directories (Scored)"
+            )
+
     def automounting_1_1_22(self):
         cmdOne = r"systemctl is-enabled autofs"
         cmdTwo = r"dpkg -s autofs"
@@ -389,7 +433,9 @@ class Debian(Helper):
         outputTwo = self.caller(cmdTwo).strip()
         outputThree = self.caller(cmdThree).strip()
 
-        if (outputOne == "install /bin/true" or outputThree == "install /bin/true") and outputTwo == "":
+        if (
+            outputOne == "install /bin/true" or outputThree == "install /bin/true"
+        ) and outputTwo == "":
             self.Compliant("Disable USB Storage (Scored)")
         else:
             self.NotCompliant("Disable USB Storage (Scored)")
@@ -397,11 +443,13 @@ class Debian(Helper):
     def packagemanager_1_2_1(self):
         cmdOne = r"apt-cache policy"
         outputOne = self.caller(cmdOne)
-        
-        self.InfoNotSure("Ensure package manager repositories are configured (Not Scored)")
+
+        self.InfoNotSure(
+            "Ensure package manager repositories are configured (Not Scored)"
+        )
         if outputOne != "":
             print("verify the package repositories: \n" + outputOne)
-    
+
     def gpgkeys_1_2_2(self):
         cmdOne = r"apt-key list"
         outputOne = self.caller(cmdOne)
@@ -409,7 +457,7 @@ class Debian(Helper):
         self.InfoNotSure("Ensure GPG keys are configured (Not Scored)")
         if outputOne != "":
             print("Verify GPG keys are configured correctly:\n" + outputOne)
-    
+
     def sudoinstalled_1_3_1(self):
         cmdOne = r"dpkg -s sudo"
         # cmdTwo = r"dpkg -s sudo-ldap"
@@ -421,7 +469,7 @@ class Debian(Helper):
             self.Compliant("Ensure sudo is installed (Scored)")
         else:
             self.NotCompliant("Ensure sudo is installed (Scored)")
-    
+
     def sudopty_1_3_2(self):
         cmdOne = r"grep -Ei '^\s*Defaults\s+([^#]+,\s*)?use_pty(,\s+\S+\s*)*(\s+#.*)?$' /etc/sudoers /etc/sudoers.d/*"
         outputOne = self.caller(cmdOne)
@@ -430,7 +478,7 @@ class Debian(Helper):
             self.Compliant("Ensure sudo commands use pty (Scored)")
         else:
             self.NotCompliant("Ensure sudo commands use pty (Scored)")
-    
+
     def sudolog_1_3_3(self):
         cmdOne = r"grep -Ei '^\s*Defaults\s+logfile=\S+' /etc/sudoers /etc/sudoers.d/*"
         outputOne = self.caller(cmdOne)
@@ -439,7 +487,7 @@ class Debian(Helper):
             self.Compliant("Ensure sudo log file exists (Scored)")
         else:
             self.NotCompliant("Ensure sudo log file exists (Scored)")
-    
+
     def aide_1_4_1(self):
         cmdOne = r"dpkg -s aide"
         outputOne = self.caller(cmdOne)
@@ -448,7 +496,7 @@ class Debian(Helper):
             self.Compliant("Ensure AIDE is installed (Scored)")
         else:
             self.NotCompliant("Ensure AIDE is installed (Scored)")
-    
+
     def fsintegrity_1_4_2(self):
         cmdOne = r"systemctl is-enabled aidecheck.service"
         cmdTwo = r"systemctl is-enabled aidecheck.timer"
@@ -458,21 +506,34 @@ class Debian(Helper):
         outputTwo = self.caller(cmdTwo)
         outputThree = self.caller(cmdThree)
 
-        if "enabled" in outputOne and "enabled" in outputTwo and "active (running)" in outputThree:
+        if (
+            "enabled" in outputOne
+            and "enabled" in outputTwo
+            and "active (running)" in outputThree
+        ):
             self.Compliant("Ensure filesystem integrity is regularly checked (Scored)")
         else:
-            self.NotCompliant("Ensure filesystem integrity is regularly checked (Scored)")
+            self.NotCompliant(
+                "Ensure filesystem integrity is regularly checked (Scored)"
+            )
 
     def bootloaderconfig_1_5_1(self):
         cmdOne = r"stat /boot/grub/grub.cfg"
         outputOne = self.caller(cmdOne)
 
-        if "Uid: (    0/    root)" in outputOne and "Gid: (    0/    root)" in outputOne and "-r--------" in outputOne:
-            self.Compliant("Ensure permissions on bootloader config are configured (Scored)")
+        if (
+            "Uid: (    0/    root)" in outputOne
+            and "Gid: (    0/    root)" in outputOne
+            and "-r--------" in outputOne
+        ):
+            self.Compliant(
+                "Ensure permissions on bootloader config are configured (Scored)"
+            )
         else:
-            self.NotCompliant("Ensure permissions on bootloader config are configured (Scored)")
+            self.NotCompliant(
+                "Ensure permissions on bootloader config are configured (Scored)"
+            )
 
-    
     def bootloaderpassword_1_5_2(self):
         cmdOne = r'grep "^set superusers" /boot/grub/grub.cfg'
         cmdTwo = r'grep "^password" /boot/grub/grub.cfg'
@@ -484,16 +545,19 @@ class Debian(Helper):
             self.Compliant("Ensure bootloader password is set (Scored)")
         else:
             self.NotCompliant("Ensure bootloader password is set (Scored)")
-    
+
     def authroot_1_5_3(self):
         cmdOne = r"grep ^root:[*\!]: /etc/shadow"
         outputOne = self.caller(cmdOne)
 
         if outputOne == "":
-            self.Compliant("Ensure authentication required for single user mode (Scored)")
+            self.Compliant(
+                "Ensure authentication required for single user mode (Scored)"
+            )
         else:
-            self.NotCompliant("Ensure authentication required for single user mode (Scored)")
-    
+            self.NotCompliant(
+                "Ensure authentication required for single user mode (Scored)"
+            )
 
     def xdnx_1_6_1(self):
         cmdOne = r"journalctl | grep 'protection: active'"
@@ -503,7 +567,6 @@ class Debian(Helper):
             self.Compliant("Ensure XD/NX support is enabled (Scored)")
         else:
             self.NotCompliant("Ensure XD/NX support is enabled (Scored)")
-    
 
     def aslr_1_6_2(self):
         cmdOne = r"sysctl kernel.randomize_va_space"
@@ -514,11 +577,18 @@ class Debian(Helper):
         outputTwo = self.caller(cmdTwo)
         outputThree = self.caller(cmdThree)
 
-        if ("kernel.randomize_va_space = 2" in outputOne or "kernel.randomize_va_space = 2" in outputTwo) and "kernel.randomize_va_space = 2" in outputThree:
-            self.Compliant("Ensure address space layout randomization (ASLR) is enabled (Scored)")
+        if (
+            "kernel.randomize_va_space = 2" in outputOne
+            or "kernel.randomize_va_space = 2" in outputTwo
+        ) and "kernel.randomize_va_space = 2" in outputThree:
+            self.Compliant(
+                "Ensure address space layout randomization (ASLR) is enabled (Scored)"
+            )
         else:
-            self.NotCompliant("Ensure address space layout randomization (ASLR) is enabled (Scored)")
-        
+            self.NotCompliant(
+                "Ensure address space layout randomization (ASLR) is enabled (Scored)"
+            )
+
     def prelink_1_6_3(self):
         cmdOne = r"dpkg -s prelink"
         outputOne = self.caller(cmdOne)
@@ -527,4 +597,3 @@ class Debian(Helper):
             self.Compliant("Ensure prelink is disabled (Scored)")
         else:
             self.NotCompliant("Ensure prelink is disabled (Scored)")
-    
