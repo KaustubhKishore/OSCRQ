@@ -719,8 +719,8 @@ class Debian(Helper):
         outputFour = self.caller(cmdFour)
 
         if(
-            ("unconfined" not in outputOne + outputTwo) and
-            ("unconfined" not in outputThree + outputFour)
+            ("unconfined" in outputOne + outputTwo) and
+            ("unconfined" in outputThree + outputFour)
         ):
             self.Compliant("Ensure all AppArmor Profiles are in enforce or complain mode (Scored)")
         else:
