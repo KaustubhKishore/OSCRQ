@@ -85,7 +85,9 @@ class Debian(Helper):
         "telnetclient_2_3_4",
         "ldaputils_2_3_5",
         "ipvsix_3_1_1",
-        "wireless_3_1_2"
+        "wireless_3_1_2",
+        "packetredir_3_2_1",
+        "ipforward_3_2_2"
     ]
 
     def __init__(self):
@@ -1038,7 +1040,7 @@ class Debian(Helper):
             self.Compliant("Ensure DNS Server is not enabled (Scored)")
         else:
             self.NotCompliant("Ensure DNS Server is not enabled (Scored)")
-    
+
     def ftp_2_2_9(self):
         cmdOne = r"systemctl is-enabled vsftpd"
         outputOne = self.caller(cmdOne)
@@ -1047,7 +1049,7 @@ class Debian(Helper):
             self.Compliant("Ensure FTP Server is not enabled (Scored)")
         else:
             self.NotCompliant("Ensure FTP Server is not enabled (Scored)")
-    
+
     def http_2_2_10(self):
         cmdOne = r"systemctl is-enabled apache2"
         outputOne = self.caller(cmdOne)
@@ -1056,7 +1058,7 @@ class Debian(Helper):
             self.Compliant("Ensure HTTP server is not enabled (Scored)")
         else:
             self.NotCompliant("Ensure HTTP server is not enabled (Scored)")
-    
+
     def email_2_2_11(self):
         cmdOne = r"systemctl is-enabled dovecot"
         outputOne = self.caller(cmdOne)
@@ -1065,7 +1067,7 @@ class Debian(Helper):
             self.Compliant("Ensure email services are not enabled (Scored)")
         else:
             self.NotCompliant("Ensure email services are not enabled (Scored)")
-    
+
     def samba_2_2_12(self):
         cmdOne = r"systemctl is-enabled smbd"
         outputOne = self.caller(cmdOne)
@@ -1074,7 +1076,7 @@ class Debian(Helper):
             self.Compliant("Ensure Samba is not enabled (Scored)")
         else:
             self.NotCompliant("Ensure Samba is not enabled (Scored)")
-    
+
     def httpproxy_2_2_13(self):
         cmdOne = r"systemctl is-enabled squid"
         outputOne = self.caller(cmdOne)
@@ -1082,7 +1084,8 @@ class Debian(Helper):
         if "enabled" not in outputOne:
             self.Compliant("Ensure HTTP Proxy Server is not enabled (Scored)")
         else:
-            self.NotCompliant("Ensure HTTP Proxy Server is not enabled (Scored)")
+            self.NotCompliant(
+                "Ensure HTTP Proxy Server is not enabled (Scored)")
 
     def snmp_2_2_14(self):
         cmdOne = r"systemctl is-enabled snmpd"
@@ -1092,16 +1095,18 @@ class Debian(Helper):
             self.Compliant("Ensure SNMP Server is not enabled (Scored)")
         else:
             self.NotCompliant("Ensure SNMP Server is not enabled (Scored)")
-        
+
     def mtalocal_2_2_15(self):
         cmdOne = r"ss -lntu | grep -E ':25\s' | grep -E -v '\s(127.0.0.1|::1):25\s'"
         outputOne = self.caller(cmdOne)
 
         if outputOne == "":
-            self.Compliant("Ensure mail transfer agent is configured for local-only mode (Scored)")
+            self.Compliant(
+                "Ensure mail transfer agent is configured for local-only mode (Scored)")
         else:
-            self.NotCompliant("Ensure mail transfer agent is configured for local-only mode (Scored)")
-        
+            self.NotCompliant(
+                "Ensure mail transfer agent is configured for local-only mode (Scored)")
+
     def rsync_2_2_16(self):
         cmdOne = r"systemctl is-enabled rsync"
         outputOne = self.caller(cmdOne)
@@ -1110,7 +1115,7 @@ class Debian(Helper):
             self.Compliant("Ensure rsync service is not enabled (Scored)")
         else:
             self.NotCompliant("Ensure rsync service is not enabled (Scored)")
-    
+
     def nis_2_2_17(self):
         cmdOne = r"systemctl is-enabled nis"
         outputOne = self.caller(cmdOne)
@@ -1119,7 +1124,7 @@ class Debian(Helper):
             self.Compliant("Ensure NIS Server is not enabled (Scored)")
         else:
             self.NotCompliant("Ensure NIS Server is not enabled (Scored)")
-    
+
     def nisclient_2_3_1(self):
         cmdOne = r"dpkg -s nis"
         outputOne = self.caller(cmdOne)
@@ -1128,7 +1133,7 @@ class Debian(Helper):
             self.Compliant("Ensure NIS Client is not installed (Scored)")
         else:
             self.NotCompliant("Ensure NIS Client is not installed (Scored)")
-    
+
     def rshclient_2_3_2(self):
         cmdOne = r"dpkg -s rsh-client"
         outputOne = self.caller(cmdOne)
@@ -1137,7 +1142,7 @@ class Debian(Helper):
             self.Compliant("Ensure rsh client is not installed (Scored)")
         else:
             self.NotCompliant("Ensure rsh client is not installed (Scored)")
-    
+
     def talkclient_2_3_3(self):
         cmdOne = r"dpkg -s talk"
         outputOne = self.caller(cmdOne)
@@ -1146,7 +1151,7 @@ class Debian(Helper):
             self.Compliant("Ensure talk client is not installed (Scored)")
         else:
             self.NotCompliant("Ensure talk client is not installed (Scored)")
-    
+
     def telnetclient_2_3_4(self):
         cmdOne = r"dpkg -s telnet"
         outputOne = self.caller(cmdOne)
@@ -1155,7 +1160,7 @@ class Debian(Helper):
             self.Compliant("Ensure telnet client is not installed (Scored)")
         else:
             self.NotCompliant("Ensure telnet client is not installed (Scored)")
-    
+
     def ldaputils_2_3_5(self):
         cmdOne = r"dpkg -s ldap-utils"
         outputOne = self.caller(cmdOne)
@@ -1164,7 +1169,7 @@ class Debian(Helper):
             self.Compliant("Ensure LDAP client is not installed (Scored)")
         else:
             self.NotCompliant("Ensure LDAP client is not installed (Scored)")
-    
+
     def ipvsix_3_1_1(self):
         cmdOne = r"""grep "^\s*linux" /boot/grub/grub.cfg | grep -v "ipv6.disable=1" """
         outputOne = self.caller(cmdOne)
@@ -1173,7 +1178,7 @@ class Debian(Helper):
             self.InfoCompliant("Disable IPv6 (Not Scored)")
         else:
             self.InfoNotCompliant("Disable IPv6 (Not Scored)")
-    
+
     def wireless_3_1_2(self):
         cmdOne = r"nmcli radio all"
         outputOne = self.caller(cmdOne)
@@ -1190,4 +1195,92 @@ class Debian(Helper):
         ):
             self.Compliant("Ensure wireless interfaces are disabled (Scored)")
         else:
-            self.NotCompliant("Ensure wireless interfaces are disabled (Scored)")
+            self.NotCompliant(
+                "Ensure wireless interfaces are disabled (Scored)")
+
+    def packetredir_3_2_1(self):
+        cmdOne = r"sysctl net.ipv4.conf.all.send_redirects"
+        cmdTwo = r"/usr/sbin/sysctl net.ipv4.conf.all.send_redirects"
+
+        cmdThree = r"sysctl net.ipv4.conf.default.send_redirects"
+        cmdFour = r"/usr/sbin/sysctl net.ipv4.conf.default.send_redirects"
+
+        cmdFive = r"""grep "net\.ipv4\.conf\.all\.send_redirects" /etc/sysctl.conf /etc/sysctl.d/*"""
+        cmdSix = r"""grep "net\.ipv4\.conf\.default\.send_redirects" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
+        outputFive = self.caller(cmdFive)
+        outputSix = self.caller(cmdSix)
+
+        if(
+            (
+                "net.ipv4.conf.all.send_redirects = 0" in outputOne or
+                "net.ipv4.conf.all.send_redirects = 0" in outputTwo
+            ) and
+            (
+                "net.ipv4.conf.default.send_redirects = 0" in outputThree or
+                "net.ipv4.conf.default.send_redirects = 0" in outputFour
+            ) and
+            (
+                "net.ipv4.conf.all.send_redirects = 0" in outputFive
+            ) and
+            (
+                "net.ipv4.conf.default.send_redirects= 0" in outputSix
+            )
+        ):
+            self.Compliant(
+                "Ensure packet redirect sending is disabled (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure packet redirect sending is disabled (Scored)")
+
+    def ipforward_3_2_2(self):
+        cmdOne = r"sysctl net.ipv4.ip_forward"
+        cmdTwo = r"/usr/sbin/sysctl net.ipv4.ip_forward"
+
+        cmdThree = r"""grep -E -s "^\s*net\.ipv4\.ip_forward\s*=\s*1" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf"""
+
+        cmdFour = r"""grep "^\s*linux" /boot/grub/grub.cfg | grep -v "ipv6.disable=1" """
+
+        cmdFive = r"sysctl net.ipv6.conf.all.forwarding"
+        cmdSix = r"/usr/sbin/sysctl net.ipv6.conf.all.forwarding"
+        cmdSeven = r"""grep -E -s "^\s*net\.ipv6\.conf\.all\.forwarding\s*=\s*1" /etc/sysctl.conf /etc/sysctl.d/*.conf /usr/lib/sysctl.d/*.conf /run/sysctl.d/*.conf"""
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
+        outputFive = self.caller(cmdFive)
+        outputSix = self.caller(cmdSix)
+        outputSeven = self.caller(cmdSeven)
+
+        if(
+            (
+                "net.ipv4.ip_forward = 0" in outputOne or
+                "net.ipv4.ip_forward = 0" in outputTwo
+            ) and
+            (
+                outputThree == ""
+            )
+        ):
+            if outputFour != "":
+                if(
+                    (
+                        "net.ipv6.conf.all.forwarding = 0" in outputFive or
+                        "net.ipv6.conf.all.forwarding = 0" in outputSix
+                    ) and
+                    (
+                        outputSeven == ""
+                    )
+                ):
+                    self.Compliant("Ensure IP forwarding is disabled (Scored)")
+                else:
+                    self.NotCompliant(
+                        "Ensure IP forwarding is disabled (Scored)")
+            else:
+                self.Compliant("Ensure IP forwarding is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure IP forwarding is disabled (Scored)")
