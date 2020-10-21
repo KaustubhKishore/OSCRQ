@@ -54,12 +54,21 @@ class Debian(Helper):
         "remotelogin_1_8_1_3",
         "permmotd_1_8_1_4",
         "permissue_1_8_1_5",
-        "permissuenet_1_8_1_6",
+        "permissuenet_1_8_1_6",  # gdm is optional
         "gdmconfig_1_8_2",
         "updates_1_9",
         "xinetd_2_1_1",
         "openbsdinetd_2_1_2",
-        "timesync_2_2_1_1"
+        "timesync_2_2_1_1",
+        "timesyncd_2_2_1_2",
+        "chronyconfig_2_2_1_3",  # optional check.
+        "ntpconfig_2_2_1_4",  # Left some additional checks
+        "xwindow_2_2_2",
+        "avahi_2_2_3",
+        "cups_2_2_4",
+        "dhcp_2_2_5",
+        "ldap_2_2_6",
+        "nfsrpc_2_2_7"
     ]
 
     def __init__(self):
@@ -871,7 +880,7 @@ class Debian(Helper):
             self.Compliant("Ensure openbsd-inetd is not installed (Scored)")
         else:
             self.NotCompliant("Ensure openbsd-inetd is not installed (Scored)")
-    
+
     def timesync_2_2_1_1(self):
         cmdOne = r"systemctl is-enabled systemd-timesyncd"
         cmdTwo = r"dpkg -s chrony"
@@ -887,5 +896,119 @@ class Debian(Helper):
         ):
             self.Compliant(" Ensure time synchronization is in use (Scored)")
         else:
-            self.NotCompliant(" Ensure time synchronization is in use (Scored)")
-    
+            self.NotCompliant(
+                " Ensure time synchronization is in use (Scored)")
+
+    def timesyncd_2_2_1_2(self):
+        cmdOne = r"systemctl is-enabled systemd-timesyncd.service"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" in outputOne:
+            self.InfoCompliant(
+                "Ensure systemd-timesyncd is configured (Not Scored)")
+        else:
+            self.InfoNotCompliant(
+                "Ensure systemd-timesyncd is configured (Not Scored)")
+
+    def chronyconfig_2_2_1_3(self):
+        cmdOne = r"dpkg -s chrony"
+        cmdTwo = r'grep -E "^(server|pool)" /etc/chrony.conf'
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if "install ok installed" in outputOne:
+            if "server" in outputTwo:
+                self.Compliant("Ensure chrony is configured (Scored)")
+            else:
+                self.NotCompliant("Ensure chrony is configured (Scored)")
+        else:
+            self.Compliant(
+                "Ensure chrony is configured (Scored) + Chrony is not used")
+
+    def ntpconfig_2_2_1_4(self):
+        cmdOne = r"dpkg -s ntp"
+        cmdTwo = r'grep "^restrict" /etc/ntp.conf'
+        cmdThree = r'grep -E "^(server|pool)" /etc/ntp.conf'
+        cmdFour = r'grep "RUNASUSER=ntp" /etc/init.d/ntp'
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
+
+        if "install ok installed" in outputOne:
+            if (
+                "restrict -6 default" in outputTwo and
+                "server" in outputThree and
+                "RUNASUSER=ntp" in outputFour
+            ):
+                self.Compliant("Ensure ntp is configured (Scored)")
+            else:
+                self.NotCompliant("Ensure ntp is configured (Scored)")
+        else:
+            self.Compliant(
+                "Ensure ntp is configured (Scored) + NTP not installed")
+
+    def xwindow_2_2_2(self):
+        cmdOne = r"dpkg -l xserver-xorg*"
+        outputOne = self.caller(cmdOne)
+
+        if "no packages found" in outputOne:
+            self.Compliant("Ensure X Window System is not installed (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure X Window System is not installed (Scored)")
+
+    def avahi_2_2_3(self):
+        cmdOne = r"systemctl is-enabled avahi-daemon"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure Avahi Server is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure Avahi Server is not enabled (Scored)")
+
+    def cups_2_2_4(self):
+        cmdOne = r"systemctl is-enabled cups"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure CUPS is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure CUPS is not enabled (Scored)")
+
+    def dhcp_2_2_5(self):
+        cmdOne = r"systemctl is-enabled isc-dhcp-server"
+        cmdTwo = r"systemctl is-enabled isc-dhcp-server6"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+            "enabled" not in outputOne and
+            "enabled" not in outputTwo
+        ):
+            self.Compliant("Ensure DHCP Server is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure DHCP Server is not enabled (Scored)")
+
+    def ldap_2_2_6(self):
+        cmdOne = r"systemctl is-enabled slapd"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure LDAP server is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure LDAP server is not enabled (Scored)")
+
+    def nfsrpc_2_2_7(self):
+        cmdOne = r"systemctl is-enabled nfs-server"
+        cmdTwo = r"systemctl is-enabled rpcbind"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+            "enabled" not in outputOne and
+            "enabled" not in outputTwo
+        ):
+            self.Compliant("Ensure NFS and RPC are not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure NFS and RPC are not enabled (Scored)")
