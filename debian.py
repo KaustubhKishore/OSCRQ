@@ -45,9 +45,18 @@ class Debian(Helper):
         "aslr_1_6_2",
         "prelink_1_6_3",
         "coredumps_1_6_4",
-        "apparmor_1_7_1_1", # Utils may not be useful. change or to and if imp. later on
-        "apparmorbootloader_1_7_1_2",
-        "apparmorprofiles_1_7_1_3"
+        "apparmor_1_7_1_1",  # Utils may not be useful. change or to and if imp. later on
+        "aabootloader_1_7_1_2",
+        "aaprofiles_1_7_1_3",
+        "aaenforce_1_7_1_4",
+        "motd_1_8_1_1",
+        "locallogin_1_8_1_2",
+        "remotelogin_1_8_1_3",
+        "permmotd_1_8_1_4",
+        "permissue_1_8_1_5",
+        "permissuenet_1_8_1_6",
+        "gdmconfig_1_8_2",
+        "updates_1_9",
     ]
 
     def __init__(self):
@@ -692,8 +701,8 @@ class Debian(Helper):
             self.Compliant("Ensure AppArmor is installed (Scored)")
         else:
             self.NotCompliant("Ensure AppArmor is installed (Scored)")
-    
-    def apparmorbootloader_1_7_1_2(self):
+
+    def aabootloader_1_7_1_2(self):
         cmdOne = r'grep "^\s*linux" /boot/grub/grub.cfg | grep -v "apparmor=1"'
         cmdTwo = r'grep "^\s*linux" /boot/grub/grub.cfg | grep -v "security=apparmor"'
         outputOne = self.caller(cmdOne)
@@ -703,11 +712,13 @@ class Debian(Helper):
             outputOne == "" and
             outputTwo == ""
         ):
-            self.Compliant("Ensure AppArmor is enabled in the bootloader configuration (Scored)")
+            self.Compliant(
+                "Ensure AppArmor is enabled in the bootloader configuration (Scored)")
         else:
-            self.NotCompliant("Ensure AppArmor is enabled in the bootloader configuration (Scored)")
-    
-    def apparmorprofiles_1_7_1_3(self):
+            self.NotCompliant(
+                "Ensure AppArmor is enabled in the bootloader configuration (Scored)")
+
+    def aaprofiles_1_7_1_3(self):
         cmdOne = r"apparmor_status | grep profiles"
         cmdTwo = r"/usr/sbin/apparmor_status | grep profiles"
         cmdThree = r"apparmor_status | grep processes"
@@ -722,6 +733,122 @@ class Debian(Helper):
             ("unconfined" not in outputOne + outputTwo) and
             ("0 processes are unconfined" in outputThree + outputFour)
         ):
-            self.Compliant("Ensure all AppArmor Profiles are in enforce or complain mode (Scored)")
+            self.Compliant(
+                "Ensure all AppArmor Profiles are in enforce or complain mode (Scored)")
         else:
-            self.NotCompliant("Ensure all AppArmor Profiles are in enforce or complain mode (Scored)")
+            self.NotCompliant(
+                "Ensure all AppArmor Profiles are in enforce or complain mode (Scored)")
+
+    def aaenforce_1_7_1_4(self):
+        cmdOne = r"apparmor_status"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "0 profiles are in complain mode" in outputOne and
+            "0 processes are unconfined" in outputOne
+        ):
+            self.Compliant(
+                "Ensure all AppArmor Profiles are enforcing (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure all AppArmor Profiles are enforcing (Scored)")
+
+    def motd_1_8_1_1(self):
+        cmdOne = r"""grep -E -i "(\\\v|\\\r|\\\m|\\\s|$(grep '^ID=' /etc/os-release | cut -d= -f2 | sed -e 's/"//g'))" /etc/motd"""
+        outputOne = self.caller(cmdOne)
+
+        if(outputOne == ""):
+            self.Compliant(
+                "Ensure message of the day is configured properly (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure message of the day is configured properly (Scored)")
+
+    def locallogin_1_8_1_2(self):
+        cmdOne = r"""grep -E -i "(\\\v|\\\r|\\\m|\\\s|$(grep '^ID=' /etc/os-release | cut -d= -f2 | sed -e 's/"//g'))" /etc/issue"""
+        outputOne = self.caller(cmdOne)
+
+        if(outputOne == ""):
+            self.Compliant(
+                "Ensure local login warning banner is configured properly (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure local login warning banner is configured properly (Scored)")
+
+    def remotelogin_1_8_1_3(self):
+        cmdOne = r"""grep -E -i "(\\\v|\\\r|\\\m|\\\s|$(grep '^ID=' /etc/os-release | cut -d= -f2 | sed -e 's/"//g'))" /etc/issue.net"""
+        outputOne = self.caller(cmdOne)
+
+        if(outputOne == ""):
+            self.Compliant(
+                "Ensure remote login warning banner is configured properly (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure remote login warning banner is configured properly (Scored)")
+
+    def permmotd_1_8_1_4(self):
+        cmdOne = r"stat /etc/motd"
+        outputOne = self.caller(cmdOne)
+
+        if "Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne:
+            self.Compliant(
+                "Ensure permissions on /etc/motd are configured (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure permissions on /etc/motd are configured (Scored)")
+
+    def permissue_1_8_1_5(self):
+        cmdOne = r"stat /etc/issue"
+        outputOne = self.caller(cmdOne)
+
+        if(
+           "Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+           ):
+            self.Compliant(
+                "Ensure permissions on /etc/issue are configured (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure permissions on /etc/issue are configured (Scored)")
+
+    def permissuenet_1_8_1_6(self):
+        cmdOne = r"stat /etc/issue.net"
+        outputOne = self.caller(cmdOne)
+
+        if(
+           "Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+           ):
+            self.Compliant(
+                "Ensure permissions on /etc/issue.net are configured (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure permissions on /etc/issue.net are configured (Scored)")
+
+    def gdmconfig_1_8_2(self):
+        cmdOne = r"dpkg -s gdm3 | grep 'install ok installed'"
+        cmdTwo = r"cat /etc/gdm3/greeter.dconf-defaults | grep banner-message-enable=true"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if "install ok installed" in outputOne:
+            if outputTwo[0] != "#":
+                self.Compliant(
+                    "Ensure GDM login banner is configured (Scored)")
+            else:
+                self.NotCompliant(
+                    "Ensure GDM login banner is configured (Scored)")
+        else:
+            self.Compliant(
+                "Ensure GDM login banner is configured (Scored) - GDM Not installed")
+
+    def updates_1_9(self):
+        cmdOne = r"apt -s upgrade"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded" in outputOne
+        ):
+            self.InfoCompliant(
+                "Ensure updates, patches, and additional security software are installed (Not Scored)")
+        else:
+            self.InfoNotCompliant(
+                "Ensure updates, patches, and additional security software are installed (Not Scored)")
