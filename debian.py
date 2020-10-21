@@ -57,6 +57,9 @@ class Debian(Helper):
         "permissuenet_1_8_1_6",
         "gdmconfig_1_8_2",
         "updates_1_9",
+        "xinetd_2_1_1",
+        "openbsdinetd_2_1_2",
+        "timesync_2_2_1_1"
     ]
 
     def __init__(self):
@@ -844,11 +847,45 @@ class Debian(Helper):
         cmdOne = r"apt -s upgrade"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded" in outputOne
-        ):
+        if "0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded" in outputOne:
             self.InfoCompliant(
                 "Ensure updates, patches, and additional security software are installed (Not Scored)")
         else:
             self.InfoNotCompliant(
                 "Ensure updates, patches, and additional security software are installed (Not Scored)")
+
+    def xinetd_2_1_1(self):
+        cmdOne = r"dpkg -s xinetd"
+        outputOne = self.caller(cmdOne)
+
+        if "'xinetd' is not installed" in outputOne:
+            self.Compliant("Ensure xinetd is not installed (Scored)")
+        else:
+            self.NotCompliant("Ensure xinetd is not installed (Scored)")
+
+    def openbsdinetd_2_1_2(self):
+        cmdOne = r"dpkg -s openbsd-inetd"
+        outputOne = self.caller(cmdOne)
+
+        if "'openbsd-inetd' is not installed" in outputOne:
+            self.Compliant("Ensure openbsd-inetd is not installed (Scored)")
+        else:
+            self.NotCompliant("Ensure openbsd-inetd is not installed (Scored)")
+    
+    def timesync_2_2_1_1(self):
+        cmdOne = r"systemctl is-enabled systemd-timesyncd"
+        cmdTwo = r"dpkg -s chrony"
+        cmdThree = r"dpkg -s ntp"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if(
+            "enabled" in outputOne or
+            "install ok installed" in outputTwo or
+            "install ok installed" in outputThree
+        ):
+            self.Compliant(" Ensure time synchronization is in use (Scored)")
+        else:
+            self.NotCompliant(" Ensure time synchronization is in use (Scored)")
+    
