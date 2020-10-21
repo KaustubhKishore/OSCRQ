@@ -68,7 +68,16 @@ class Debian(Helper):
         "cups_2_2_4",
         "dhcp_2_2_5",
         "ldap_2_2_6",
-        "nfsrpc_2_2_7"
+        "nfsrpc_2_2_7",
+        "dns_2_2_8",
+        "ftp_2_2_9",
+        "http_2_2_10",
+        "email_2_2_11",
+        "samba_2_2_12",
+        "httpproxy_2_2_13",
+        "snmp_2_2_14",
+        "mtalocal_2_2_15",
+        "rsync_2_2_16"
     ]
 
     def __init__(self):
@@ -1012,3 +1021,85 @@ class Debian(Helper):
             self.Compliant("Ensure NFS and RPC are not enabled (Scored)")
         else:
             self.NotCompliant("Ensure NFS and RPC are not enabled (Scored)")
+
+    def dns_2_2_8(self):
+        cmdOne = r"systemctl is-enabled bind9"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure DNS Server is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure DNS Server is not enabled (Scored)")
+    
+    def ftp_2_2_9(self):
+        cmdOne = r"systemctl is-enabled vsftpd"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure FTP Server is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure FTP Server is not enabled (Scored)")
+    
+    def http_2_2_10(self):
+        cmdOne = r"systemctl is-enabled apache2"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure HTTP server is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure HTTP server is not enabled (Scored)")
+    
+    def email_2_2_11(self):
+        cmdOne = r"systemctl is-enabled dovecot"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure email services are not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure email services are not enabled (Scored)")
+    
+    def samba_2_2_12(self):
+        cmdOne = r"systemctl is-enabled smbd"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure Samba is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure Samba is not enabled (Scored)")
+    
+    def httpproxy_2_2_13(self):
+        cmdOne = r"systemctl is-enabled squid"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure HTTP Proxy Server is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure HTTP Proxy Server is not enabled (Scored)")
+
+    def snmp_2_2_14(self):
+        cmdOne = r"systemctl is-enabled snmpd"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure SNMP Server is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure SNMP Server is not enabled (Scored)")
+        
+    def mtalocal_2_2_15(self):
+        cmdOne = r"ss -lntu | grep -E ':25\s' | grep -E -v '\s(127.0.0.1|::1):25\s'"
+        outputOne = self.caller(cmdOne)
+
+        if outputOne == "":
+            self.Compliant("Ensure mail transfer agent is configured for local-only mode (Scored)")
+        else:
+            self.NotCompliant("Ensure mail transfer agent is configured for local-only mode (Scored)")
+        
+    def rsync_2_2_16(self):
+        cmdOne = r"systemctl is-enabled rsync"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure rsync service is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure rsync service is not enabled (Scored)")
+    
