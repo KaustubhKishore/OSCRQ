@@ -77,7 +77,15 @@ class Debian(Helper):
         "httpproxy_2_2_13",
         "snmp_2_2_14",
         "mtalocal_2_2_15",
-        "rsync_2_2_16"
+        "rsync_2_2_16",
+        "nis_2_2_17",
+        "nisclient_2_3_1",
+        "rshclient_2_3_2",
+        "talkclient_2_3_3",
+        "telnetclient_2_3_4",
+        "ldaputils_2_3_5",
+        "ipvsix_3_1_1",
+        "wireless_3_1_2"
     ]
 
     def __init__(self):
@@ -1103,3 +1111,83 @@ class Debian(Helper):
         else:
             self.NotCompliant("Ensure rsync service is not enabled (Scored)")
     
+    def nis_2_2_17(self):
+        cmdOne = r"systemctl is-enabled nis"
+        outputOne = self.caller(cmdOne)
+
+        if "enabled" not in outputOne:
+            self.Compliant("Ensure NIS Server is not enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure NIS Server is not enabled (Scored)")
+    
+    def nisclient_2_3_1(self):
+        cmdOne = r"dpkg -s nis"
+        outputOne = self.caller(cmdOne)
+
+        if "is not installed" in outputOne:
+            self.Compliant("Ensure NIS Client is not installed (Scored)")
+        else:
+            self.NotCompliant("Ensure NIS Client is not installed (Scored)")
+    
+    def rshclient_2_3_2(self):
+        cmdOne = r"dpkg -s rsh-client"
+        outputOne = self.caller(cmdOne)
+
+        if "is not installed" in outputOne:
+            self.Compliant("Ensure rsh client is not installed (Scored)")
+        else:
+            self.NotCompliant("Ensure rsh client is not installed (Scored)")
+    
+    def talkclient_2_3_3(self):
+        cmdOne = r"dpkg -s talk"
+        outputOne = self.caller(cmdOne)
+
+        if "is not installed" in outputOne:
+            self.Compliant("Ensure talk client is not installed (Scored)")
+        else:
+            self.NotCompliant("Ensure talk client is not installed (Scored)")
+    
+    def telnetclient_2_3_4(self):
+        cmdOne = r"dpkg -s telnet"
+        outputOne = self.caller(cmdOne)
+
+        if "is not installed" in outputOne:
+            self.Compliant("Ensure telnet client is not installed (Scored)")
+        else:
+            self.NotCompliant("Ensure telnet client is not installed (Scored)")
+    
+    def ldaputils_2_3_5(self):
+        cmdOne = r"dpkg -s ldap-utils"
+        outputOne = self.caller(cmdOne)
+
+        if "is not installed" in outputOne:
+            self.Compliant("Ensure LDAP client is not installed (Scored)")
+        else:
+            self.NotCompliant("Ensure LDAP client is not installed (Scored)")
+    
+    def ipvsix_3_1_1(self):
+        cmdOne = r"""grep "^\s*linux" /boot/grub/grub.cfg | grep -v "ipv6.disable=1" """
+        outputOne = self.caller(cmdOne)
+
+        if outputOne == "":
+            self.InfoCompliant("Disable IPv6 (Not Scored)")
+        else:
+            self.InfoNotCompliant("Disable IPv6 (Not Scored)")
+    
+    def wireless_3_1_2(self):
+        cmdOne = r"nmcli radio all"
+        outputOne = self.caller(cmdOne)
+
+        temp = outputOne.find("\n")
+        temp = outputOne[temp:].split()
+
+        testOne = temp[1]
+        testTwo = temp[3]
+
+        if(
+            "disabled" in testOne and
+            "disabled" in testTwo
+        ):
+            self.Compliant("Ensure wireless interfaces are disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure wireless interfaces are disabled (Scored)")
