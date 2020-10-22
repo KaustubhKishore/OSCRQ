@@ -93,7 +93,15 @@ class Debian(Helper):
         "secureicmp_3_3_3",
         "suspackets_3_3_4",
         "broadicmp_3_3_5",
-        "bogusicmp_3_3_6"
+        "bogusicmp_3_3_6",
+        "rpfilter_3_3_7",
+        "tcpsyn_3_3_8",
+        "ipv6router_3_3_9",
+        "dccp_3_4_1",
+        "sctp_3_4_2",
+        "rds_3_4_3",
+        "tipc_3_4_4",
+        "firewall_3_5_1_1"
     ]
 
     def __init__(self):
@@ -1568,4 +1576,240 @@ class Debian(Helper):
                 "Ensure broadcast ICMP requests are ignored (Scored)")
     
     def bogusicmp_3_3_6(self):
-        pass
+        cmdOne = r"sysctl net.ipv4.icmp_ignore_bogus_error_responses"
+        cmdTwo = r"/usr/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses"
+
+        cmdThree = r"""grep "net.ipv4.icmp_ignore_bogus_error_responses" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if(
+            (
+            "net.ipv4.icmp_ignore_bogus_error_responses = 1" in outputOne or
+            "net.ipv4.icmp_ignore_bogus_error_responses = 1" in outputTwo 
+            ) and
+            (
+                "net.ipv4.icmp_ignore_bogus_error_responses = 1" in outputThree and 
+                "#" not in outputThree
+            )
+        ):
+            self.Compliant("Ensure bogus ICMP responses are ignored (Scored)")
+        else:
+            self.NotCompliant("Ensure bogus ICMP responses are ignored (Scored)")
+
+    def rpfilter_3_3_7(self):
+        cmdOne = r"sysctl net.ipv4.conf.all.rp_filter"
+        cmdTwo = r"/usr/sbin/sysctl net.ipv4.conf.all.rp_filter"
+
+        cmdThree = r"sysctl net.ipv4.conf.default.rp_filter"
+        cmdFour = r"/usr/sbin/sysctl net.ipv4.conf.default.rp_filter"
+
+        cmdFive = r"""grep "net\.ipv4\.conf\.all\.rp_filter" /etc/sysctl.conf /etc/sysctl.d/*"""
+        cmdSix = r"""grep "net\.ipv4\.conf\.default\.rp_filter" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
+        outputFive = self.caller(cmdFive)
+        outputSix = self.caller(cmdSix)
+
+        if(
+            (
+                "net.ipv4.conf.all.rp_filter = 1" in outputOne and
+                "net.ipv4.conf.all.rp_filter = 1" in outputTwo
+            ) and
+            (
+                "net.ipv4.conf.default.rp_filter = 1" in outputThree and
+                "net.ipv4.conf.default.rp_filter = 1" in outputFour
+            ) and
+            (
+                "net.ipv4.conf.all.rp_filter = 1" in outputFive and
+                "#" not in outputFive
+            ) and
+            (
+                "net.ipv4.conf.default.rp_filter = 1" in outputSix and
+                "#" not in outputSix
+            )
+        ):
+            self.Compliant("Ensure Reverse Path Filtering is enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure Reverse Path Filtering is enabled (Scored)")
+
+    def tcpsyn_3_3_8(self):
+        cmdOne = r"sysctl net.ipv4.tcp_syncookies"
+        cmdTwo = r"/usr/sbin/sysctl net.ipv4.tcp_syncookies"
+        cmdThree = r"""grep "net\.ipv4\.tcp_syncookies" /etc/sysctl.conf /etc/sysctl.d/*"""
+        
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if(
+            (
+                "net.ipv4.tcp_syncookies = 1" in outputOne or
+                "net.ipv4.tcp_syncookies = 1" in outputTwo
+            ) and
+            (
+                "net.ipv4.tcp_syncookies = 1" in outputThree and
+                "#" not in outputThree
+            )
+        ):
+            self.Compliant("Ensure TCP SYN Cookies is enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure TCP SYN Cookies is enabled (Scored)")
+    
+    def ipv6router_3_3_9(self):
+        cmdOne = r"""grep "^\s*linux" /boot/grub/grub.cfg | grep -v "ipv6.disable=1" """
+        outputOne = self.caller(cmdOne)
+
+        if outputOne == "":
+            self.Compliant("Ensure IPv6 router advertisements are not accepted (Scored) + IPv6 Disabled")
+        else:
+            cmdTwo = r"sysctl net.ipv6.conf.all.accept_ra"
+            cmdThree = r"/usr/sbin/sysctl net.ipv6.conf.all.accept_ra"
+            
+            cmdFour = r"sysctl net.ipv6.conf.default.accept_ra"
+            cmdFive = r"/usr/sbin/sysctl net.ipv6.conf.default.accept_ra"
+            
+            cmdSix = r"""grep "net\.ipv6\.conf\.all\.accept_ra" /etc/sysctl.conf /etc/sysctl.d/*"""
+            cmdSeven = r"""grep "net\.ipv6\.conf\.default\.accept_ra" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+            outputTwo = self.caller(cmdTwo)
+            outputThree = self.caller(cmdThree)
+            outputFour = self.caller(cmdFour)
+            outputFive = self.caller(cmdFive)
+            outputSix = self.caller(cmdSix)
+            outputSeven = self.caller(cmdSeven)
+
+            if(
+                (
+                    "net.ipv6.conf.all.accept_ra = 0" in outputTwo or
+                    "net.ipv6.conf.all.accept_ra = 0" in outputThree   
+                ) and
+                (
+                    "net.ipv6.conf.default.accept_ra = 0" in outputFour or
+                    "net.ipv6.conf.default.accept_ra = 0" in outputFive
+                ) and
+                (
+                    "net.ipv6.conf.all.accept_ra = 0" in outputSix and
+                    "#" not in outputSix
+                ) and
+                (
+                    "net.ipv6.conf.default.accept_ra = 0" in outputSeven and
+                    "#" not in outputSeven
+                )
+            ):
+                self.Compliant("Ensure IPv6 router advertisements are not accepted (Scored)")
+            else:
+                self.NotCompliant(" Ensure IPv6 router advertisements are not accepted (Scored)")
+        
+    def dccp_3_4_1(self):
+        cmdOne = r"modprobe -n -v dccp"
+        cmdTwo = r"/usr/sbin/modprobe -n -v dccp"
+
+        cmdThree = r"lsmod | grep dccp"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if(
+            (
+                "install /bin/true" in outputOne or
+                "install /bin/true" in outputTwo
+            ) and
+            (
+                outputThree == ""
+            )
+        ):
+            self.Compliant("Ensure DCCP is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure DCCP is disabled (Scored)")
+    
+    def sctp_3_4_2(self):
+        cmdOne = r"modprobe -n -v sctp | grep -E '(sctp|install)'"
+        cmdTwo = r"/usr/sbin/modprobe -n -v sctp | grep -E '(sctp|install)'"
+        cmdThree = r"lsmod | grep sctp"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if(
+            (
+            "install /bin/true" in outputOne or
+            "install /bin/true" in outputTwo
+            ) and
+            (
+                outputThree == ""
+            )
+        ):
+            self.Compliant("Ensure SCTP is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure SCTP is disabled (Scored)")
+    
+    def rds_3_4_3(self):
+        cmdOne = r"modprobe -n -v rds"
+        cmdTwo = r"/usr/sbin/modprobe -n -v rds"
+        cmdThree = r"lsmod | grep rds"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        if(
+            (
+                "install /bin/true" in outputOne or
+                "install /bin/true" in outputTwo   
+            ) and
+            (
+                outputThree == ""
+            )
+        ):
+            self.Compliant("Ensure RDS is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure RDS is disabled (Scored)")
+
+    def tipc_3_4_4(self):
+        cmdOne = r"modprobe -n -v tipc | grep -E '(tipc|install)'"
+        cmdTwo = r"/usr/sbin/modprobe -n -v tipc | grep -E '(tipc|install)'"
+        cmdThree = r" lsmod | grep tipc"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if(
+            (
+                "install /bin/true" in outputOne or
+                "install /bin/true" in outputTwo
+            ) and
+            (
+                outputThree == ""
+            )
+        ):
+            self.Compliant("Ensure TIPC is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure TIPC is disabled (Scored)")
+
+    def firewall_3_5_1_1(self):
+        cmdOne = r"dpkg -s ufw | grep -i status"
+        cmdTwo = r"dpkg -s nftables | grep -i status"
+        cmdThree = r"dpkg -s iptables | grep -i status"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if(
+            "install ok installed" in outputOne or
+            "install ok installed" in outputTwo or
+            "install ok installed" in outputThree
+        ):
+            self.Compliant("Ensure a Firewall package is installed (Scored)")
+        else:
+            self.NotCompliant("Ensure a Firewall package is installed (Scored)")
+
+    
