@@ -87,7 +87,13 @@ class Debian(Helper):
         "ipvsix_3_1_1",
         "wireless_3_1_2",
         "packetredir_3_2_1",
-        "ipforward_3_2_2"
+        "ipforward_3_2_2",
+        "srpackets_3_3_1",
+        "icmp_3_3_2",
+        "secureicmp_3_3_3",
+        "suspackets_3_3_4",
+        "broadicmp_3_3_5",
+        "bogusicmp_3_3_6"
     ]
 
     def __init__(self):
@@ -1284,3 +1290,282 @@ class Debian(Helper):
                 self.Compliant("Ensure IP forwarding is disabled (Scored)")
         else:
             self.NotCompliant("Ensure IP forwarding is disabled (Scored)")
+
+    def srpackets_3_3_1(self):
+        cmdOne = r"sysctl net.ipv4.conf.all.accept_source_route"
+        cmdTwo = r"/usr/sbin/sysctl net.ipv4.conf.all.accept_source_route"
+
+        cmdThree = r"sysctl net.ipv4.conf.default.accept_source_route"
+        cmdFour = r"/usr/sbin/sysctl net.ipv4.conf.default.accept_source_route"
+
+        cmdFive = r"""grep "net\.ipv4\.conf\.all\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d/*"""
+        cmdSix = r"""grep "net\.ipv4\.conf\.default\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
+        outputFive = self.caller(cmdFive)
+        outputSix = self.caller(cmdSix)
+
+        if (
+            (
+                "net.ipv4.conf.all.accept_source_route = 0" in outputOne or
+                "net.ipv4.conf.all.accept_source_route = 0" in outputTwo
+
+            ) and
+            (
+                "net.ipv4.conf.default.accept_source_route = 0" in outputThree or
+                "net.ipv4.conf.default.accept_source_route = 0" in outputFour
+            ) and
+            (
+                "net.ipv4.conf.all.accept_source_route= 0" in outputFive and
+                "#" not in outputFive
+            ) and
+            (
+                "net.ipv4.conf.default.accept_source_route= 0" in outputSix and
+                "#" not in outputSix
+            )
+        ):
+            cmdSeven = r"""grep "^\s*linux" /boot/grub/grub.cfg | grep -v "ipv6.disable=1" """
+            outputSeven = self.caller(cmdSeven)
+
+            if outputSeven != "":
+                cmdEight = r"sysctl net.ipv6.conf.all.accept_source_route"
+                cmdNine = r"/usr/sbin/sysctl net.ipv6.conf.all.accept_source_route"
+
+                cmdTen = r"sysctl net.ipv6.conf.default.accept_source_route"
+                cmdEleven = r"/usr/sbin/sysctl net.ipv6.conf.default.accept_source_route"
+
+                cmdTwelve = r"""grep "net\.ipv6\.conf\.all\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d/*"""
+                cmdThirteen = r"""grep "net\.ipv6\.conf\.default\.accept_source_route" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+                outputEight = self.caller(cmdEight)
+                outputNine = self.caller(cmdNine)
+                outputTen = self.caller(cmdTen)
+                outputEleven = self.caller(cmdEleven)
+                outputTwelve = self.caller(cmdTwelve)
+                outputThirteen = self.caller(cmdThirteen)
+
+                if (
+                    (
+                        "net.ipv6.conf.all.accept_source_route = 0" in outputEight or
+                        "net.ipv6.conf.all.accept_source_route = 0" in outputNine
+                    ) and
+                    (
+                        "net.ipv6.conf.default.accept_source_route = 0" in outputTen or
+                        "net.ipv6.conf.default.accept_source_route = 0" in outputEleven
+                    ) and
+                    (
+                        "net.ipv4.conf.all.accept_source_route = 0" in outputTwelve and
+                        "#" not in outputTwelve
+                    ) and
+                    (
+                        "net.ipv6.conf.default.accept_source_route = 0" in outputThirteen and
+                        "#" not in outputTwelve
+                    )
+                ):
+                    self.Compliant(
+                        "Ensure source routed packets are not accepted (Scored)")
+                else:
+                    self.NotCompliant(
+                        "Ensure source routed packets are not accepted (Scored)")
+            else:
+                self.Compliant(
+                    "Ensure source routed packets are not accepted (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure source routed packets are not accepted (Scored)")
+
+    def icmp_3_3_2(self):
+        cmdOne = r"sysctl net.ipv4.conf.all.accept_redirects"
+        cmdTwo = r"/usr/sbin/sysctl net.ipv4.conf.all.accept_redirects"
+
+        cmdThree = r"sysctl net.ipv4.conf.default.accept_redirects"
+        cmdFour = r"/usr/sbin/sysctl net.ipv4.conf.default.accept_redirects"
+
+        cmdFive = r"""grep "net\.ipv4\.conf\.all\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d/*"""
+        cmdSix = r"""grep "net\.ipv4\.conf\.default\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
+        outputFive = self.caller(cmdFive)
+        outputSix = self.caller(cmdSix)
+
+        if (
+            (
+                "net.ipv4.conf.all.accept_redirects = 0" in outputOne or
+                "net.ipv4.conf.all.accept_redirects = 0" in outputTwo
+            ) and
+            (
+                "net.ipv4.conf.default.accept_redirects = 0" in outputThree or
+                "net.ipv4.conf.default.accept_redirects = 0" in outputFour
+            ) and
+            (
+                "net.ipv4.conf.all.accept_redirects = 0" in outputFive and
+                "#" not in outputFive
+            ) and
+            (
+                "net.ipv4.conf.default.accept_redirects = 0" in outputSix and
+                "#" not in outputSix
+            )
+        ):
+            cmdSeven = r"""grep "^\s*linux" /boot/grub/grub.cfg | grep -v "ipv6.disable=1" """
+            outputSeven = self.caller(cmdSeven)
+
+            if outputSeven != "":
+                cmdEight = r"sysctl net.ipv6.conf.all.accept_redirects"
+                cmdNine = r"/usr/sbin/sysctl net.ipv6.conf.all.accept_redirects"
+
+                cmdTen = r"sysctl net.ipv6.conf.default.accept_redirects"
+                cmdEleven = r"/usr/sbin/sysctl net.ipv6.conf.default.accept_redirects"
+
+                cmdTwelve = r"""grep "net\.ipv6\.conf\.all\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d/*"""
+                cmdThirteen = r"""grep "net\.ipv6\.conf\.default\.accept_redirects" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+                outputEight = self.caller(cmdEight)
+                outputNine = self.caller(cmdNine)
+                outputTen = self.caller(cmdTen)
+                outputEleven = self.caller(cmdEleven)
+                outputTwelve = self.caller(cmdTwelve)
+                outputThirteen = self.caller(cmdThirteen)
+
+                if (
+                    (
+                        "net.ipv6.conf.all.accept_redirects = 0" in outputEight or
+                        "net.ipv6.conf.all.accept_redirects = 0" in outputNine
+                    ) and
+                    (
+                        "net.ipv6.conf.default.accept_redirects = 0" in outputTen or
+                        "net.ipv6.conf.default.accept_redirects = 0" in outputEleven
+                    ) and
+                    (
+                        "net.ipv6.conf.all.accept_redirects = 0" in outputTwelve and
+                        "#" not in outputTwelve
+                    ) and
+                    (
+                        "net.ipv6.conf.default.accept_redirects = 0" in outputThirteen and
+                        "#" not in outputThirteen
+                    )
+                ):
+                    self.Compliant(
+                        "Ensure ICMP redirects are not accepted (Scored)")
+                else:
+                    self.NotCompliant(
+                        "Ensure ICMP redirects are not accepted (Scored)")
+
+            else:
+                self.Compliant(
+                    "Ensure ICMP redirects are not accepted (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure ICMP redirects are not accepted (Scored)")
+
+    def secureicmp_3_3_3(self):
+        cmdOne = r"sysctl net.ipv4.conf.all.secure_redirects"
+        cmdTwo = r"/usr/sbin/sysctl net.ipv4.conf.all.secure_redirects"
+
+        cmdThree = r"sysctl net.ipv4.conf.default.secure_redirects"
+        cmdFour = r"/usr/sbin/sysctl net.ipv4.conf.default.secure_redirects"
+
+        cmdFive = r"""grep "net\.ipv4\.conf\.all\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d/*"""
+        cmdSix = r"""grep "net\.ipv4\.conf\.default\.secure_redirects" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
+        outputFive = self.caller(cmdFive)
+        outputSix = self.caller(cmdSix)
+
+        if(
+            (
+                "net.ipv4.conf.all.secure_redirects = 0" in outputOne or
+                "net.ipv4.conf.all.secure_redirects = 0" in outputTwo
+            ) and
+            (
+                "net.ipv4.conf.default.secure_redirects = 0" in outputThree or
+                "net.ipv4.conf.default.secure_redirects = 0" in outputFour
+            ) and
+            (
+                "net.ipv4.conf.all.secure_redirects = 0" in outputFive
+            ) and
+            (
+                "net.ipv4.conf.default.secure_redirects = 0" in outputSix
+            )
+        ):
+            self.Compliant(
+                "Ensure secure ICMP redirects are not accepted (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure secure ICMP redirects are not accepted (Scored)")
+
+    def suspackets_3_3_4(self):
+        cmdOne = r"sysctl net.ipv4.conf.all.log_martians"
+        cmdTwo = r"/usr/sbin/sysctl net.ipv4.conf.all.log_martians"
+
+        cmdThree = r"sysctl net.ipv4.conf.default.log_martians"
+        cmdFour = r"/usr/sbin/sysctl net.ipv4.conf.default.log_martians"
+
+        cmdFive = r"""grep "net\.ipv4\.conf\.all\.log_martians" /etc/sysctl.conf /etc/sysctl.d/*"""
+        cmdSix = r"""grep "net\.ipv4\.conf\.default\.log_martians" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
+        outputFive = self.caller(cmdFive)
+        outputSix = self.caller(cmdSix)
+
+        if(
+            (
+                "net.ipv4.conf.all.log_martians = 1" in outputOne or
+                "net.ipv4.conf.all.log_martians = 1" in outputTwo
+            ) and
+            (
+                "net.ipv4.conf.default.log_martians = 1" in outputThree or
+                "net.ipv4.conf.default.log_martians = 1" in outputFour
+            ) and
+            (
+                "net.ipv4.conf.all.log_martians = 1" in outputFive and
+                "#" not in outputFive
+            ) and
+            (
+                "net.ipv4.conf.default.log_martians = 1" in outputSix and
+                "#" not in outputSix
+            )
+        ):
+            self.Compliant("Ensure suspicious packets are logged (Scored)")
+        else:
+            self.NotCompliant("Ensure suspicious packets are logged (Scored)")
+
+    def broadicmp_3_3_5(self):
+        cmdOne = r"sysctl net.ipv4.icmp_echo_ignore_broadcasts"
+        cmdTwo = r"/usr/sbin/sysctl net.ipv4.icmp_echo_ignore_broadcasts"
+
+        cmdThree = r"""grep "net\.ipv4\.icmp_echo_ignore_broadcasts" /etc/sysctl.conf /etc/sysctl.d/*"""
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if(
+            (
+                "net.ipv4.icmp_echo_ignore_broadcasts = 1" in outputOne or
+                "net.ipv4.icmp_echo_ignore_broadcasts = 1" in outputTwo
+            ) and
+            (
+                "net.ipv4.icmp_echo_ignore_broadcasts = 1" in outputThree and
+                "#" not in outputThree
+            )
+        ):
+            self.Compliant(
+                "Ensure broadcast ICMP requests are ignored (Scored)")
+        else:
+            self.NotCompliant(
+                "Ensure broadcast ICMP requests are ignored (Scored)")
+    
+    def bogusicmp_3_3_6(self):
+        pass
