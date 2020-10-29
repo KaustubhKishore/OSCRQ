@@ -1200,15 +1200,20 @@ class Debian(Helper):
         temp = outputOne.find("\n")
         temp = outputOne[temp:].split()
 
-        testOne = temp[1]
-        testTwo = temp[3]
+        try:
+            testOne = temp[1]
+            testTwo = temp[3]
 
-        if(
-            "disabled" in testOne and
-            "disabled" in testTwo
-        ):
-            self.Compliant("Ensure wireless interfaces are disabled (Scored)")
-        else:
+            if(
+                "disabled" in testOne and
+                "disabled" in testTwo
+            ):
+                self.Compliant(
+                    "Ensure wireless interfaces are disabled (Scored)")
+            else:
+                self.NotCompliant(
+                    "Ensure wireless interfaces are disabled (Scored)")
+        except:
             self.NotCompliant(
                 "Ensure wireless interfaces are disabled (Scored)")
 
@@ -1574,7 +1579,7 @@ class Debian(Helper):
         else:
             self.NotCompliant(
                 "Ensure broadcast ICMP requests are ignored (Scored)")
-    
+
     def bogusicmp_3_3_6(self):
         cmdOne = r"sysctl net.ipv4.icmp_ignore_bogus_error_responses"
         cmdTwo = r"/usr/sbin/sysctl net.ipv4.icmp_ignore_bogus_error_responses"
@@ -1587,17 +1592,18 @@ class Debian(Helper):
 
         if(
             (
-            "net.ipv4.icmp_ignore_bogus_error_responses = 1" in outputOne or
-            "net.ipv4.icmp_ignore_bogus_error_responses = 1" in outputTwo 
+                "net.ipv4.icmp_ignore_bogus_error_responses = 1" in outputOne or
+                "net.ipv4.icmp_ignore_bogus_error_responses = 1" in outputTwo
             ) and
             (
-                "net.ipv4.icmp_ignore_bogus_error_responses = 1" in outputThree and 
+                "net.ipv4.icmp_ignore_bogus_error_responses = 1" in outputThree and
                 "#" not in outputThree
             )
         ):
             self.Compliant("Ensure bogus ICMP responses are ignored (Scored)")
         else:
-            self.NotCompliant("Ensure bogus ICMP responses are ignored (Scored)")
+            self.NotCompliant(
+                "Ensure bogus ICMP responses are ignored (Scored)")
 
     def rpfilter_3_3_7(self):
         cmdOne = r"sysctl net.ipv4.conf.all.rp_filter"
@@ -1636,13 +1642,14 @@ class Debian(Helper):
         ):
             self.Compliant("Ensure Reverse Path Filtering is enabled (Scored)")
         else:
-            self.NotCompliant("Ensure Reverse Path Filtering is enabled (Scored)")
+            self.NotCompliant(
+                "Ensure Reverse Path Filtering is enabled (Scored)")
 
     def tcpsyn_3_3_8(self):
         cmdOne = r"sysctl net.ipv4.tcp_syncookies"
         cmdTwo = r"/usr/sbin/sysctl net.ipv4.tcp_syncookies"
         cmdThree = r"""grep "net\.ipv4\.tcp_syncookies" /etc/sysctl.conf /etc/sysctl.d/*"""
-        
+
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
         outputThree = self.caller(cmdThree)
@@ -1660,20 +1667,21 @@ class Debian(Helper):
             self.Compliant("Ensure TCP SYN Cookies is enabled (Scored)")
         else:
             self.NotCompliant("Ensure TCP SYN Cookies is enabled (Scored)")
-    
+
     def ipv6router_3_3_9(self):
         cmdOne = r"""grep "^\s*linux" /boot/grub/grub.cfg | grep -v "ipv6.disable=1" """
         outputOne = self.caller(cmdOne)
 
         if outputOne == "":
-            self.Compliant("Ensure IPv6 router advertisements are not accepted (Scored) + IPv6 Disabled")
+            self.Compliant(
+                "Ensure IPv6 router advertisements are not accepted (Scored) + IPv6 Disabled")
         else:
             cmdTwo = r"sysctl net.ipv6.conf.all.accept_ra"
             cmdThree = r"/usr/sbin/sysctl net.ipv6.conf.all.accept_ra"
-            
+
             cmdFour = r"sysctl net.ipv6.conf.default.accept_ra"
             cmdFive = r"/usr/sbin/sysctl net.ipv6.conf.default.accept_ra"
-            
+
             cmdSix = r"""grep "net\.ipv6\.conf\.all\.accept_ra" /etc/sysctl.conf /etc/sysctl.d/*"""
             cmdSeven = r"""grep "net\.ipv6\.conf\.default\.accept_ra" /etc/sysctl.conf /etc/sysctl.d/*"""
 
@@ -1687,7 +1695,7 @@ class Debian(Helper):
             if(
                 (
                     "net.ipv6.conf.all.accept_ra = 0" in outputTwo or
-                    "net.ipv6.conf.all.accept_ra = 0" in outputThree   
+                    "net.ipv6.conf.all.accept_ra = 0" in outputThree
                 ) and
                 (
                     "net.ipv6.conf.default.accept_ra = 0" in outputFour or
@@ -1702,10 +1710,12 @@ class Debian(Helper):
                     "#" not in outputSeven
                 )
             ):
-                self.Compliant("Ensure IPv6 router advertisements are not accepted (Scored)")
+                self.Compliant(
+                    "Ensure IPv6 router advertisements are not accepted (Scored)")
             else:
-                self.NotCompliant(" Ensure IPv6 router advertisements are not accepted (Scored)")
-        
+                self.NotCompliant(
+                    " Ensure IPv6 router advertisements are not accepted (Scored)")
+
     def dccp_3_4_1(self):
         cmdOne = r"modprobe -n -v dccp"
         cmdTwo = r"/usr/sbin/modprobe -n -v dccp"
@@ -1728,7 +1738,7 @@ class Debian(Helper):
             self.Compliant("Ensure DCCP is disabled (Scored)")
         else:
             self.NotCompliant("Ensure DCCP is disabled (Scored)")
-    
+
     def sctp_3_4_2(self):
         cmdOne = r"modprobe -n -v sctp | grep -E '(sctp|install)'"
         cmdTwo = r"/usr/sbin/modprobe -n -v sctp | grep -E '(sctp|install)'"
@@ -1740,8 +1750,8 @@ class Debian(Helper):
 
         if(
             (
-            "install /bin/true" in outputOne or
-            "install /bin/true" in outputTwo
+                "install /bin/true" in outputOne or
+                "install /bin/true" in outputTwo
             ) and
             (
                 outputThree == ""
@@ -1750,7 +1760,7 @@ class Debian(Helper):
             self.Compliant("Ensure SCTP is disabled (Scored)")
         else:
             self.NotCompliant("Ensure SCTP is disabled (Scored)")
-    
+
     def rds_3_4_3(self):
         cmdOne = r"modprobe -n -v rds"
         cmdTwo = r"/usr/sbin/modprobe -n -v rds"
@@ -1762,7 +1772,7 @@ class Debian(Helper):
         if(
             (
                 "install /bin/true" in outputOne or
-                "install /bin/true" in outputTwo   
+                "install /bin/true" in outputTwo
             ) and
             (
                 outputThree == ""
@@ -1810,6 +1820,5 @@ class Debian(Helper):
         ):
             self.Compliant("Ensure a Firewall package is installed (Scored)")
         else:
-            self.NotCompliant("Ensure a Firewall package is installed (Scored)")
-
-    
+            self.NotCompliant(
+                "Ensure a Firewall package is installed (Scored)")
