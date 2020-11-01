@@ -101,7 +101,9 @@ class Debian(Helper):
         "sctp_3_4_2",
         "rds_3_4_3",
         "tipc_3_4_4",
-        "firewall_3_5_1_1"
+        "firewall_3_5_1_1",
+        "ufwservice_3_5_2_1",
+        ""
     ]
 
     def __init__(self):
@@ -1822,3 +1824,20 @@ class Debian(Helper):
         else:
             self.NotCompliant(
                 "Ensure a Firewall package is installed (Scored)")
+
+    def ufwservice_3_5_2_1(self):
+        cmdOne = r"systemctl is-enabled ufw"
+        cmdTwo = r"ufw status | grep Status"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+            "enabled" in outputOne and
+            "active" in outputTwo
+        ):
+            self.Compliant("Ensure ufw service is enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure ufw service is enabled (Scored)")
+
+
