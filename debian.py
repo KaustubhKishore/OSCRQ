@@ -105,12 +105,16 @@ class Debian(Helper):
         "ufwservice_3_5_2_1",
         "ufwdeny_3_5_2_2",
         "ufwloopback_3_5_2_3",
-        "ufwoutbound_3_5_2_4",
+        "ufwoutbound_3_5_2_4",  # Skip 3.5.2.5, Manual pref.
         "confnf_3_5_3",  # Skip nftables. Manual pref.
         "nfloop_3_5_3_4",
         "nfdeny_3_5_3_6",
         "nfservice_3_5_3_7",
-        "nfrules_3_5_3_8", # Need an awk workaround
+        "nfrules_3_5_3_8",
+        "ipdeny_3_5_4_1_1",
+        "iploop_3_5_4_1_2",
+        "ipoutb_3_5_4_1_3",  # Skip 3_5_4_1_4
+
     ]
 
     def __init__(self):
@@ -1882,9 +1886,6 @@ class Debian(Helper):
             self.Compliant("Ensure default deny firewall policy (Scored)")
         else:
             self.NotCompliant("Ensure default deny firewall policy (Scored)")
-    
-
-
 
     def ufwloopback_3_5_2_3(self):
         cmdOne = r"sudo /usr/sbin/ufw status verbose"
@@ -1931,10 +1932,10 @@ class Debian(Helper):
             "command not found" in outputOne
         ):
             print(
-                "verify all rules for new outbound connections match site policy:\n" + outputTwo)
+                "Verify all rules for new outbound connections match site policy:\n" + outputTwo)
         else:
             print(
-                "verify all rules for new outbound connections match site policy:\n" + outputOne)
+                "Verify all rules for new outbound connections match site policy:\n" + outputOne)
 
     def confnf_3_5_3(self):
         print("(Skipped) - Configure nftables")
@@ -2036,4 +2037,64 @@ class Debian(Helper):
             self.Compliant("Ensure nftables rules are permanent (Scored)")
         else:
             self.NotCompliant("Ensure nftables rules are permanent (Scored)")
-    
+
+    def ipdeny_3_5_4_1_1(self):
+        cmdOne = r"iptables -L"
+        cmdTwo = r"/usr/sbin/iptables -L"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+            (
+                "Chain INPUT (policy DROP)" in outputOne and
+                "Chain FORWARD (policy DROP)" in outputOne and
+                "Chain OUTPUT (policy DROP)" in outputOne
+            ) or
+            (
+                "Chain INPUT (policy DROP)" in outputTwo and
+                "Chain FORWARD (policy DROP)" in outputTwo and
+                "Chain OUTPUT (policy DROP)" in outputTwo
+            )
+        ):
+            self.Compliant("Ensure default deny firewall policy (Scored)")
+        else:
+            self.NotCompliant("Ensure default deny firewall policy (Scored)")
+
+    def iploop_3_5_4_1_2(self):
+        cmdOne = r"iptables -L INPUT -v -n"
+        cmdTwo = r"/usr/sbin/iptables -L INPUT -v -n"
+
+        cmdThree = r"iptables -L OUTPUT -v -n"
+        cmdFour = r"/usr/sbin/iptables -L OUTPUT -v -n"
+
+        outputOne = self.caller(cmdOne) + " " + self.caller(cmdTwo)
+        outputTwo = self.caller(cmdThree) + " " + self.caller(cmdFour)
+
+        if(
+            (
+                "ACCEPT     all  --  lo     *       0.0.0.0/0            0.0.0.0/0" in outputOne and
+                "DROP       all  --  *      *       127.0.0.0/8          0.0.0.0/0" in outputOne
+            ) and
+            (
+                "ACCEPT     all  --  *      lo      0.0.0.0/0            0.0.0.0/0" in outputTwo
+            )
+        ):
+            self.Compliant("Ensure loopback traffic is configured (Scored)")
+        else:
+            self.NotCompliant("Ensure loopback traffic is configured (Scored)")
+
+    def ipoutb_3_5_4_1_3(self):
+        cmdOne = r"iptables -L -v -n"
+        cmdTwo = r"/usr/sbin/iptables -L -v -n"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        self.InfoNotSure(
+            "Ensure outbound and established connections are configured (Not Scored)")
+        print("Verify all rules for new outbound, and established connections match site policy:")
+        if("command not found" in outputOne):
+            print(outputTwo)
+        else:
+            print(outputOne)
