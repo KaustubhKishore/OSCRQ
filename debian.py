@@ -2086,17 +2086,20 @@ class Debian(Helper):
             self.NotCompliant("Ensure loopback traffic is configured (Scored)")
 
     def ipoutb_3_5_4_1_3(self):
-        # cmdOne = r"iptables -L -v -n"
+        cmdOne = r"iptables -L -v -n"
         cmdTwo = r"/usr/sbin/iptables -L -v -n"
 
-        # outputOne = self.caller(cmdOne)
+        outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
 
         self.InfoNotSure(
             "Ensure outbound and established connections are configured (Not Scored)")
         print("Verify all rules for new outbound, and established connections match site policy:")
         print(outputTwo)
-        # if("command not found" in outputOne):
-            # print(outputTwo)
-        # else:
-            # print(outputOne)
+        if(
+            "command not found" in outputOne or
+            "failed" in outputOne
+        ):
+            print(outputTwo)
+        else:
+            print(outputOne)
