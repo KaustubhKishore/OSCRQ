@@ -55,7 +55,7 @@ class Helper:
         return self.ncInfoScore
 
     def caller(self, cmd):
-        p = sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
+        p = sp.Popen(cmd, shell=True,stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT).stdout.read().decode()
         os.killpg(os.getpgid(p.pid), signal.SIGTERM)
         return (
             p
