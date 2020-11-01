@@ -103,6 +103,14 @@ class Debian(Helper):
         "tipc_3_4_4",
         "firewall_3_5_1_1",
         "ufwservice_3_5_2_1",
+        "ufwdeny_3_5_2_2",
+        "ufwloopback_3_5_2_3",
+        "ufwoutbound_3_5_2_4",
+        "confnf_3_5_3",  # Skip nftables. Manual pref.
+        "nfloop_3_5_3_4",
+        "nfdeny_3_5_3_6",
+        "nfservice_3_5_3_7",
+        "nfrules_3_5_3_8"
     ]
 
     def __init__(self):
@@ -1844,4 +1852,188 @@ class Debian(Helper):
         else:
             self.NotCompliant("Ensure ufw service is enabled (Scored)")
 
+    def ufwdeny_3_5_2_2(self):
+        cmdOne = r"sudo ufw status verbose"
+        cmdTwo = r"sudo /usr/sbin/ufw status verbose"
 
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+            (
+                "deny (incoming)" in outputOne or
+                "deny (incoming)" in outputTwo
+            ) and
+            (
+                "deny (outgoing)" in outputOne or
+                "deny (outgoing)" in outputTwo
+            ) and
+            (
+                (
+                    "disabled (routed)" in outputOne or
+                    "disabled (routed)" in outputTwo
+                ) or
+                (
+                    "deny (routed)" in outputOne or
+                    "deny (routed)" in outputTwo
+                )
+            )
+        ):
+            self.Compliant("Ensure default deny firewall policy (Scored)")
+        else:
+            self.NotCompliant("Ensure default deny firewall policy (Scored)")
+    
+
+
+
+    def ufwloopback_3_5_2_3(self):
+        cmdOne = r"sudo /usr/sbin/ufw status verbose"
+        cmdTwo = r"sudo ufw status verbose"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputFinal = outputOne + "\n" + outputTwo
+
+        if(
+            (
+                "Anywhere on lo             ALLOW IN    Anywhere" in outputFinal
+            ) and
+            (
+                "Anywhere                   DENY IN     127.0.0.0/8" in outputFinal
+            ) and
+            (
+                "Anywhere (v6) on lo        ALLOW IN    Anywhere (v6)" in outputFinal
+            ) and
+            (
+                "Anywhere (v6)              DENY IN     ::1" in outputFinal
+            ) and
+            (
+                "Anywhere                   ALLOW OUT   Anywhere on lo" in outputFinal
+            ) and
+            (
+                "Anywhere (v6)              ALLOW OUT   Anywhere (v6) on lo" in outputFinal
+            )
+        ):
+            self.Compliant("Ensure loopback traffic is configured (Scored)")
+        else:
+            self.NotCompliant("Ensure loopback traffic is configured (Scored)")
+
+    def ufwoutbound_3_5_2_4(self):
+        cmdOne = r"ufw status numbered"
+        cmdTwo = r"/usr/sbin/ufw status numbered"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        self.InfoNotSure(
+            "Ensure outbound connections are configured (Not Scored)")
+        if(
+            "command not found" in outputOne
+        ):
+            print(
+                "verify all rules for new outbound connections match site policy:\n" + outputTwo)
+        else:
+            print(
+                "verify all rules for new outbound connections match site policy:\n" + outputOne)
+
+    def confnf_3_5_3(self):
+        print("(Skipped) - Configure nftables")
+        print("(Skipped) - Ensure iptables are flushed (Not Scored)")
+        print("(Skipped) - Ensure a table exists (Scored)")
+        print("(Skipped) - Ensure base chains exist (Scored)")
+        print("(Skipped) - Ensure loopback traffic is configured (Scored)")
+        print("(Skipped) - Ensure outbound and established connections are configured (Not Scored)")
+
+    def nfloop_3_5_3_4(self):
+        cmdOne = r"""nft list ruleset | awk '/hook input/,/}/' | grep 'iif "lo" accept'"""
+        cmdTwo = r"nft list ruleset | awk '/hook input/,/}/' | grep 'ip sddr'"
+
+        cmdThree = r"""/usr/sbin/nft list ruleset | awk '/hook input/,/}/' | grep 'iif "lo" accept'"""
+        cmdFour = r"/usr/sbin/nft list ruleset | awk '/hook input/,/}/' | grep 'ip sddr'"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
+
+        if(
+            (
+                'iif "lo" accept' in outputOne or
+                'iif "lo" accept' in outputThree
+            ) and
+            (
+                "ip saddr 127.0.0.0/8 counter packets 0 bytes 0 drop" in outputTwo or
+                "ip saddr 127.0.0.0/8 counter packets 0 bytes 0 drop" in outputFour
+            )
+        ):
+            self.Compliant("Ensure loopback traffic is configured (Scored)")
+        else:
+            self.NotCompliant("Ensure loopback traffic is configured (Scored)")
+
+    def nfdeny_3_5_3_6(self):
+        cmdOne = r"nft list ruleset | grep 'hook input'"
+        cmdTwo = r"/usr/sbin/nft list ruleset | grep 'hook input'"
+
+        cmdThree = r"nft list ruleset | grep 'hook forward'"
+        cmdFour = r"/usr/sbin/nft list ruleset | grep 'hook forward'"
+
+        cmdFive = r"nft list ruleset | grep 'hook output'"
+        cmdSix = r"/usr/sbin/nft list ruleset | grep 'hook output'"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFour = self.caller(cmdFour)
+        outputFive = self.caller(cmdFive)
+        outputSix = self.caller(cmdSix)
+
+        if(
+            (
+                "type filter hook input priority 0; policy drop;" in outputOne or
+                "type filter hook input priority 0; policy drop;" in outputTwo
+            ) and
+            (
+                "type filter hook forward priority 0; policy drop;" in outputThree or
+                "type filter hook forward priority 0; policy drop;" in outputFour
+            ) and
+            (
+                "type filter hook output priority 0; policy drop;" in outputFive or
+                "type filter hook output priority 0; policy drop;" in outputSix
+            )
+        ):
+            self.Compliant("Ensure default deny firewall policy (Scored)")
+        else:
+            self.NotCompliant("Ensure default deny firewall policy (Scored)")
+
+    def nfservice_3_5_3_7(self):
+        cmdOne = r"systemctl is-enabled nftables"
+        outputOne = self.caller(cmdOne)
+
+        if(
+           "enabled" in outputOne
+           ):
+            self.Compliant("Ensure nftables service is enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure nftables service is enabled (Scored)")
+
+    def nfrules_3_5_3_8(self):
+        cmdOne = r"""awk '/hook input/,/}/' $(awk '$1 ~ /^\s*include/ { gsub("\"","",$2);print $2 }' /etc/nftables.conf)"""
+        cmdTwo = r"""awk '/hook output/,/}/' $(awk '$1 ~ /^\s*include/ { gsub("\"","",$2);print $2 }' /etc/nftables.conf)"""
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+            (
+                "Ensure loopback traffic is configured" in outputOne or
+                "Ensure established connections are configured" in outputOne or
+                "Accept port 22(SSH) traffic from anywhere" in outputOne or
+                "Accept ICMP and IGMP from anywhere" in outputOne
+            ) and
+            (
+                "Base chain for hook output named output (Filters outbound network packets)" in outputTwo or
+                "type filter hook output priority 0; policy drop;" in outputTwo
+            )
+        ):
+            self.Compliant("Ensure nftables rules are permanent (Scored)")
+        else:
+            self.NotCompliant("Ensure nftables rules are permanent (Scored)")
+    
