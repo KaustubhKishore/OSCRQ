@@ -103,7 +103,6 @@ class Debian(Helper):
         "tipc_3_4_4",
         "firewall_3_5_1_1",
         "ufwservice_3_5_2_1",
-        ""
     ]
 
     def __init__(self):
@@ -1828,13 +1827,18 @@ class Debian(Helper):
     def ufwservice_3_5_2_1(self):
         cmdOne = r"systemctl is-enabled ufw"
         cmdTwo = r"ufw status | grep Status"
+        cmdThree = r"/usr/sbin/ufw status | grep Status"
 
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
 
         if(
             "enabled" in outputOne and
-            "active" in outputTwo
+            (
+                "active" in outputTwo or
+                "active" in outputThree
+            )
         ):
             self.Compliant("Ensure ufw service is enabled (Scored)")
         else:
