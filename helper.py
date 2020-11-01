@@ -59,7 +59,7 @@ class Helper:
         # p = sp.Popen(cmd, shell=True,stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT, preexec_fn = os.setsid)
         # outp = p.stdout.read().decode()
         # p.kill()
-        p = check_output(cmd, shell=True,stderr=sp.STDOUT, timeout=3).decode()
+        p = check_output(cmd, shell=True, stdin=sp.PIPE,stderr=sp.STDOUT, timeout=3).decode()
         return (
             p
             # sp.Popen(cmd, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT)
