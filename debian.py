@@ -110,7 +110,7 @@ class Debian(Helper):
         "nfloop_3_5_3_4",
         "nfdeny_3_5_3_6",
         "nfservice_3_5_3_7",
-        #"nfrules_3_5_3_8", # Need an awk workaround
+        "nfrules_3_5_3_8", # Need an awk workaround
     ]
 
     def __init__(self):
