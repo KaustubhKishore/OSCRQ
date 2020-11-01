@@ -56,11 +56,11 @@ class Helper:
         return self.ncInfoScore
 
     def caller(self, cmd):
-        # p = sp.Popen(cmd, shell=True,stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT, preexec_fn = os.setsid)
-        # outp = p.stdout.read().decode()
-        # p.kill()
-        p = check_output(cmd, shell=True, stdin=sp.PIPE,stderr=sp.STDOUT, timeout=3).decode()
+        p = sp.Popen("timeout 2 "+cmd, shell=True,stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT, preexec_fn = os.setsid)
+        outp = p.stdout.read().decode()
+        p.kill()
+        # p = check_output(cmd, shell=True, stdin=sp.PIPE,stderr=sp.STDOUT, timeout=3).decode()
         return (
-            p
+            outp
             # sp.Popen(cmd, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT)
         )
