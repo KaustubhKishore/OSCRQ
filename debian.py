@@ -1929,7 +1929,8 @@ class Debian(Helper):
         self.InfoNotSure(
             "Ensure outbound connections are configured (Not Scored)")
         if(
-            "command not found" in outputOne
+            "command not found" in outputOne or
+            "failed" in outputOne
         ):
             print(
                 "Verify all rules for new outbound connections match site policy:\n" + outputTwo)
