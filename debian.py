@@ -110,7 +110,7 @@ class Debian(Helper):
         "nfloop_3_5_3_4",
         "nfdeny_3_5_3_6",
         "nfservice_3_5_3_7",
-        "nfrules_3_5_3_8"
+        #"nfrules_3_5_3_8", # Need an awk workaround
     ]
 
     def __init__(self):
@@ -2016,7 +2016,7 @@ class Debian(Helper):
             self.NotCompliant("Ensure nftables service is enabled (Scored)")
 
     def nfrules_3_5_3_8(self):
-        cmdOne = r"""awk '/hook input/,/}/' $(awk '$1 ~ /^\s*include/ { gsub("\"","",$2);print $2 }' /etc/nftables.conf)"""
+        cmdOne = r"""awk '/hook input/,/}/' $(awk '$1 ~ /^\s*include/ { gsub("\"","",$2);print $2 }' /etc/nftables.conf) """
         cmdTwo = r"""awk '/hook output/,/}/' $(awk '$1 ~ /^\s*include/ { gsub("\"","",$2);print $2 }' /etc/nftables.conf)"""
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)

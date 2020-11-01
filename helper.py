@@ -54,7 +54,8 @@ class Helper:
 
     def caller(self, cmd):
         return (
-            sp.Popen(cmd, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT)
+            # sp.Popen(cmd, shell=True, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT)
+            sp.Popen(cmd, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.STDOUT)
             .stdout.read()
             .decode()
         )
