@@ -114,7 +114,8 @@ class Debian(Helper):
         "ipdeny_3_5_4_1_1",
         "iploop_3_5_4_1_2",
         "ipoutb_3_5_4_1_3",  # Skip 3_5_4_1_4
-
+        "ip6deny_3_5_4_2_1",
+        "ip6loop_3_5_4_2_2"
     ]
 
     def __init__(self):
@@ -2103,3 +2104,61 @@ class Debian(Helper):
             print(outputTwo)
         else:
             print(outputOne)
+
+    def ip6deny_3_5_4_2_1(self):
+        cmdOne = r"""grep "^\s*linux" /boot/grub/grub.cfg | grep -v ipv6.disable=1"""
+        cmdTwo = r"ip6tables -L"
+        cmdThree = r"/usr/sbin/ip6tables -L"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+        outputFinal =  outputTwo + " " + outputThree
+
+        if(outputOne == ""):
+            self.Compliant("Ensure IPv6 default deny firewall policy (Scored)")
+        else:
+            if(
+                (
+                    (
+                        "Chain INPUT (policy DROP)" in outputFinal or
+                        "Chain INPUT (policy REJECT)" in outputFinal
+                    ) and
+                    (
+                        "Chain FORWARD (policy DROP)" in outputFinal or
+                        "Chain FORWARD (policy REJECT)" in outputFinal
+                    ) and
+                    (
+                        "Chain OUTPUT (policy DROP)" in outputFinal or
+                        "Chain OUTPUT (policy REJECT)" in outputFinal
+                    )
+                )
+            ):
+                self.Compliant("Ensure IPv6 default deny firewall policy (Scored)")
+            else:
+                self.NotCompliant("Ensure IPv6 default deny firewall policy (Scored)")
+        
+    def ip6loop_3_5_4_2_2(self):
+        cmdOne = r"ip6tables -L INPUT -v -n"
+        cmdTwo = r"/usr/sbin/ip6tables -L INPUT -v -n"
+
+        cmdThree = r"ip6tables -L OUTPUT -v -n"
+        cmdFour = r"/usr/sbin/ip6tables -L OUTPUT -v -n"
+
+        outputOne = self.caller(cmdOne) + " " + self.caller(cmdTwo) 
+        outputTwo = self.caller(cmdThree) + " " + self.caller(cmdFour)
+
+        if(
+            (
+                "ACCEPT     all      lo     *       ::/0                 ::/0" in outputOne and
+                "DROP       all      *      *       ::1                  ::/0" in outputOne
+            ) and
+            (
+                "ACCEPT     all      *      lo      ::/0                 ::/0" in outputTwo
+            )
+        ):
+            self.Compliant("Ensure IPv6 loopback traffic is configured (Scored)")
+        else:
+            self.NotCompliant("Ensure IPv6 loopback traffic is configured (Scored)")
+        
+    
