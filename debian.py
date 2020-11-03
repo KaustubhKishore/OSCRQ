@@ -115,7 +115,8 @@ class Debian(Helper):
         "iploop_3_5_4_1_2",
         "ipoutb_3_5_4_1_3",  # Skip 3_5_4_1_4
         "ip6deny_3_5_4_2_1",
-        "ip6loop_3_5_4_2_2"
+        "ip6loop_3_5_4_2_2",
+        "ip6outb_3_5_4_2_3", # Skip 3_5_4_2_4
     ]
 
     def __init__(self):
@@ -2161,4 +2162,29 @@ class Debian(Helper):
         else:
             self.NotCompliant("Ensure IPv6 loopback traffic is configured (Scored)")
         
+    def ip6outb_3_5_4_2_3(self):
+        cmdOne = r"ip6tables -L -v -n"
+        cmdTwo = r"/usr/sbin/ip6tables -L -v -n"
+        cmdThree = r"""grep "^\s*linux" /boot/grub/grub.cfg | grep -v ipv6.disable=1"""
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if(
+            outputThree == ""
+        ):
+            self.InfoCompliant("Ensure IPv6 outbound and established connections are configured (Not Scored)")
+        else:
+            self.InfoNotSure("Ensure IPv6 outbound and established connections are configured (Not Scored)")
+            if(
+                "command not found" in outputOne or
+                "failed" in outputOne
+            ):
+                print("Verify all rules for new outbound, and established connections match site policy:")
+                print(outputThree)
+            else:
+                print("Verify all rules for new outbound, and established connections match site policy:")
+                print(outputTwo)
+    
     
