@@ -120,7 +120,16 @@ class Debian(Helper):
         "auditdenabled_4_1_1_2",
         "auditproc_4_1_1_3",
         "auditdbacklog_4_1_1_4",
-        "auditdlogstorage_4_1_2_1"
+        "auditdlogstorage_4_1_2_1",
+        "auditddeleted_4_1_2_2",
+        "auditdsystem_4_1_2_3",
+        "auditdtime_4_1_3",
+        "auditdusermodify_4_1_4",
+        "auditdsysnet_4_1_5",
+        "auditdmac_4_1_6",
+        "auditdlogin_4_1_7",
+        "auditdsession_4_1_8",
+        "auditddac_4_1_9"
     ]
 
     def __init__(self):
@@ -2253,10 +2262,190 @@ class Debian(Helper):
         cmdOne = r"grep max_log_file /etc/audit/auditd.conf"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "max_log_file" in outputOne
+        if (
+                "max_log_file" in outputOne
         ):
             self.Compliant("Ensure audit log storage size is configured (Scored)")
         else:
             self.NotCompliant("Ensure audit log storage size is configured (Scored)")
+
+    def auditddeleted_4_1_2_2(self):
+        cmdOne = r"grep max_log_file_action /etc/audit/auditd.conf"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "max_log_file_action = keep_logs" in outputOne
+        ):
+            self.Compliant("Ensure audit logs are not automatically deleted (Scored)")
+        else:
+            self.NotCompliant("Ensure audit logs are not automatically deleted (Scored)")
+
+    def auditdsystem_4_1_2_3(self):
+        cmdOne = r"grep space_left_action /etc/audit/auditd.conf"
+        cmdTwo = r"grep action_mail_acct /etc/audit/auditd.conf"
+        cmdThree = r"grep admin_space_left_action /etc/audit/auditd.conf"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if (
+                "space_left_action = email" in outputOne and
+                "action_mail_acct = root" in outputTwo and
+                "admin_space_left_action = halt" in outputThree
+        ):
+            self.Compliant("Ensure system is disabled when audit logs are full (Scored)")
+        else:
+            self.NotCompliant("Ensure system is disabled when audit logs are full (Scored)")
+
+    def auditdtime_4_1_3(self):
+        cmdOne = r"grep time-change /etc/audit/rules.d/*.rules"
+        cmdTwo = r"auditctl -l | grep time-change"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if (
+                (
+                        "-a always,exit -F arch=b32 -S adjtimex -S settimeofday -S stime -k time-change" in outputOne and
+                        "-a always,exit -F arch=b32 -S clock_settime -k time-change" in outputOne and
+                        "-w /etc/localtime -p wa -k time-change" in outputOne and
+                        "-a always,exit -F arch=b32 -S stime,settimeofday,adjtimex -F key=time-change" in outputTwo and
+                        "-a always,exit -F arch=b32 -S clock_settime -F key=time-change" in outputTwo and
+                        "-w /etc/localtime -p wa -k time-change" in outputTwo
+                ) or
+                (
+                        "-a always,exit -F arch=b64 -S adjtimex -S settimeofday -k time-change" in outputOne and
+                        "-a always,exit -F arch=b64 -S clock_settime -k time-change" in outputOne and
+                        "-w /etc/localtime -p wa -k time-change" in outputOne and
+                        "-a always,exit -F arch=b64 -S adjtimex,settimeofday -F key=time-change" in outputTwo and
+                        "-a always,exit -F arch=b64 -S clock_settime -F key=time-change" in outputTwo and
+                        "-w /etc/localtime -p wa -k time-change" in outputTwo
+                )
+        ):
+            self.Compliant("Ensure events that modify date and time information are collected (Scored)")
+        else:
+            self.NotCompliant("Ensure events that modify date and time information are collected (Scored)")
+
+    def auditdusermodify_4_1_4(self):
+        cmdOne = r"grep identity /etc/audit/rules.d/*.rules"
+        cmdTwo = r"auditctl -l | grep identity"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if (
+                "-w /etc/group -p wa -k identity" in outputOne and
+                "-w /etc/group -p wa -k identity" in outputTwo and
+                "-w /etc/passwd -p wa -k identity" in outputOne and
+                "-w /etc/passwd -p wa -k identity" in outputTwo and
+                "-w /etc/gshadow -p wa -k identity" in outputOne and
+                "-w /etc/gshadow -p wa -k identity" in outputTwo and
+                "-w /etc/shadow -p wa -k identity" in outputOne and
+                "-w /etc/shadow -p wa -k identity" in outputTwo and
+                "-w /etc/security/opasswd -p wa -k identity" in outputOne and
+                "-w /etc/security/opasswd -p wa -k identity" in outputTwo
+        ):
+            self.Compliant("Ensure events that modify user/group information are collected (Scored)")
+        else:
+            self.NotCompliant("Ensure events that modify user/group information are collected (Scored)")
+
+    def auditdsysnet_4_1_5(self):
+        cmdOne = r"grep system-locale /etc/audit/rules.d/*.rules"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                (
+                        "-a always,exit -F arch=b32 -S sethostname,setdomainname -F key=system-locale" in outputOne and
+                        "-w etc/issue -p wa -k system-locale" in outputOne and
+                        "-w /etc/issue.net -p wa -k system-locale" in outputOne and
+                        "-w /etc/hosts -p wa -k system-locale" in outputOne and
+                        "-w /etc/network -p wa -k system-locale" in outputOne
+                ) or
+                (
+                        "-a always,exit -F arch=b64 -S sethostname,setdomainname -F key=system-locale" in outputOne and
+                        "-a always,exit -F arch=b32 -S sethostname,setdomainname -F key=system-locale" in outputOne and
+                        "-w etc/issue -p wa -k system-locale" in outputOne and
+                        "-w /etc/issue.net -p wa -k system-locale" in outputOne and
+                        "-w /etc/hosts -p wa -k system-locale" in outputOne and
+                        "-w /etc/network -p wa -k system-locale" in outputOne
+                )
+        ):
+            self.Compliant("Ensure events that modify the system's network environment are collected (Scored)")
+        else:
+            self.NotCompliant("Ensure events that modify the system's network environment are collected (Scored)")
+
+    def auditdmac_4_1_6(self):
+        cmdOne = r"grep MAC-policy /etc/audit/rules.d/*.rules"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "-w /etc/apparmor/ -p wa -k MAC-policy" in outputOne and
+                "-w /etc/apparmor.d/ -p wa -k MAC-policy" in outputOne
+        ):
+            self.Compliant("Ensure events that modify the system's Mandatory Access Controls are collected (Scored)")
+        else:
+            self.NotCompliant("Ensure events that modify the system's Mandatory Access Controls are collected (Scored)")
+
+    def auditdlogin_4_1_7(self):
+        cmdOne = r"grep logins /etc/audit/rules.d/*.rules"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "-w /var/log/faillog -p wa -k logins" in outputOne and
+                "-w /var/log/lastlog -p wa -k logins" in outputOne and
+                "-w /var/log/tallylog -p wa -k logins" in outputOne
+        ):
+            self.Compliant("Ensure login and logout events are collected (Scored)")
+        else:
+            self.NotCompliant("Ensure login and logout events are collected (Scored)")
+
+    def auditdsession_4_1_8(self):
+        cmdOne = r"grep -E '(session|logins)' /etc/audit/rules.d/*.rules"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "-w /var/run/utmp -p wa -k session" in outputOne and
+                "-w /var/log/wtmp -p wa -k logins" in outputOne and
+                "-w /var/log/btmp -p wa -k logins" in outputOne
+        ):
+            self.Compliant("Ensure session initiation information is collected (Scored)")
+        else:
+            self.NotCompliant("Ensure session initiation information is collected (Scored)")
+
+    def auditddac_4_1_9(self):
+        cmdOne = r"awk '/^\s*UID_MIN/{print $2}' /etc/login.defs"
+        cmdTwo = r"grep perm_mod /etc/audit/rules.d/*.rules"
+        cmdThree = r"auditctl -l | grep perm_mod"
+
+        minUID = str(int(self.caller(cmdOne)))
+        outputOne = self.caller(cmdTwo)
+        outputTwo = self.caller(cmdThree)
+
+        if(
+                (
+                    "-a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>="+minUID+" -F auid!=4294967295 -k perm_mod" in outputOne and
+                    "-a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>="+minUID+" -F auid!=4294967295 -k perm_mod" in outputOne and
+                    "-a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>="+minUID+" -F auid!=4294967295 -k perm_mod" in outputOne and
+                    "-a always,exit -F arch=b32 -S chmod,fchmod,fchmodat -F auid>=" + minUID + " -F auid!=-1 -F key=perm_mod" in outputTwo and
+                    "-a always,exit -F arch=b32 -S lchown,fchown,chown,fchownat -F auid>=" + minUID + " -F auid!=-1 -F key=perm_mod" in outputTwo and
+                    "-a always,exit -F arch=b32 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>=" + minUID + " -F auid!=-1 -F key=perm_mod" in outputTwo
+                ) or
+                (
+                    "-a always,exit -F arch=b64 -S chmod -S fchmod -S fchmodat -F auid>=" + minUID + " -F auid!=4294967295 -k perm_mod" in outputOne and
+                    "-a always,exit -F arch=b32 -S chmod -S fchmod -S fchmodat -F auid>=" + minUID + " -F auid!=4294967295 -k perm_mod" in outputOne and
+                    "-a always,exit -F arch=b64 -S chown -S fchown -S fchownat -S lchown -F auid>=" + minUID + " -F auid!=4294967295 -k perm_mod" in outputOne and
+                    "-a always,exit -F arch=b32 -S chown -S fchown -S fchownat -S lchown -F auid>=" + minUID + " -F auid!=4294967295 -k perm_mod" in outputOne and
+                    "-a always,exit -F arch=b64 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=" + minUID + " -F auid!=4294967295 -k perm_mod" in outputOne and
+                    "-a always,exit -F arch=b32 -S setxattr -S lsetxattr -S fsetxattr -S removexattr -S lremovexattr -S fremovexattr -F auid>=" + minUID + " -F auid!=4294967295 -k perm_mod" in outputOne and
+                    "-a always,exit -F arch=b64 -S chmod,fchmod,fchmodat -F auid>=" + minUID + " -F auid!=-1 -F key=perm_mod" in outputTwo and
+                    "-a always,exit -F arch=b32 -S chmod,fchmod,fchmodat -F auid>=" + minUID + " -F auid!=-1 -F key=perm_mod" in outputTwo and
+                    "-a always,exit -F arch=b64 -S chown,fchown,lchown,fchownat -F auid>="+minUID+" -F auid!=-1 -F key=perm_mod" and
+                    "-a always,exit -F arch=b32 -S lchown,fchown,chown,fchownat -F auid>=" + minUID + " -F auid!=-1 -F key=perm_mod" in outputTwo and
+                    "-a always,exit -F arch=b64 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>=" + minUID + " -F auid!=-1 -F key=perm_mod" in outputTwo and
+                    "-a always,exit -F arch=b32 -S setxattr,lsetxattr,fsetxattr,removexattr,lremovexattr,fremovexattr -F auid>=" + minUID + " -F auid!=-1 -F key=perm_mod" in outputTwo
+
+                )
+        ):
+            self.Compliant("Ensure discretionary access control permission modification events are collected (Scored)")
+        else:
+            self.NotCompliant("Ensure discretionary access control permission modification events are collected (Scored)")
 
