@@ -145,7 +145,7 @@ class Debian(Helper):
         "rsyslogremotedesignated_4_2_1_6",
         "journaldconfig_4_2_2_1",
         "journaldcompress_4_2_2_2",
-        "journaldpers_4_2_2_3", # Skip 4_2_3 (Scored) & 4_3
+        "journaldpers_4_2_2_3",  # Skip 4_2_3 (Scored) & 4_3
         "logrotate_4_4",
         "crond_5_1_1",
         "cronperm_5_1_2",
@@ -155,7 +155,7 @@ class Debian(Helper):
         "cronmonthlyperm_5_1_6",
         "crondperm_5_1_7",
         "atcron_5_1_8",
-        "sshdconfig_5_2_1", # Skip 5_2_2 & 5_2_3 Manual - (Scored)
+        "sshdconfig_5_2_1",  # Skip 5_2_2 & 5_2_3 Manual - (Scored)
         "sshone_5_2_4",
         "sshloglevel_5_2_5",
         "sshx11_5_2_6",
@@ -2674,8 +2674,8 @@ class Debian(Helper):
         cmdOne = r"grep ^\$FileCreateMode /etc/rsyslog.conf /etc/rsyslog.d/*.conf"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "$FileCreateMode 0640" in outputOne
+        if (
+                "$FileCreateMode 0640" in outputOne
         ):
             self.Compliant("Ensure rsyslog default file permissions configured (Scored)")
         else:
@@ -2685,8 +2685,8 @@ class Debian(Helper):
         cmdOne = r"""grep -E "^[^#](\s*\S+\s*)\s*action\(" /etc/rsyslog.conf /etc/rsyslog.d/*.conf | grep "target=" """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne != ""
+        if (
+                outputOne != ""
         ):
             self.Compliant("Ensure rsyslog is configured to send logs to a remote log host (Scored)")
         else:
@@ -2698,28 +2698,29 @@ class Debian(Helper):
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
 
-        if(
+        if (
                 (
-                    "$ModLoad imtcp" in outputOne and
-                    "#$ModLoad imtcp" not in outputOne and
-                    "# $ModLoad imtcp" not in outputOne
+                        "$ModLoad imtcp" in outputOne and
+                        "#$ModLoad imtcp" not in outputOne and
+                        "# $ModLoad imtcp" not in outputOne
                 ) and
                 (
-                    "$InputTCPServerRun 514" in outputTwo and
-                    "#$InputTCPServerRun 514" not in outputTwo and
-                    "# $InputTCPServerRun 514" not in outputTwo
+                        "$InputTCPServerRun 514" in outputTwo and
+                        "#$InputTCPServerRun 514" not in outputTwo and
+                        "# $InputTCPServerRun 514" not in outputTwo
                 )
         ):
             self.InfoCompliant("Ensure remote rsyslog messages are only accepted on designated log hosts. (Not Scored)")
         else:
-            self.InfoNotCompliant("Ensure remote rsyslog messages are only accepted on designated log hosts. (Not Scored)")
+            self.InfoNotCompliant(
+                "Ensure remote rsyslog messages are only accepted on designated log hosts. (Not Scored)")
 
     def journaldconfig_4_2_2_1(self):
         cmdOne = r"grep -e ForwardToSyslog /etc/systemd/journald.conf"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "ForwardToSyslog=yes" in outputOne
+        if (
+                "ForwardToSyslog=yes" in outputOne
         ):
             self.Compliant("Ensure journald is configured to send logs to rsyslog (Scored)")
         else:
@@ -2729,8 +2730,8 @@ class Debian(Helper):
         cmdOne = r"grep -e Compress /etc/systemd/journald.conf"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Compress=yes" in outputOne
+        if (
+                "Compress=yes" in outputOne
         ):
             self.Compliant("Ensure journald is configured to compress large log files (Scored)")
         else:
@@ -2740,8 +2741,8 @@ class Debian(Helper):
         cmdOne = r"grep -e Storage /etc/systemd/journald.conf"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Storage=persistent" in outputOne
+        if (
+                "Storage=persistent" in outputOne
         ):
             self.Compliant("Ensure journald is configured to write logfiles to persistent disk (Scored)")
         else:
@@ -2751,8 +2752,8 @@ class Debian(Helper):
         cmdOne = r"""grep -E "^\s*create\s+\S+" /etc/logrotate.conf | grep -E -v "\s(0)?[0-6][04]0\s" """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == ""
+        if (
+                outputOne == ""
         ):
             self.Compliant("Ensure logrotate assigns appropriate permissions (Scored)")
         else:
@@ -2762,8 +2763,8 @@ class Debian(Helper):
         cmdOne = r"systemctl is-enabled cron"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "enabled" in outputOne
+        if (
+                "enabled" in outputOne
         ):
             self.Compliant("Ensure cron daemon is enabled (Scored)")
         else:
@@ -2773,8 +2774,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/crontab"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/crontab are configured (Scored)")
         else:
@@ -2784,8 +2785,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/cron.hourly"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/cron.hourly are configured (Scored)")
         else:
@@ -2795,8 +2796,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/cron.daily"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/cron.daily are configured (Scored)")
         else:
@@ -2806,8 +2807,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/cron.weekly"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/cron.weekly are configured (Scored)")
         else:
@@ -2817,8 +2818,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/cron.monthly"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/cron.monthly are configured (Scored)")
         else:
@@ -2828,8 +2829,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/cron.d"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/cron.d are configured (Scored)")
         else:
@@ -2844,10 +2845,10 @@ class Debian(Helper):
         outputTwo = self.caller(cmdTwo)
         outputThree = self.caller(cmdThree)
 
-        if(
-            "No such file or directory" in outputOne and
-            "No such file or directory" in outputTwo and
-            "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)"
+        if (
+                "No such file or directory" in outputOne and
+                "No such file or directory" in outputTwo and
+                "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)"
         ):
             self.Compliant("Ensure at/cron is restricted to authorized users (Scored)")
         else:
@@ -2857,8 +2858,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/ssh/sshd_config"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/ssh/sshd_config are configured (Scored)")
         else:
@@ -2868,8 +2869,8 @@ class Debian(Helper):
         cmdOne = r"""sshd -T | grep -Ei '^\s*protocol\s+(1|1\s*,\s*2|2\s*,\s*1)\s*' """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == ""
+        if (
+                outputOne == ""
         ):
             self.Compliant("Ensure SSH Protocol is not set to 1 (Scored)")
         else:
@@ -2879,9 +2880,9 @@ class Debian(Helper):
         cmdOne = r"sshd -T | grep loglevel"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "LogLevel VERBOSE" in outputOne or
-            "loglevel INFO" in outputOne
+        if (
+                "LogLevel VERBOSE" in outputOne or
+                "loglevel INFO" in outputOne
         ):
             self.Compliant("Ensure SSH LogLevel is appropriate (Scored)")
         else:
@@ -2891,8 +2892,8 @@ class Debian(Helper):
         cmdOne = r"sshd -T | grep x11forwarding"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "X11Forwarding no" in outputOne
+        if (
+                "X11Forwarding no" in outputOne
         ):
             self.Compliant("Ensure SSH X11 forwarding is disabled (Scored)")
         else:
@@ -2919,8 +2920,8 @@ class Debian(Helper):
         cmdOne = r"sshd -T | grep ignorerhosts"
         outputOne = self.caller(cmdOne)
 
-        if(
-           "IgnoreRhosts yes" in outputOne
+        if (
+                "IgnoreRhosts yes" in outputOne
         ):
             self.Compliant("Ensure SSH IgnoreRhosts is enabled (Scored)")
         else:
@@ -2930,8 +2931,8 @@ class Debian(Helper):
         cmdOne = r"sshd -T | grep hostbasedauthentication"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "HostbasedAuthentication no" in outputOne
+        if (
+                "HostbasedAuthentication no" in outputOne
         ):
             self.Compliant("Ensure SSH HostbasedAuthentication is disabled (Scored)")
         else:
@@ -2941,8 +2942,8 @@ class Debian(Helper):
         cmdOne = r"sshd -T | grep permitrootlogin"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "PermitRootLogin no" in outputOne
+        if (
+                "PermitRootLogin no" in outputOne
         ):
             self.Compliant("Ensure SSH root login is disabled (Scored)")
         else:
@@ -2952,8 +2953,8 @@ class Debian(Helper):
         cmdOne = r"sshd -T | grep permitemptypasswords"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "PermitEmptyPasswords no" in outputOne
+        if (
+                "PermitEmptyPasswords no" in outputOne
         ):
             self.Compliant("Ensure SSH PermitEmptyPasswords is disabled (Scored)")
         else:
@@ -2963,8 +2964,8 @@ class Debian(Helper):
         cmdOne = r"sshd -T | grep permituserenvironment"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "PermitUserEnvironment no" in outputOne
+        if (
+                "PermitUserEnvironment no" in outputOne
         ):
             self.Compliant("Ensure SSH PermitUserEnvironment is disabled (Scored)")
         else:
@@ -3001,4 +3002,3 @@ class Debian(Helper):
             self.Compliant("Ensure only strong MAC algorithms are used (Scored)")
         else:
             self.NotCompliant("Ensure only strong MAC algorithms are used (Scored)")
-
