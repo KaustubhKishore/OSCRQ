@@ -129,7 +129,44 @@ class Debian(Helper):
         "auditdmac_4_1_6",
         "auditdlogin_4_1_7",
         "auditdsession_4_1_8",
-        "auditddac_4_1_9"
+        "auditddac_4_1_9",
+        "auditdufa_4_1_10",
+        "auditdprivcmd_4_1_11",  # Skip 4_1_11 - Manual
+        "auditdfsmount_4_1_12",
+        "auditdfiledel_4_1_13",
+        "auditdsudoers_4_1_14",
+        "auditdsudolog_4_1_15",
+        "auditdkernel_4_1_16",
+        "auditdconfig_4_1_17",
+        "rsyslog_4_2_1_1",
+        "rsyslogenabled_4_2_1_2",  # Skip 4_2_1_3 - Manual (Not Scored)
+        "rsyslogperm_4_2_1_4",
+        "rsyslogremote_4_2_1_5",
+        "rsyslogremotedesignated_4_2_1_6",
+        "journaldconfig_4_2_2_1",
+        "journaldcompress_4_2_2_2",
+        "journaldpers_4_2_2_3", # Skip 4_2_3 (Scored) & 4_3
+        "logrotate_4_4",
+        "crond_5_1_1",
+        "cronperm_5_1_2",
+        "cronhourlyperm_5_1_3",
+        "crondailyperm_5_1_4",
+        "cronweeklyperm_5_1_5",
+        "cronmonthlyperm_5_1_6",
+        "crondperm_5_1_7",
+        "atcron_5_1_8",
+        "sshdconfig_5_2_1", # Skip 5_2_2 & 5_2_3 Manual - (Scored)
+        "sshone_5_2_4",
+        "sshloglevel_5_2_5",
+        "sshx11_5_2_6",
+        "sshmaxauth_5_2_7",
+        "sshignorerhost_5_2_8",
+        "sshhostbased_5_2_9",
+        "sshrootlogin_5_2_10",
+        "sshempty_5_2_11",
+        "sshuserenv_5_2_12",
+        "sshstrongcipher_5_2_13",
+        "strongmac_5_2_14"
     ]
 
     def __init__(self):
@@ -2449,3 +2486,519 @@ class Debian(Helper):
         else:
             self.NotCompliant(
                 "Ensure discretionary access control permission modification events are collected (Scored)")
+
+    def auditdufa_4_1_10(self):
+        cmdOne = r"awk '/^\s*UID_MIN/{print $2}' /etc/login.defs"
+        cmdTwo = r"grep access /etc/audit/rules.d/*.rules"
+        cmdThree = r"auditctl -l | grep access"
+
+        minUID = str(int(self.caller(cmdOne)))
+        outputOne = self.caller(cmdTwo)
+        outputTwo = self.caller(cmdThree)
+
+        if (
+                (
+                        "-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=" + minUID + " -F auid!=4294967295 -k access" in outputOne and
+                        "-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=" + minUID + " -F auid!=4294967295 -k access" in outputOne and
+                        "-a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat -F exit=-EACCES -F auid>=" + minUID + " -F auid!=-1 -F key=access" in outputTwo and
+                        "-a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat -F exit=-EPERM -F auid>=" + minUID + " -F auid!=-1 -F key=access" in outputTwo
+
+                ) or
+                (
+                        "-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=" + minUID + " -F auid!=4294967295 -k access" in outputOne and
+                        "-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EACCES -F auid>=" + minUID + " -F auid!=4294967295 -k access" in outputOne and
+                        "-a always,exit -F arch=b32 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=" + minUID + " -F auid!=4294967295 -k access" in outputOne and
+                        "-a always,exit -F arch=b64 -S creat -S open -S openat -S truncate -S ftruncate -F exit=-EPERM -F auid>=" + minUID + " -F auid!=4294967295 -k access" in outputOne and
+                        "-a always,exit -F arch=b64 -S open,truncate,ftruncate,creat,openat -F exit=-EACCES -F auid>=" + minUID + " -F auid!=-1 -F key=access" in outputTwo and
+                        "-a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat -F exit=-EACCES -F auid>=" + minUID + " -F auid!=-1 -F key=access" in outputTwo and
+                        "-a always,exit -F arch=b64 -S open,truncate,ftruncate,creat,openat -F exit=-EPERM -F auid>=" + minUID + " -F auid!=-1 -F key=access" in outputTwo and
+                        "-a always,exit -F arch=b32 -S open,creat,truncate,ftruncate,openat -F exit=-EPERM -F auid>=" + minUID + " -F auid!=-1 -F key=access" in outputTwo
+                )
+        ):
+            self.Compliant("nsure unsuccessful unauthorized file access attempts are collected (Scored)")
+        else:
+            self.NotCompliant("nsure unsuccessful unauthorized file access attempts are collected (Scored)")
+
+    def auditdfsmount_4_1_12(self):
+        cmdOne = r"awk '/^\s*UID_MIN/{print $2}' /etc/login.defs"
+        cmdTwo = r"grep mounts /etc/audit/rules.d/*.rules"
+        cmdThree = r"auditctl -l | grep mounts"
+
+        minUID = str(int(self.caller(cmdOne)))
+        outputOne = self.caller(cmdTwo)
+        outputTwo = self.caller(cmdThree)
+
+        if (
+                (
+                        "-a always,exit -F arch=b32 -S mount -F auid>=" + minUID + " -F auid!=4294967295 -k mounts" in outputOne and
+                        "-a always,exit -F arch=b32 -S mount -F auid>=" + minUID + " -F auid!=-1 -F key=mounts" in outputTwo
+                ) or
+                (
+                        "-a always,exit -F arch=b32 -S mount -F auid>=" + minUID + " -F auid!=4294967295 -k mounts" in outputOne and
+                        "-a always,exit -F arch=b64 -S mount -F auid>=" + minUID + " -F auid!=4294967295 -k mounts" in outputOne and
+                        "-a always,exit -F arch=b32 -S mount -F auid>=" + minUID + " -F auid!=-1 -F key=mounts" in outputTwo and
+                        "-a always,exit -F arch=b64 -S mount -F auid>=" + minUID + " -F auid!=-1 -F key=mounts" in outputTwo
+
+                )
+        ):
+            self.Compliant("Ensure successful file system mounts are collected (Scored)")
+        else:
+            self.NotCompliant("Ensure successful file system mounts are collected (Scored)")
+
+    def auditdfiledel_4_1_13(self):
+        cmdOne = r"awk '/^\s*UID_MIN/{print $2}' /etc/login.defs"
+        cmdTwo = r"grep delete /etc/audit/rules.d/*.rules"
+        cmdThree = r"auditctl -l | grep delete"
+
+        minUID = str(int(self.caller(cmdOne)))
+        outputOne = self.caller(cmdTwo)
+        outputTwo = self.caller(cmdThree)
+
+        if (
+                (
+                        "-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=" + minUID + " -F auid!=4294967295 -k delete" in outputOne and
+                        "-a always,exit -F arch=b32 -S unlink,rename,unlinkat,renameat -F auid>=" + minUID + " -F auid!=-1 -F key=delete" in outputTwo
+                ) or
+                (
+                        "-a always,exit -F arch=b32 -S unlink -S unlinkat -S rename -S renameat -F auid>=" + minUID + " -F auid!=4294967295 -k delete" in outputOne and
+                        "-a always,exit -F arch=b64 -S unlink -S unlinkat -S rename -S renameat -F auid>=" + minUID + " -F auid!=4294967295 -k delete" in outputOne and
+                        "-a always,exit -F arch=b64 -S rename,unlink,unlinkat,renameat -F auid>=5100 -F auid!=-1 -F key=delete" in outputTwo and
+                        "-a always,exit -F arch=b32 -S unlink,rename,unlinkat,renameat -F auid>=" + minUID + " -F auid!=-1 -F key=delete" in outputTwo
+
+                )
+        ):
+            self.Compliant("Ensure file deletion events by users are collected (Scored)")
+        else:
+            self.NotCompliant("Ensure file deletion events by users are collected (Scored)")
+
+    def auditdsudoers_4_1_14(self):
+        cmdOne = r"grep scope /etc/audit/rules.d/*.rules"
+        cmdTwo = r"auditctl -l | grep scope"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if (
+                (
+                        "-w /etc/sudoers -p wa -k scope" in outputOne and
+                        "-w /etc/sudoers.d/ -p wa -k scope" in outputOne
+                ) and
+                (
+                        "-w /etc/sudoers -p wa -k scope" in outputTwo and
+                        "-w /etc/sudoers.d/ -p wa -k scope" in outputTwo
+                )
+        ):
+            self.Compliant("Ensure changes to system administration scope (sudoers) is collected (Scored)")
+        else:
+            self.NotCompliant("Ensure changes to system administration scope (sudoers) is collected (Scored)")
+
+    def auditdsudolog_4_1_15(self):
+        cmdOne = r"""grep -E "^\s*-w\s+$(grep -r logfile /etc/sudoers* | sed -e 's/.*logfile=//;s/,? .*//')\s+-p\s+wa\s+-k\s+actions"/etc/audit/rules.d/*.rules  """
+        cmdTwo = r"auditctl -l | grep actions"
+        cmdThree = r"""echo "-w $(grep -r logfile /etc/sudoers* | sed -e 's/.*logfile=//;s/,? .*//') -p wa -k actions" """
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if (
+                "-w" in outputThree and
+                "-p wa -k actions" in outputThree and
+                ".log" in outputThree and
+                outputOne.strip() == outputThree.strip() and
+                outputTwo.strip() == outputThree.strip()
+        ):
+            self.Compliant("Ensure system administrator actions (sudolog) are collected (Scored)")
+
+        else:
+            self.NotCompliant("Ensure system administrator actions (sudolog) are collected (Scored)")
+
+    def auditdkernel_4_1_16(self):
+        cmdOne = r"grep modules /etc/audit/rules.d/*.rules"
+        cmdTwo = r"auditctl -l | grep modules"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        if (
+                (
+                        "-w /sbin/insmod -p x -k modules" in outputOne and
+                        "-w /sbin/insmod -p x -k modules" in outputTwo and
+                        "-w /sbin/rmmod -p x -k modules" in outputOne and
+                        "-w /sbin/rmmod -p x -k modules" in outputTwo and
+                        "-w /sbin/modprobe -p x -k modules" in outputOne and
+                        "-w /sbin/modprobe -p x -k modules" in outputTwo and
+                        "-a always,exit -F arch=b32 -S init_module -S delete_module -k modules" in outputOne and
+                        (
+                                "-a always,exit -F arch=b32 -S init_module,delete_module -F key=modules" in outputTwo or
+                                "-a always,exit -F arch=b64 -S init_module,delete_module -F key=modules" in outputTwo
+                        )
+
+                )
+        ):
+            self.Compliant("Ensure kernel module loading and unloading is collected (Scored)")
+        else:
+            self.NotCompliant("Ensure kernel module loading and unloading is collected (Scored)")
+
+    def auditdconfig_4_1_17(self):
+        cmdOne = r"""grep "^\s*[^#]" /etc/audit/rules.d/*.rules | tail -1"""
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "-e 2" in outputOne
+        ):
+            self.Compliant("Ensure the audit configuration is immutable (Scored)")
+        else:
+            self.NotCompliant("Ensure the audit configuration is immutable (Scored)")
+
+    def rsyslog_4_2_1_1(self):
+        cmdOne = r"dpkg -s rsyslog"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "install ok installed" in outputOne
+        ):
+            self.Compliant("Ensure rsyslog is installed (Scored)")
+        else:
+            self.NotCompliant("Ensure rsyslog is installed (Scored)")
+
+    def rsyslogenabled_4_2_1_2(self):
+        cmdOne = r"systemctl is-enabled rsyslog"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "enabled" in outputOne
+        ):
+            self.Compliant("Ensure rsyslog Service is enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure rsyslog Service is enabled (Scored)")
+
+    def rsyslogperm_4_2_1_4(self):
+        cmdOne = r"grep ^\$FileCreateMode /etc/rsyslog.conf /etc/rsyslog.d/*.conf"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "$FileCreateMode 0640" in outputOne
+        ):
+            self.Compliant("Ensure rsyslog default file permissions configured (Scored)")
+        else:
+            self.NotCompliant("Ensure rsyslog default file permissions configured (Scored)")
+
+    def rsyslogremote_4_2_1_5(self):
+        cmdOne = r"""grep -E "^[^#](\s*\S+\s*)\s*action\(" /etc/rsyslog.conf /etc/rsyslog.d/*.conf | grep "target=" """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne != ""
+        ):
+            self.Compliant("Ensure rsyslog is configured to send logs to a remote log host (Scored)")
+        else:
+            self.NotCompliant("Ensure rsyslog is configured to send logs to a remote log host (Scored)")
+
+    def rsyslogremotedesignated_4_2_1_6(self):
+        cmdOne = r"grep '$ModLoad imtcp' /etc/rsyslog.conf /etc/rsyslog.d/*.conf"
+        cmdTwo = r"grep '$InputTCPServerRun' /etc/rsyslog.conf /etc/rsyslog.d/*.conf"
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+                (
+                    "$ModLoad imtcp" in outputOne and
+                    "#$ModLoad imtcp" not in outputOne and
+                    "# $ModLoad imtcp" not in outputOne
+                ) and
+                (
+                    "$InputTCPServerRun 514" in outputTwo and
+                    "#$InputTCPServerRun 514" not in outputTwo and
+                    "# $InputTCPServerRun 514" not in outputTwo
+                )
+        ):
+            self.InfoCompliant("Ensure remote rsyslog messages are only accepted on designated log hosts. (Not Scored)")
+        else:
+            self.InfoNotCompliant("Ensure remote rsyslog messages are only accepted on designated log hosts. (Not Scored)")
+
+    def journaldconfig_4_2_2_1(self):
+        cmdOne = r"grep -e ForwardToSyslog /etc/systemd/journald.conf"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "ForwardToSyslog=yes" in outputOne
+        ):
+            self.Compliant("Ensure journald is configured to send logs to rsyslog (Scored)")
+        else:
+            self.NotCompliant("Ensure journald is configured to send logs to rsyslog (Scored)")
+
+    def journaldcompress_4_2_2_2(self):
+        cmdOne = r"grep -e Compress /etc/systemd/journald.conf"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Compress=yes" in outputOne
+        ):
+            self.Compliant("Ensure journald is configured to compress large log files (Scored)")
+        else:
+            self.NotCompliant("Ensure journald is configured to compress large log files (Scored)")
+
+    def journaldpers_4_2_2_3(self):
+        cmdOne = r"grep -e Storage /etc/systemd/journald.conf"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Storage=persistent" in outputOne
+        ):
+            self.Compliant("Ensure journald is configured to write logfiles to persistent disk (Scored)")
+        else:
+            self.NotCompliant("Ensure journald is configured to write logfiles to persistent disk (Scored)")
+
+    def logrotate_4_4(self):
+        cmdOne = r"""grep -E "^\s*create\s+\S+" /etc/logrotate.conf | grep -E -v "\s(0)?[0-6][04]0\s" """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == ""
+        ):
+            self.Compliant("Ensure logrotate assigns appropriate permissions (Scored)")
+        else:
+            self.NotCompliant("Ensure logrotate assigns appropriate permissions (Scored)")
+
+    def crond_5_1_1(self):
+        cmdOne = r"systemctl is-enabled cron"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "enabled" in outputOne
+        ):
+            self.Compliant("Ensure cron daemon is enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure cron daemon is enabled (Scored)")
+
+    def cronperm_5_1_2(self):
+        cmdOne = r"stat /etc/crontab"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/crontab are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/crontab are configured (Scored)")
+
+    def cronhourlyperm_5_1_3(self):
+        cmdOne = r"stat /etc/cron.hourly"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/cron.hourly are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/cron.hourly are configured (Scored)")
+
+    def crondailyperm_5_1_4(self):
+        cmdOne = r"stat /etc/cron.daily"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/cron.daily are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/cron.daily are configured (Scored)")
+
+    def cronweeklyperm_5_1_5(self):
+        cmdOne = r"stat /etc/cron.weekly"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/cron.weekly are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/cron.weekly are configured (Scored)")
+
+    def cronmonthlyperm_5_1_6(self):
+        cmdOne = r"stat /etc/cron.monthly"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/cron.monthly are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/cron.monthly are configured (Scored)")
+
+    def crondperm_5_1_7(self):
+        cmdOne = r"stat /etc/cron.d"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0700/drwx------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/cron.d are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/cron.d are configured (Scored)")
+
+    def atcron_5_1_8(self):
+        cmdOne = r"stat /etc/cron.deny"
+        cmdTwo = r"stat /etc/at.deny"
+        cmdThree = r"stat /etc/cron.allow"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+        outputThree = self.caller(cmdThree)
+
+        if(
+            "No such file or directory" in outputOne and
+            "No such file or directory" in outputTwo and
+            "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)"
+        ):
+            self.Compliant("Ensure at/cron is restricted to authorized users (Scored)")
+        else:
+            self.NotCompliant("Ensure at/cron is restricted to authorized users (Scored)")
+
+    def sshdconfig_5_2_1(self):
+        cmdOne = r"stat /etc/ssh/sshd_config"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/ssh/sshd_config are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/ssh/sshd_config are configured (Scored)")
+
+    def sshone_5_2_4(self):
+        cmdOne = r"""sshd -T | grep -Ei '^\s*protocol\s+(1|1\s*,\s*2|2\s*,\s*1)\s*' """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == ""
+        ):
+            self.Compliant("Ensure SSH Protocol is not set to 1 (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH Protocol is not set to 1 (Scored)")
+
+    def sshloglevel_5_2_5(self):
+        cmdOne = r"sshd -T | grep loglevel"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "LogLevel VERBOSE" in outputOne or
+            "loglevel INFO" in outputOne
+        ):
+            self.Compliant("Ensure SSH LogLevel is appropriate (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH LogLevel is appropriate (Scored)")
+
+    def sshx11_5_2_6(self):
+        cmdOne = r"sshd -T | grep x11forwarding"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "X11Forwarding no" in outputOne
+        ):
+            self.Compliant("Ensure SSH X11 forwarding is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH X11 forwarding is disabled (Scored)")
+
+    def sshmaxauth_5_2_7(self):
+        cmdOne = r"sshd -T | grep maxauthtries"
+        outputOne = self.caller(cmdOne)
+
+        if "MaxAuthTries" in outputOne:
+            temp = outputOne.split()
+            try:
+                tries = int(temp[1])
+                if tries <= 4:
+                    self.Compliant("Ensure SSH MaxAuthTries is set to 4 or less (Scored)")
+                else:
+                    self.NotCompliant("Ensure SSH MaxAuthTries is set to 4 or less (Scored)")
+            except:
+                self.NotCompliant("Ensure SSH MaxAuthTries is set to 4 or less (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH MaxAuthTries is set to 4 or less (Scored)")
+
+    def sshignorerhost_5_2_8(self):
+        cmdOne = r"sshd -T | grep ignorerhosts"
+        outputOne = self.caller(cmdOne)
+
+        if(
+           "IgnoreRhosts yes" in outputOne
+        ):
+            self.Compliant("Ensure SSH IgnoreRhosts is enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH IgnoreRhosts is enabled (Scored)")
+
+    def sshhostbased_5_2_9(self):
+        cmdOne = r"sshd -T | grep hostbasedauthentication"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "HostbasedAuthentication no" in outputOne
+        ):
+            self.Compliant("Ensure SSH HostbasedAuthentication is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH HostbasedAuthentication is disabled (Scored)")
+
+    def sshrootlogin_5_2_10(self):
+        cmdOne = r"sshd -T | grep permitrootlogin"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "PermitRootLogin no" in outputOne
+        ):
+            self.Compliant("Ensure SSH root login is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH root login is disabled (Scored)")
+
+    def sshempty_5_2_11(self):
+        cmdOne = r"sshd -T | grep permitemptypasswords"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "PermitEmptyPasswords no" in outputOne
+        ):
+            self.Compliant("Ensure SSH PermitEmptyPasswords is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH PermitEmptyPasswords is disabled (Scored)")
+
+    def sshuserenv_5_2_12(self):
+        cmdOne = r"sshd -T | grep permituserenvironment"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "PermitUserEnvironment no" in outputOne
+        ):
+            self.Compliant("Ensure SSH PermitUserEnvironment is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH PermitUserEnvironment is disabled (Scored)")
+
+    def sshstrongcipher_5_2_13(self):
+        cmdOne = r"sshd -T | grep ciphers"
+        outputOne = self.caller(cmdOne)
+        found = False
+        weak = "3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,arcfour,arcfour128,arcfour256,blowfish-cbc,cast128-cbc,rijndael-cbc@lysator.liu.se"
+        weak = weak.split(",")
+
+        for i in weak:
+            if i in outputOne:
+                found = True
+
+        if not found and "command not found" not in outputOne:
+            self.Compliant("Ensure only strong Ciphers are used (Scored)")
+        else:
+            self.NotCompliant("Ensure only strong Ciphers are used (Scored)")
+
+    def strongmac_5_2_14(self):
+        cmdOne = r"""sshd -T | grep -i "MACs" """
+        outputOne = self.caller(cmdOne)
+        found = False
+
+        weak = "hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1,hmac-sha1-96,umac-64@openssh.com,umac-128@openssh.com,hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com,hmac-sha1-etm@openssh.com,hmac-sha1-96-etm@openssh.com,umac-64-etm@openssh.com,umac-128-etm@openssh.com"
+        weak = weak.split(',')
+
+        for i in weak:
+            if i in outputOne:
+                found = True
+        if not found and "command not found" not in outputOne:
+            self.Compliant("Ensure only strong MAC algorithms are used (Scored)")
+        else:
+            self.NotCompliant("Ensure only strong MAC algorithms are used (Scored)")
+
