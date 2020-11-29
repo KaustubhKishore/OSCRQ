@@ -2975,7 +2975,8 @@ class Debian(Helper):
         cmdOne = r"sshd -T | grep ciphers"
         outputOne = self.caller(cmdOne)
         found = False
-        weak = "3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,arcfour,arcfour128,arcfour256,blowfish-cbc,cast128-cbc,rijndael-cbc@lysator.liu.se"
+        weak = "3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,arcfour,arcfour128,arcfour256,"+\
+               "blowfish-cbc,cast128-cbc,rijndael-cbc@lysator.liu.se"
         weak = weak.split(",")
 
         for i in weak:
@@ -2992,7 +2993,10 @@ class Debian(Helper):
         outputOne = self.caller(cmdOne)
         found = False
 
-        weak = "hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1,hmac-sha1-96,umac-64@openssh.com,umac-128@openssh.com,hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com,hmac-sha1-etm@openssh.com,hmac-sha1-96-etm@openssh.com,umac-64-etm@openssh.com,umac-128-etm@openssh.com"
+        weak = "hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1,hmac-sha1-96,umac-64@openssh.com,umac-128@openssh.com,"+\
+               "hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com,"+\
+               "hmac-sha1-etm@openssh.com,hmac-sha1-96-etm@openssh.com,"+\
+               "umac-64-etm@openssh.com,umac-128-etm@openssh.com"
         weak = weak.split(',')
 
         for i in weak:
