@@ -1,0 +1,18 @@
+// Color Pallete
+$background: #2D283E;
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+
+body{
+    width:100vw;
+    height:100vh;
+    background-color: $background;
+    font-family: 'Oswald',sans-serif;
+    color:white;
+}
+#logomain{
+    font-size: 80px;
+    position: absolute;
+    top:10px;
+    left:30px;
+}

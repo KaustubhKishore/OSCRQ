@@ -690,10 +690,6 @@ if(found == 0):
     NONCOMPLIANT.append("SeTakeOwnershipPrivilege")
     NOTCONFIGURED.append("SeTakeOwnershipPrivilege")
 
-print("Compliant",COMPLIANT,'\n')
-print("Non Compliant",NONCOMPLIANT,'\n')
-print("Not Configured",NOTCONFIGURED,'\n')
-
 # Security Options
 
 # 2.3.1.1 (L1) Ensure 'Accounts: Administrator account status' is set to
@@ -790,7 +786,7 @@ if(found == 0):
 # MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\AllocateDASD=1,"2"
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\AllocateDASD=1,"2""):
+    if (GPRsplit[idx] == 'MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\AllocateDASD=1,"2"'):
         found = 1
         COMPLIANT.append("AllocateDASD")
         break
@@ -985,7 +981,7 @@ if(found == 0):
 # MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount=1,"3"
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount=1,"3""):
+    if (GPRsplit[idx] == 'MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount=1,"3"'):
         found = 1
         COMPLIANT.append("CachedLogonsCount")
         break
@@ -1011,7 +1007,7 @@ if(found == 0):
 # MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ScRemoveOption=1,"1"
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ScRemoveOption=1,"1""):
+    if (GPRsplit[idx] == 'MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ScRemoveOption=1,"1"'):
         found = 1
         COMPLIANT.append("ScRemoveOption")
         break
@@ -1281,8 +1277,12 @@ if(found == 0):
     NONCOMPLIANT.append("ForceGuest")
     NOTCONFIGURED.append("ForceGuest")
     
+print("Compliant",COMPLIANT,'\n')
+print("Non Compliant",NONCOMPLIANT,'\n')
+print("Not Configured",NOTCONFIGURED,'\n')
+
 # 2.3.11 Network security
----------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 # 2.3.11.1 (L1) Ensure 'Network security: Allow Local System to use
 # computer identity for NTLM' is set to 'Enabled' (Automated)
 
@@ -1662,3 +1662,29 @@ if(found == 0):
 # Failure' (Automated)
 
 # 17.9 System
+
+from pymongo import MongoClient 
+  
+try: 
+    conn = MongoClient("mongodb+srv://Sanya:4wUubuaMachwQ9rn@cluster0.9w3mr.mongodb.net/OSCARQ?retryWrites=true&w=majority") 
+    print("Connected to OSCARQ Database") 
+except Exception as e:   
+    print("Could not connect ", e) 
+  
+db = conn.OSCARQ 
+collection = db.Windows
+  
+emp_rec1 = { 
+        "Message":"This is a test! ~Vaibhav",
+        "Compliant":COMPLIANT,
+        "Non Compliant":NONCOMPLIANT,
+        "Not Configured":NOTCONFIGURED
+        } 
+  
+rec_id1 = collection.insert_one(emp_rec1) 
+  
+print("Data inserted with record id",rec_id1) 
+  
+cursor = collection.find() 
+for record in cursor: 
+    print(record) 
