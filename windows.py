@@ -10,7 +10,7 @@ import win32com.shell.shell as shell
 # shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/c '+command)
 
 
-policyRep = open('group-policy.inf','rb')
+policyRep = open('group-policy.inf', 'rb')
 RepRead = policyRep.read()
 GPR = RepRead.decode('utf-16')
 GPRsplit = GPR.split()
@@ -29,16 +29,15 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "PasswordHistorySize"):
         found = 1
-        benchVal = int(GPRsplit[idx+2])
+        benchVal = int(GPRsplit[idx + 2])
         if benchVal >= 24:
             COMPLIANT.append("PasswordHistorySize")
         else:
             NONCOMPLIANT.append("PasswordHistorySize")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("PasswordHistorySize")
     NOTCONFIGURED.append("PasswordHistorySize")
-
 
 # 1.1.2 (L1) Ensure 'Maximum password age' is set to '60 or fewer days,
 # but not 0' (Automated)
@@ -46,13 +45,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "MaximumPasswordAge"):
         found = 1
-        benchVal = int(GPRsplit[idx+2])
+        benchVal = int(GPRsplit[idx + 2])
         if benchVal <= 60:
             COMPLIANT.append("MaximumPasswordAge")
         else:
             NONCOMPLIANT.append("MaximumPasswordAge")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("MaximumPasswordAge")
     NOTCONFIGURED.append("MaximumPasswordAge")
 
@@ -62,13 +61,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "MinimumPasswordAge"):
         found = 1
-        benchVal = int(GPRsplit[idx+2])
+        benchVal = int(GPRsplit[idx + 2])
         if benchVal >= 1:
             COMPLIANT.append("MinimumPasswordAge")
         else:
             NONCOMPLIANT.append("MinimumPasswordAge")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("MinimumPasswordAge")
     NOTCONFIGURED.append("MinimumPasswordAge")
 
@@ -78,13 +77,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "MinimumPasswordLength"):
         found = 1
-        benchVal = int(GPRsplit[idx+2])
+        benchVal = int(GPRsplit[idx + 2])
         if benchVal >= 14:
             COMPLIANT.append("MinimumPasswordLength")
         else:
             NONCOMPLIANT.append("MinimumPasswordLength")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("MinimumPasswordLength")
     NOTCONFIGURED.append("MinimumPasswordLength")
 
@@ -94,16 +93,15 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "PasswordComplexity"):
         found = 1
-        benchVal = int(GPRsplit[idx+2])
+        benchVal = int(GPRsplit[idx + 2])
         if benchVal == 1:
             COMPLIANT.append("PasswordComplexity")
         else:
             NONCOMPLIANT.append("PasswordComplexity")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("PasswordComplexity")
     NOTCONFIGURED.append("PasswordComplexity")
-
 
 # 1.1.6 (L1) Ensure 'Relax minimum password length limits' is set to
 # 'Enabled' (Automated)
@@ -114,7 +112,7 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "RelaxMinimumPasswordLengthLimits"):
         found = 1
-        benchVal = int(GPRsplit[idx+2])
+        benchVal = int(GPRsplit[idx + 2])
         if benchVal == 1:
             COMPLIANT.append("RelaxMinimumPasswordLengthLimits")
         else:
@@ -126,7 +124,7 @@ for idx, word in enumerate(GPRsplit):
             # pathStr.split('\)
             print(pathStr)
             break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("RelaxMinimumPasswordLengthLimits")
     NOTCONFIGURED.append("RelaxMinimumPasswordLengthLimits")
 
@@ -137,13 +135,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "ClearTextPassword"):
         found = 1
-        benchVal = int(GPRsplit[idx+2])
+        benchVal = int(GPRsplit[idx + 2])
         if benchVal == 0:
             COMPLIANT.append("ClearTextPassword")
         else:
             NONCOMPLIANT.append("ClearTextPassword")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("ClearTextPassword")
     NOTCONFIGURED.append("ClearTextPassword")
 
@@ -154,13 +152,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "LockoutDuration"):
         found = 1
-        benchVal = int(GPRsplit[idx+2])
+        benchVal = int(GPRsplit[idx + 2])
         if benchVal >= 15:
             COMPLIANT.append("LockoutDuration")
         else:
             NONCOMPLIANT.append("LockoutDuration")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("LockoutDuration")
     NOTCONFIGURED.append("LockoutDuration")
 
@@ -171,13 +169,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "LockoutBadCount"):
         found = 1
-        benchVal = int(GPRsplit[idx+2])
-        if benchVal >= 1 and benchVal <=10:
+        benchVal = int(GPRsplit[idx + 2])
+        if benchVal >= 1 and benchVal <= 10:
             COMPLIANT.append("LockoutBadCount")
         else:
             NONCOMPLIANT.append("LockoutBadCount")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("LockoutBadCount")
     NOTCONFIGURED.append("LockoutBadCount")
 
@@ -188,13 +186,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "ResetLockoutCount"):
         found = 1
-        benchVal = int(GPRsplit[idx+2])
+        benchVal = int(GPRsplit[idx + 2])
         if benchVal >= 15:
             COMPLIANT.append("ResetLockoutCount")
         else:
             NONCOMPLIANT.append("ResetLockoutCount")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("ResetLockoutCount")
     NOTCONFIGURED.append("ResetLockoutCount")
 
@@ -226,13 +224,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeTrustedCredManAccessPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-0-0":
             COMPLIANT.append("SeTrustedCredManAccessPrivilege")
         else:
             NONCOMPLIANT.append("SeTrustedCredManAccessPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeTrustedCredManAccessPrivilege")
     NOTCONFIGURED.append("SeTrustedCredManAccessPrivilege")
 
@@ -245,13 +243,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeNetworkLogonRight"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544,*S-1-5-32-555":
             COMPLIANT.append("SeNetworkLogonRight")
         else:
             NONCOMPLIANT.append("SeNetworkLogonRight")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeNetworkLogonRight")
     NOTCONFIGURED.append("SeNetworkLogonRight")
 
@@ -264,13 +262,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeTcbPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-0-0":
             COMPLIANT.append("SeTcbPrivilege")
         else:
             NONCOMPLIANT.append("SeTcbPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeTcbPrivilege")
     NOTCONFIGURED.append("SeTcbPrivilege")
 
@@ -298,13 +296,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeBackupPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeBackupPrivilege")
         else:
             NONCOMPLIANT.append("SeBackupPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeBackupPrivilege")
     NOTCONFIGURED.append("SeBackupPrivilege")
 
@@ -327,13 +325,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeCreatePagefilePrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeCreatePagefilePrivilege")
         else:
             NONCOMPLIANT.append("SeCreatePagefilePrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeCreatePagefilePrivilege")
     NOTCONFIGURED.append("SeCreatePagefilePrivilege")
 
@@ -345,13 +343,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeCreateTokenPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-0-0":
             COMPLIANT.append("SeCreateTokenPrivilege")
         else:
             NONCOMPLIANT.append("SeCreateTokenPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeCreateTokenPrivilege")
     NOTCONFIGURED.append("SeCreateTokenPrivilege")
 
@@ -369,13 +367,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeCreatePermanentPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-0-0":
             COMPLIANT.append("SeCreatePermanentPrivilege")
         else:
             NONCOMPLIANT.append("SeCreatePermanentPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeCreatePermanentPrivilege")
     NOTCONFIGURED.append("SeCreatePermanentPrivilege")
 
@@ -392,13 +390,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeDebugPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeDebugPrivilege")
         else:
             NONCOMPLIANT.append("SeDebugPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeDebugPrivilege")
     NOTCONFIGURED.append("SeDebugPrivilege")
 
@@ -435,13 +433,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeEnableDelegationPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-0-0":
             COMPLIANT.append("SeEnableDelegationPrivilege")
         else:
             NONCOMPLIANT.append("SeEnableDelegationPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeEnableDelegationPrivilege")
     NOTCONFIGURED.append("SeEnableDelegationPrivilege")
 
@@ -454,13 +452,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeRemoteShutdownPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeRemoteShutdownPrivilege")
         else:
             NONCOMPLIANT.append("SeRemoteShutdownPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeRemoteShutdownPrivilege")
     NOTCONFIGURED.append("SeRemoteShutdownPrivilege")
 
@@ -489,13 +487,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeLoadDriverPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeLoadDriverPrivilege")
         else:
             NONCOMPLIANT.append("SeLoadDriverPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeLoadDriverPrivilege")
     NOTCONFIGURED.append("SeLoadDriverPrivilege")
 
@@ -508,13 +506,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeLockMemoryPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-0-0":
             COMPLIANT.append("SeLockMemoryPrivilege")
         else:
             NONCOMPLIANT.append("SeLockMemoryPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeLockMemoryPrivilege")
     NOTCONFIGURED.append("SeLockMemoryPrivilege")
 
@@ -527,13 +525,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeBatchLogonRight"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeBatchLogonRight")
         else:
             NONCOMPLIANT.append("SeBatchLogonRight")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeBatchLogonRight")
     NOTCONFIGURED.append("SeBatchLogonRight")
 
@@ -550,13 +548,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeSecurityPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeSecurityPrivilege")
         else:
             NONCOMPLIANT.append("SeSecurityPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeSecurityPrivilege")
     NOTCONFIGURED.append("SeSecurityPrivilege")
 
@@ -569,13 +567,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeRelabelPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-0-0":
             COMPLIANT.append("SeRelabelPrivilege")
         else:
             NONCOMPLIANT.append("SeRelabelPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeRelabelPrivilege")
     NOTCONFIGURED.append("SeRelabelPrivilege")
 
@@ -588,16 +586,15 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeSystemEnvironmentPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeSystemEnvironmentPrivilege")
         else:
             NONCOMPLIANT.append("SeSystemEnvironmentPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeSystemEnvironmentPrivilege")
     NOTCONFIGURED.append("SeSystemEnvironmentPrivilege")
-
 
 # 2.2.33 (L1) Ensure 'Perform volume maintenance tasks' is set to
 # 'Administrators' (Automated)
@@ -608,13 +605,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeManageVolumePrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeManageVolumePrivilege")
         else:
             NONCOMPLIANT.append("SeManageVolumePrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeManageVolumePrivilege")
     NOTCONFIGURED.append("SeManageVolumePrivilege")
 
@@ -627,13 +624,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeProfileSingleProcessPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeProfileSingleProcessPrivilege")
         else:
             NONCOMPLIANT.append("SeProfileSingleProcessPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeProfileSingleProcessPrivilege")
     NOTCONFIGURED.append("SeProfileSingleProcessPrivilege")
 
@@ -656,13 +653,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeRestorePrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeRestorePrivilege")
         else:
             NONCOMPLIANT.append("SeRestorePrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeRestorePrivilege")
     NOTCONFIGURED.append("SeRestorePrivilege")
 
@@ -680,19 +677,19 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "SeTakeOwnershipPrivilege"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "*S-1-5-32-544":
             COMPLIANT.append("SeTakeOwnershipPrivilege")
         else:
             NONCOMPLIANT.append("SeTakeOwnershipPrivilege")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SeTakeOwnershipPrivilege")
     NOTCONFIGURED.append("SeTakeOwnershipPrivilege")
 
-print("Compliant",COMPLIANT,'\n')
-print("Non Compliant",NONCOMPLIANT,'\n')
-print("Not Configured",NOTCONFIGURED,'\n')
+print("Compliant", COMPLIANT, '\n')
+print("Non Compliant", NONCOMPLIANT, '\n')
+print("Not Configured", NOTCONFIGURED, '\n')
 
 # Security Options
 
@@ -704,13 +701,13 @@ for idx, word in enumerate(GPRsplit):
     found = 0
     if (GPRsplit[idx] == "EnableAdminAccount"):
         found = 1
-        benchVal = GPRsplit[idx+2]
+        benchVal = GPRsplit[idx + 2]
         if benchVal == "0":
             COMPLIANT.append("EnableAdminAccount")
         else:
             NONCOMPLIANT.append("EnableAdminAccount")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("EnableAdminAccount")
     NOTCONFIGURED.append("EnableAdminAccount")
 
@@ -724,7 +721,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("NoConnectedUser")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("NoConnectedUser")
     NOTCONFIGURED.append("NoConnectedUser")
 
@@ -741,7 +738,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("LimitBlankPasswordUse")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("LimitBlankPasswordUse")
     NOTCONFIGURED.append("LimitBlankPasswordUse")
 
@@ -763,7 +760,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("SCENoApplyLegacyAuditPolicy")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SCENoApplyLegacyAuditPolicy")
     NOTCONFIGURED.append("SCENoApplyLegacyAuditPolicy")
 
@@ -779,7 +776,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("CrashOnAuditFail")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("CrashOnAuditFail")
     NOTCONFIGURED.append("CrashOnAuditFail")
 
@@ -794,7 +791,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("AllocateDASD")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("AllocateDASD")
     NOTCONFIGURED.append("AllocateDASD")
 
@@ -803,11 +800,12 @@ if(found == 0):
 # MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers\AddPrinterDrivers=4,1
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers\AddPrinterDrivers=4,1"):
+    if (GPRsplit[
+        idx] == "MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers\AddPrinterDrivers=4,1"):
         found = 1
         COMPLIANT.append("AddPrinterDrivers")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("AddPrinterDrivers")
     NOTCONFIGURED.append("AddPrinterDrivers")
 
@@ -822,7 +820,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("RequireSignOrSeal")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("RequireSignOrSeal")
     NOTCONFIGURED.append("RequireSignOrSeal")
 
@@ -835,7 +833,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("SealSecureChannel")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SealSecureChannel")
     NOTCONFIGURED.append("SealSecureChannel")
 
@@ -848,7 +846,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("SignSecureChannel")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SignSecureChannel")
     NOTCONFIGURED.append("SignSecureChannel")
 
@@ -861,7 +859,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("DisablePasswordChange")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("DisablePasswordChange")
     NOTCONFIGURED.append("DisablePasswordChange")
 
@@ -874,7 +872,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("MaximumPasswordAge")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("MaximumPasswordAge")
     NOTCONFIGURED.append("MaximumPasswordAge")
 
@@ -887,7 +885,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("RequireStrongKey")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("RequireStrongKey")
     NOTCONFIGURED.append("RequireStrongKey")
 
@@ -902,7 +900,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("DisableCAD")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("DisableCAD")
     NOTCONFIGURED.append("DisableCAD")
 
@@ -911,11 +909,12 @@ if(found == 0):
 # MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName=4,1
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName=4,1"):
+    if (GPRsplit[
+        idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName=4,1"):
         found = 1
         COMPLIANT.append("DontDisplayLastUserName")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("DontDisplayLastUserName")
     NOTCONFIGURED.append("DontDisplayLastUserName")
 
@@ -927,11 +926,12 @@ if(found == 0):
 # Has to be configured 
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts=4,9"):
+    if (GPRsplit[
+        idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts=4,9"):
         found = 1
         COMPLIANT.append("MaxDevicePasswordFailedAttempts")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("MaxDevicePasswordFailedAttempts")
     NOTCONFIGURED.append("MaxDevicePasswordFailedAttempts")
 
@@ -942,11 +942,12 @@ if(found == 0):
 # Need to reconfigure 
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs=4,899"):
+    if (GPRsplit[
+        idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs=4,899"):
         found = 1
         COMPLIANT.append("InactivityTimeoutSecs")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("InactivityTimeoutSecs")
     NOTCONFIGURED.append("InactivityTimeoutSecs")
 
@@ -956,11 +957,12 @@ if(found == 0):
 # Caption can be anything, need to reconfigure test
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeText=7,Configured"):
+    if (GPRsplit[
+        idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeText=7,Configured"):
         found = 1
         COMPLIANT.append("LegalNoticeText")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("LegalNoticeText")
     NOTCONFIGURED.append("LegalNoticeText")
 
@@ -971,11 +973,12 @@ if(found == 0):
 # Caption can be anything, need to reconfigure test 
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == 'MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeCaption=1,"Configured"'):
+    if (GPRsplit[
+        idx] == 'MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeCaption=1,"Configured"'):
         found = 1
         COMPLIANT.append("LegalNoticeCaption")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("LegalNoticeCaption")
     NOTCONFIGURED.append("LegalNoticeCaption")
 
@@ -989,7 +992,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("CachedLogonsCount")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("CachedLogonsCount")
     NOTCONFIGURED.append("CachedLogonsCount")
 
@@ -1002,7 +1005,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("PasswordExpiryWarning")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("PasswordExpiryWarning")
     NOTCONFIGURED.append("PasswordExpiryWarning")
 
@@ -1015,7 +1018,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("ScRemoveOption")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("ScRemoveOption")
     NOTCONFIGURED.append("ScRemoveOption")
 
@@ -1026,11 +1029,12 @@ if(found == 0):
 # MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature=4,1
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature=4,1"):
+    if (GPRsplit[
+        idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature=4,1"):
         found = 1
         COMPLIANT.append("RequireSecuritySignature")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("RequireSecuritySignature")
     NOTCONFIGURED.append("RequireSecuritySignature")
 
@@ -1039,11 +1043,12 @@ if(found == 0):
 # MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnableSecuritySignature=4,1
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnableSecuritySignature=4,1"):
+    if (GPRsplit[
+        idx] == "MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnableSecuritySignature=4,1"):
         found = 1
         COMPLIANT.append("EnableSecuritySignature")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("EnableSecuritySignature")
     NOTCONFIGURED.append("EnableSecuritySignature")
 
@@ -1052,11 +1057,12 @@ if(found == 0):
 # MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnablePlainTextPassword=4,0
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnablePlainTextPassword=4,0"):
+    if (GPRsplit[
+        idx] == "MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnablePlainTextPassword=4,0"):
         found = 1
         COMPLIANT.append("EnablePlainTextPassword")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("EnablePlainTextPassword")
     NOTCONFIGURED.append("EnablePlainTextPassword")
 
@@ -1072,7 +1078,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("AutoDisconnect")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("AutoDisconnect")
     NOTCONFIGURED.append("AutoDisconnect")
 
@@ -1081,11 +1087,12 @@ if(found == 0):
 # MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature=4,1
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature=4,1"):
+    if (GPRsplit[
+        idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature=4,1"):
         found = 1
         COMPLIANT.append("RequireSecuritySignature")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("RequireSecuritySignature")
     NOTCONFIGURED.append("RequireSecuritySignature")
 
@@ -1094,11 +1101,12 @@ if(found == 0):
 # MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableSecuritySignature=4,1
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableSecuritySignature=4,1"):
+    if (GPRsplit[
+        idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableSecuritySignature=4,1"):
         found = 1
         COMPLIANT.append("EnableSecuritySignature")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("EnableSecuritySignature")
     NOTCONFIGURED.append("EnableSecuritySignature")
 
@@ -1111,7 +1119,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("EnableForcedLogOff")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("EnableForcedLogOff")
     NOTCONFIGURED.append("EnableForcedLogOff")
 
@@ -1121,11 +1129,12 @@ if(found == 0):
 # MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\SmbServerNameHardeningLevel=4,1
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\SmbServerNameHardeningLevel=4,1"):
+    if (GPRsplit[
+        idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\SmbServerNameHardeningLevel=4,1"):
         found = 1
         COMPLIANT.append("SmbServerNameHardeningLevel")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("SmbServerNameHardeningLevel")
     NOTCONFIGURED.append("SmbServerNameHardeningLevel")
 
@@ -1143,7 +1152,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("RestrictAnonymousSAM")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("RestrictAnonymousSAM")
     NOTCONFIGURED.append("RestrictAnonymousSAM")
 
@@ -1157,7 +1166,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("RestrictAnonymous")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("RestrictAnonymous")
     NOTCONFIGURED.append("RestrictAnonymous")
 
@@ -1171,7 +1180,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("DisableDomainCreds")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("DisableDomainCreds")
     NOTCONFIGURED.append("DisableDomainCreds")
 
@@ -1184,7 +1193,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("EveryoneIncludesAnonymous")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("EveryoneIncludesAnonymous")
     NOTCONFIGURED.append("EveryoneIncludesAnonymous")
 
@@ -1197,7 +1206,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("NullSessionPipes")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("NullSessionPipes")
     NOTCONFIGURED.append("NullSessionPipes")
 
@@ -1206,11 +1215,12 @@ if(found == 0):
 # MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine=7,System\CurrentControlSet\Control\ProductOptions,System\CurrentControlSet\Control\Server Applications,Software\Microsoft\Windows NT\CurrentVersion
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine=7,System\CurrentControlSet\Control\ProductOptions,System\CurrentControlSet\Control\Server Applications,Software\Microsoft\Windows NT\CurrentVersion"):
+    if (GPRsplit[
+        idx] == "MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine=7,System\CurrentControlSet\Control\ProductOptions,System\CurrentControlSet\Control\Server Applications,Software\Microsoft\Windows NT\CurrentVersion"):
         found = 1
         COMPLIANT.append("AllowedExactPaths")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("AllowedExactPaths")
     NOTCONFIGURED.append("AllowedExactPaths")
 
@@ -1219,11 +1229,12 @@ if(found == 0):
 # MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine=7,System\CurrentControlSet\Control\Print\Printers,System\CurrentControlSet\Services\Eventlog,Software\Microsoft\OLAP Server,Software\Microsoft\Windows NT\CurrentVersion\Print,Software\Microsoft\Windows NT\CurrentVersion\Windows,System\CurrentControlSet\Control\ContentIndex,System\CurrentControlSet\Control\Terminal Server,System\CurrentControlSet\Control\Terminal Server\UserConfig,System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration,Software\Microsoft\Windows NT\CurrentVersion\Perflib,System\CurrentControlSet\Services\SysmonLog
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine=7,System\CurrentControlSet\Control\Print\Printers,System\CurrentControlSet\Services\Eventlog,Software\Microsoft\OLAP Server,Software\Microsoft\Windows NT\CurrentVersion\Print,Software\Microsoft\Windows NT\CurrentVersion\Windows,System\CurrentControlSet\Control\ContentIndex,System\CurrentControlSet\Control\Terminal Server,System\CurrentControlSet\Control\Terminal Server\UserConfig,System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration,Software\Microsoft\Windows NT\CurrentVersion\Perflib,System\CurrentControlSet\Services\SysmonLog"):
+    if (GPRsplit[
+        idx] == "MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine=7,System\CurrentControlSet\Control\Print\Printers,System\CurrentControlSet\Services\Eventlog,Software\Microsoft\OLAP Server,Software\Microsoft\Windows NT\CurrentVersion\Print,Software\Microsoft\Windows NT\CurrentVersion\Windows,System\CurrentControlSet\Control\ContentIndex,System\CurrentControlSet\Control\Terminal Server,System\CurrentControlSet\Control\Terminal Server\UserConfig,System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration,Software\Microsoft\Windows NT\CurrentVersion\Perflib,System\CurrentControlSet\Services\SysmonLog"):
         found = 1
         COMPLIANT.append("AllowedPaths")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("AllowedPaths")
     NOTCONFIGURED.append("AllowedPaths")
 
@@ -1232,11 +1243,12 @@ if(found == 0):
 # MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RestrictNullSessAccess=4,1
 for idx, word in enumerate(GPRsplit):
     found = 0
-    if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RestrictNullSessAccess=4,1"):
+    if (GPRsplit[
+        idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RestrictNullSessAccess=4,1"):
         found = 1
         COMPLIANT.append("RestrictNullSessAccess")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("RestrictNullSessAccess")
     NOTCONFIGURED.append("RestrictNullSessAccess")
 
@@ -1250,7 +1262,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("RestrictRemoteSAM")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("RestrictRemoteSAM")
     NOTCONFIGURED.append("RestrictRemoteSAM")
 
@@ -1263,7 +1275,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("NullSessionShares")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("NullSessionShares")
     NOTCONFIGURED.append("NullSessionShares")
 
@@ -1277,10 +1289,10 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         COMPLIANT.append("ForceGuest")
         break
-if(found == 0):
+if (found == 0):
     NONCOMPLIANT.append("ForceGuest")
     NOTCONFIGURED.append("ForceGuest")
-    
+
 # 2.3.11 Network security
 ---------------------------------------------------------------------------
 # 2.3.11.1 (L1) Ensure 'Network security: Allow Local System to use
