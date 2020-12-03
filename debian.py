@@ -188,8 +188,26 @@ class Debian(Helper):
         "defgroupid_5_4_3",
         "umask_5_4_4",
         "shelltimeout_5_4_5",
-        "sucmd_5_6",  # Skip 5_6 (Manual)
-
+        "sucmd_5_6",  # Skip 5_6(Scored) & 6_1_1(Not Scored)(Manual)
+        "passwdperm_6_1_2",
+        "gshadowperm_6_1_3",
+        "shadowperm_6_1_4",
+        "groupperm_6_1_5",
+        "etcpasswdperm_6_1_6",
+        "etcshadow_6_1_7",
+        "etcgroup_6_1_8",
+        "etcgshadow_6_1_9",
+        "wwfiles_6_1_10",
+        "unowned_6_1_11",
+        "ungrouped_6_1_12", #Skip 6_1_13 & 6_1_14(Not Scored) Manual
+        "passwdnotempty_6_2_1",
+        "nolegacy_6_2_2",
+        "userhome_6_2_3",
+        "nolegacy_6_2_4",
+        "nolegacygroup_6_2_5",
+        "rootuid_6_2_6",
+        "rootpathintegrity_6_2_7",
+        "userhomeperm_6_2_8"
     ]
 
     def __init__(self):
@@ -3332,3 +3350,272 @@ class Debian(Helper):
             self.Compliant("Ensure access to the su command is restricted (Scored)")
         else:
             self.NotCompliant("Ensure access to the su command is restricted (Scored)")
+
+    def passwdperm_6_1_2(self):
+        cmdOne = r"stat /etc/passwd"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/passwd are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/passwd are configured (Scored)")
+
+    def gshadowperm_6_1_3(self):
+        cmdOne = r"stat /etc/gshadow-"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)"
+        ):
+            self.Compliant("Ensure permissions on /etc/gshadow- are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/gshadow- are configured (Scored)")
+
+    def shadowperm_6_1_4(self):
+        cmdOne = r"stat /etc/shadow"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (   42/  shadow)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/shadow are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/shadow are configured (Scored)")
+
+    def groupperm_6_1_5(self):
+        cmdOne = r"stat /etc/group"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/group are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/group are configured (Scored)")
+
+
+    def etcpasswdperm_6_1_6(self):
+        cmdOne = r"stat /etc/passwd-"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/passwd- are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/passwd- are configured (Scored)")
+
+    def etcshadow_6_1_7(self):
+        cmdOne = r"stat /etc/shadow-"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (   42/  shadow)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/shadow- are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/shadow- are configured (Scored)")
+
+    def etcgroup_6_1_8(self):
+        cmdOne = r"stat /etc/group-"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/group- are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/group- are configured (Scored)")
+
+    def etcgshadow_6_1_9(self):
+        cmdOne = r"stat /etc/gshadow"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (   42/  shadow)" in outputOne
+        ):
+            self.Compliant("Ensure permissions on /etc/gshadow are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure permissions on /etc/gshadow are configured (Scored)")
+
+    def wwfiles_6_1_10(self):
+        cmdOne = r"df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type f -perm -0002"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) == 0
+        ):
+            self.Compliant("Ensure no world writable files exist (Scored)")
+        else:
+            self.NotCompliant("Ensure no world writable files exist (Scored)")
+
+    def unowned_6_1_11(self):
+        cmdOne = r"df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nouser"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) == 0
+        ):
+            self.Compliant("Ensure no unowned files or directories exist (Scored)")
+        else:
+            self.NotCompliant("Ensure no unowned files or directories exist (Scored)")
+
+    def ungrouped_6_1_12(self):
+        cmdOne = r"df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -nogroup"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) == 0
+        ):
+            self.Compliant("Ensure no ungrouped files or directories exist (Scored)")
+
+        else:
+            self.NotCompliant("Ensure no ungrouped files or directories exist (Scored)")
+
+    def passwdnotempty_6_2_1(self):
+        cmdOne = r"""awk -F: '($2 == "" ) { print $1 " does not have a password "}' /etc/shadow """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) == 0
+        ):
+            self.Compliant("Ensure password fields are not empty (Scored)")
+        else:
+            self.NotCompliant("Ensure password fields are not empty (Scored)")
+
+    def nolegacy_6_2_2(self):
+        cmdOne = r"grep '^\+:' /etc/passwd"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) == 0
+        ):
+            self.Compliant("Ensure no legacy \"+\" entries exist in /etc/passwd (Scored)")
+        else:
+            self.NotCompliant("Ensure no legacy \"+\" entries exist in /etc/passwd (Scored)")
+
+    def userhome_6_2_3(self):
+        cmdOne = r"""
+            #!/bin/bash
+            grep -E -v '^(halt|sync|shutdown)' /etc/passwd | awk -F: '($7 != "'"$(which nologin)"'" && $7 != "/bin/false") { print $1 " " $6 }' | while read -r user dir; do
+            if [ ! -d "$dir" ]; then
+                echo "The home directory ($dir) of user $user does not exist."
+            fi
+            done
+        """
+
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure all users' home directories exist (Scored)")
+        else:
+            self.NotCompliant("Ensure all users' home directories exist (Scored)")
+
+    def nolegacy_6_2_4(self):
+        cmdOne = r"grep '^\+:' /etc/shadow"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) == 0
+        ):
+            self.Compliant("Ensure no legacy \"+\" entries exist in /etc/shadow (Scored)")
+        else:
+            self.NotCompliant("Ensure no legacy \"+\" entries exist in /etc/shadow (Scored)")
+
+    def nolegacygroup_6_2_5(self):
+        cmdOne = r"grep '^\+:' /etc/group"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) == 0
+        ):
+            self.Compliant("Ensure no legacy \"+\" entries exist in /etc/group (Scored)")
+        else:
+            self.NotCompliant("Ensure no legacy \"+\" entries exist in /etc/group (Scored)")
+    def rootuid_6_2_6(self):
+        cmdOne = r"awk -F: '($3 == 0) { print $1 }' /etc/passwd"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "root" in outputOne
+        ):
+            self.Compliant("Ensure root is the only UID 0 account (Scored)")
+        else:
+            self.NotCompliant("Ensure root is the only UID 0 account (Scored)")
+
+    def rootpathintegrity_6_2_7(self):
+        cmdOne = r"""
+            #!/bin/bash
+            if echo $PATH | grep -q "::" ; then
+                echo "Empty Directory in PATH (::)"
+            fi
+            if echo $PATH | grep -q ":$" ; then
+                echo "Trailing : in PATH"
+            fi
+            for x in $(echo $PATH | tr ":" " ") ; do
+                if [ -d "$x" ] ; then
+                    ls -ldH "$x" | awk '
+                $9 == "." {print "PATH contains current working directory (.)"}
+                $3 != "root" {print $9, "is not owned by root"}
+            substr($1,6,1) != "-" {print $9, "is group writable"}
+            substr($1,9,1) != "-" {print $9, "is world writable"}'
+                else
+                    echo "$x is not a directory"
+                fi
+            done
+        """
+        outputOne = self.caller(cmdOne)
+        if(
+            outputOne == "" or
+            len(outputOne) == 0
+        ):
+            self.Compliant("Ensure root PATH Integrity (Scored)")
+
+        else:
+            self.NotCompliant("Ensure root PATH Integrity (Scored)")
+
+    def userhomeperm_6_2_8(self):
+        cmdOne = r"""
+        #!/bin/bash
+        grep -E -v '^(halt|sync|shutdown)' /etc/passwd | awk -F: '($7 != "'"$(which nologin)"'" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+                echo "The home directory ($dir) of user $user does not exist."
+            else
+                dirperm=$(ls -ld $dir | cut -f1 -d" ")
+                if [ $(echo $dirperm | cut -c6) != "-" ]; then
+                    echo "Group Write permission set on the home directory ($dir) of user $user"
+                fi
+                if [ $(echo $dirperm | cut -c8) != "-" ]; then
+                echo "Other Read permission set on the home directory ($dir) of user $user"
+                fi
+                if [ $(echo $dirperm | cut -c9) != "-" ]; then
+                    echo "Other Write permission set on the home directory ($dir) of user $user"
+                fi
+                if [ $(echo $dirperm | cut -c10) != "-" ]; then
+                    echo "Other Execute permission set on the home directory ($dir) of user $user"
+                fi
+            fi
+        done
+        """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure users' home directories permissions are 750 or more restrictive (Scored)")
+        else:
+            self.NotCompliant("Ensure users' home directories permissions are 750 or more restrictive (Scored)")
+

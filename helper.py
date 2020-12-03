@@ -57,7 +57,7 @@ class Helper:
         return self.ncInfoScore
 
     def caller(self, cmd):
-        p = sp.Popen("timeout 3 "+cmd, shell=True, stdin=sp.PIPE,
+        p = sp.Popen("timeout 7 "+cmd, shell=True, stdin=sp.PIPE,
                      stdout=sp.PIPE, stderr=sp.STDOUT, preexec_fn=os.setsid)
         outp = p.stdout.read().decode()
         p.kill()
