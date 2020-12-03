@@ -1,5 +1,5 @@
 var req = new XMLHttpRequest();
-req.open('GET', 'http://localhost:3000');
+req.open('GET', 'http://localhost:3000/data');
 req.onload = function(){
     var x = JSON.parse(req.response);
     var data = document.getElementById("data");
@@ -49,3 +49,5 @@ req.onload = function(){
     console.log(x);
 }
 req.send();
+
+

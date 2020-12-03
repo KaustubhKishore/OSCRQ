@@ -15,7 +15,7 @@ MongoClient.connect('mongodb://localhost:27017', function (err, client) {
   var db = client.db('OSCARQ')
 
   // generic get - gets all values 
-  app.get("/", (req, res) => {
+  app.get("/data", (req, res) => {
     db.collection('Windows').find().toArray(function (err, result) {
       if (err) throw err
       res.send(result);
@@ -38,8 +38,11 @@ MongoClient.connect('mongodb://localhost:27017', function (err, client) {
   });
   
 })
-
+app.use(express.static(__dirname));
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
+
+
+
