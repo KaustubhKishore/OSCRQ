@@ -30,20 +30,20 @@ req.onload = function(){
     var devid = x[LatestIndex]["DeviceID"];
     var total = totalComp + totalNonComp;
     score.innerHTML = totalComp + "/" + total;
-    data.innerHTML = "Test Conducted at:" + testTime + "<br>Plaform:" + platform + "<br>Device ID:" + devid + "<hr>";
+    data.innerHTML = "Test Conducted at:" + testTime + "<br>Plaform:" + platform + "<br>Device ID:" + devid;
     devicelist.innerHTML += devid;
     for(i=0 ; i<x.length; i++){
         sideDevice.innerHTML += "<li>" + devid + "</li>";
     } 
     for(i=0 ; i<totalComp ; i++){
-        detailsAnalysis.innerHTML += x[0]["Compliant"][i] + " | Status: Compliant<br>";
+        detailsAnalysis.innerHTML += x[0]["Compliant"][i] + " | Status: <span class='compliant'>Compliant</span><br>";
     }
     for(i=0 ; i<totalNonComp ; i++){
         if (x[0]["Not Configured"].includes(x[0]["Non Compliant"][i])){
-            detailsAnalysis.innerHTML += x[0]["Non Compliant"][i] + " | Status: Not Configured - Non Compliant<br>";
+            detailsAnalysis.innerHTML += x[0]["Non Compliant"][i] + " | Status: <span class='notconfigured'>Not Configured</span> - <span class='noncompliant'>Non Compliant</span><br>";
         }
         else{
-            detailsAnalysis.innerHTML += x[0]["Non Compliant"][i] + " | Status: Non Compliant<br>";
+            detailsAnalysis.innerHTML += x[0]["Non Compliant"][i] + " | Status: <span class='noncompliant'>Non Compliant</span><br>";
         }
     }
     console.log(x);

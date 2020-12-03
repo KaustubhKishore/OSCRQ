@@ -2,6 +2,9 @@
 $background: #2D283E;
 $backgroundLight: rgba(129,101,166,0.2);
 $shadow: #626262;
+$warning: #f15b5b;
+$success: #5fc88b;
+$neutral: #eeb37c;
 
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
 @font-face {
@@ -161,6 +164,28 @@ a{
     overflow-x: hidden;
 }
 
+#status{
+    @extend #container;
+    width:370px;
+    height:400px;
+    top:40%;
+    left:77%;
+}
+
+#status div{
+    @extend #data;
+    width:300px;
+    height:350px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#status span{
+    margin-bottom: -30px;
+}
+
 #photo{
     width:150px;
     height:150px;
@@ -181,4 +206,18 @@ button{
 
 li{
     font-family: 'haas light';
+}
+
+span{
+    font-family: 'haas bold';
+}
+
+.compliant{
+    color:$success;
+}
+.noncompliant{
+    color:$warning;
+}
+.notconfigured{
+    color:$neutral;
 }

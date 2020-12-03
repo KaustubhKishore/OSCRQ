@@ -71,7 +71,7 @@ body {
           box-shadow: 6px 6px 6px #626262;
 }
 
-#data, #devices div, #details div {
+#data, #devices div, #details div, #status div {
   width: 500px;
   height: 200px;
   background-color: rgba(255, 255, 255, 0.8);
@@ -81,7 +81,7 @@ body {
   font-size: 20px;
 }
 
-#container, #devices, #details {
+#container, #devices, #details, #status {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -98,7 +98,7 @@ body {
   border-radius: 12px;
 }
 
-#container div, #devices div, #details div {
+#container div, #devices div, #details div, #status div {
   margin: 20px;
 }
 
@@ -186,6 +186,35 @@ a {
   overflow-x: hidden;
 }
 
+#status {
+  width: 370px;
+  height: 400px;
+  top: 40%;
+  left: 77%;
+}
+
+#status div {
+  width: 300px;
+  height: 350px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+#status span {
+  margin-bottom: -30px;
+}
+
 #photo {
   width: 150px;
   height: 150px;
@@ -208,5 +237,21 @@ button {
 
 li {
   font-family: 'haas light';
+}
+
+span {
+  font-family: 'haas bold';
+}
+
+.compliant {
+  color: #5fc88b;
+}
+
+.noncompliant {
+  color: #f15b5b;
+}
+
+.notconfigured {
+  color: #eeb37c;
 }
 /*# sourceMappingURL=style.css.map */

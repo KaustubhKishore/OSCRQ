@@ -12,7 +12,7 @@
     <div id="main">
         <div id="sidebar">
             <div id="photo"></div>
-            <div>UserName</div>
+            <div id="username">UserName</div>
             <div><ul id="sideDevice">Devices</ul></div>
             <div>Settings</div>
             <div><a href="#about">About OSCARQ</a></div>
@@ -24,33 +24,52 @@
         <div id="container">
         <div id="score">
             <div id="scoreVal">69/420</div>
-            <div>SYSTEM SCORE</div>
+            <div><span>SYSTEM SCORE</span></div>
         </div>
         <div id="data"></div>
         </div>
         </div>
         <div id="devices">
             <div id="devicelist">
-                Your Devices<br><hr>
+                <span>Your Devices</span><br><hr>
             </div>
         </div>
-        <div id="details"><div id="detailsAnalysis">Details and Analysis<br><hr></div></div>
+        <div id="details"><div id="detailsAnalysis"><span>Details and Analysis</span><br><hr></div></div>
+        <div id="status">
+            <div><span>SYSTEM STATUS</span><br>
+                <div>NA</div>
+                <button class="button">Download Benchmark</button>
+            </div>
+        </div>
     </div>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script>
         function onSignIn(googleUser) {
             var profile = googleUser.getBasicProfile();
             console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            localStorage.setItem("ID",profile.getId());
             console.log('Name: ' + profile.getName());
+            localStorage.setItem('Name', profile.getName());
             console.log('Image URL: ' + profile.getImageUrl());
+            localStorage.setItem('ImURL', profile.getImageUrl());
             console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+            localStorage.setItem('EmailID', profile.getEmail());
+            var userImage = document.getElementById("photo");
+            var username = document.getElementById("username");
+            userImage.style.backgroundImage = 'url('+profile.getImageUrl()+')';
+            username.innerHTML = profile.getName();
           }
         
           
         function signOut() {
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
-            console.log('User signed out.');
+                localStorage.removeItem("ID");
+                localStorage.removeItem('Name');
+                localStorage.removeItem('ImURL');
+                localStorage.removeItem('EmailID');
+                console.log('User signed out.');
+                location.reload();
             });
         }
     </script>
