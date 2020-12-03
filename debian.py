@@ -188,7 +188,7 @@ class Debian(Helper):
         "defgroupid_5_4_3",
         "umask_5_4_4",
         "shelltimeout_5_4_5",
-        "sucmd_5_6", #Skip 5_6 (Manual)
+        "sucmd_5_6",  # Skip 5_6 (Manual)
 
     ]
 
@@ -3164,10 +3164,10 @@ class Debian(Helper):
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
 
-        if(
-            "auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900" in outputOne and
-            "pam_deny.so" in outputTwo and
-            "pam_tally2.so"
+        if (
+                "auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900" in outputOne and
+                "pam_deny.so" in outputTwo and
+                "pam_tally2.so"
         ):
             self.Compliant("Ensure lockout for failed password attempts is configured (Scored)")
 
@@ -3179,9 +3179,9 @@ class Debian(Helper):
         outputOne = self.caller(cmdOne)
 
         try:
-            if(
-                "password required pam_pwhistory.so remember=5" in outputOne or
-                int(outputOne[-1]) >= 5
+            if (
+                    "password required pam_pwhistory.so remember=5" in outputOne or
+                    int(outputOne[-1]) >= 5
             ):
                 self.Compliant("Ensure password reuse is limited (Scored)")
             else:
@@ -3193,8 +3193,8 @@ class Debian(Helper):
         cmdOne = r"""grep -E '^\s*password\s+(\S+\s+)+pam_unix\.so\s+(\S+\s+)*sha512\s*(\S+\s*)*(\s+#.*)?$ ' /etc/pam.d/common-password """
         outputOne = self.caller(cmdOne)
 
-        if(
-            "sha512" in outputOne
+        if (
+                "sha512" in outputOne
         ):
             self.Compliant("Ensure password hashing algorithm is SHA-512 (Scored)")
         else:
@@ -3205,8 +3205,8 @@ class Debian(Helper):
         outputOne = self.caller(cmdOne)
 
         days = int(outputOne.split("\n")[1].split("\t")[1])
-        if(
-            days <= 365
+        if (
+                days <= 365
         ):
             self.Compliant("Ensure password expiration is 365 days or less (Scored)")
         else:
@@ -3218,8 +3218,8 @@ class Debian(Helper):
 
         days = int(outputOne.split("\n")[1].split("\t")[1])
 
-        if(
-            days >= 1
+        if (
+                days >= 1
         ):
             self.Compliant("Ensure minimum days between password changes is configured (Scored)")
         else:
@@ -3231,8 +3231,8 @@ class Debian(Helper):
 
         days = int(outputOne.split("\n")[1].split("\t")[1])
 
-        if(
-            days >= 7
+        if (
+                days >= 7
         ):
             self.Compliant("Ensure password expiration warning days is 7 or more (Scored)")
         else:
@@ -3244,7 +3244,7 @@ class Debian(Helper):
 
         try:
             days = int(outputOne.split("=")[1])
-            if(days <= 30):
+            if (days <= 30):
                 self.Compliant("Ensure inactive password lock is 30 days or less (Scored)")
             else:
                 self.NotCompliant("Ensure inactive password lock is 30 days or less (Scored)")
@@ -3255,8 +3255,8 @@ class Debian(Helper):
         cmdOne = r"""for usr in $(cut -d: -f1 /etc/shadow); do [[ $(chage --list $usr | grep '^Last password change' | cut -d: -f2) > $(date) ]] && echo "$usr :$(chage --list $usr | grep '^Last password change' | cut -d: -f2)"; done"""
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == ""
+        if (
+                outputOne == ""
         ):
             self.Compliant("Ensure all users last password change date is in the past (Scored)")
         else:
@@ -3269,9 +3269,9 @@ class Debian(Helper):
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
 
-        if(
-            outputOne == "" and
-            outputTwo == ""
+        if (
+                outputOne == "" and
+                outputTwo == ""
         ):
             self.Compliant("Ensure system accounts are secured (Scored)")
         else:
@@ -3281,8 +3281,8 @@ class Debian(Helper):
         cmdOne = r"""grep "^root:" /etc/passwd | cut -f4 -d:"""
         outputOne = self.caller(cmdOne)
 
-        if(
-            "0" in outputOne
+        if (
+                "0" in outputOne
         ):
             self.Compliant("Ensure default group for the root account is GID 0 (Scored)")
         else:
@@ -3297,9 +3297,9 @@ class Debian(Helper):
         try:
             perm = int(outputOne.split(" ")[1])
             perm2 = int(outputTwo.split("")[1])
-            if(
-                perm >= 27 or
-                perm2 >= 27
+            if (
+                    perm >= 27 or
+                    perm2 >= 27
             ):
                 self.Compliant("Ensure default user umask is 027 or more restrictive (Scored)")
             else:
@@ -3314,9 +3314,9 @@ class Debian(Helper):
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
 
-        if(
-            "TMOUT=900" in outputOne and
-            "TMOUT=900" in outputTwo
+        if (
+                "TMOUT=900" in outputOne and
+                "TMOUT=900" in outputTwo
         ):
             self.Compliant("Ensure default user shell timeout is 900 seconds or less (Scored)")
         else:
@@ -3326,10 +3326,9 @@ class Debian(Helper):
         cmdOne = r"grep pam_wheel.so /etc/pam.d/su"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "auth required pam_wheel.so use_uid group=" in outputOne
+        if (
+                "auth required pam_wheel.so use_uid group=" in outputOne
         ):
             self.Compliant("Ensure access to the su command is restricted (Scored)")
         else:
             self.NotCompliant("Ensure access to the su command is restricted (Scored)")
-
