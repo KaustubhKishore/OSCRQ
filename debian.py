@@ -199,7 +199,7 @@ class Debian(Helper):
         "etcgshadow_6_1_9",
         "wwfiles_6_1_10",
         "unowned_6_1_11",
-        "ungrouped_6_1_12", #Skip 6_1_13 & 6_1_14(Not Scored) Manual
+        "ungrouped_6_1_12",  # Skip 6_1_13 & 6_1_14(Not Scored) Manual
         "passwdnotempty_6_2_1",
         "nolegacy_6_2_2",
         "userhome_6_2_3",
@@ -207,7 +207,19 @@ class Debian(Helper):
         "nolegacygroup_6_2_5",
         "rootuid_6_2_6",
         "rootpathintegrity_6_2_7",
-        "userhomeperm_6_2_8"
+        "userhomeperm_6_2_8",
+        "usershome_6_2_9",
+        "userdotfile_6_2_10",
+        "nouserforward_6_2_11",
+        "nousernetrc_6_2_12",
+        "usernetrc_6_2_13",
+        "nouserrhosts_6_2_14",
+        "groupsetcpasswd_6_2_15",
+        "noduplicateuid_6_2_16",
+        "noduplicategid_6_2_17",
+        "noduplicateusernames_6_2_18",
+        "noduplicategroupname_6_2_19",
+        "emptyshadow_6_2_20"
     ]
 
     def __init__(self):
@@ -3355,8 +3367,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/passwd"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/passwd are configured (Scored)")
         else:
@@ -3366,8 +3378,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/gshadow-"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)"
+        if (
+                "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (    0/    root)"
         ):
             self.Compliant("Ensure permissions on /etc/gshadow- are configured (Scored)")
         else:
@@ -3377,8 +3389,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/shadow"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (   42/  shadow)" in outputOne
+        if (
+                "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (   42/  shadow)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/shadow are configured (Scored)")
         else:
@@ -3388,20 +3400,19 @@ class Debian(Helper):
         cmdOne = r"stat /etc/group"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0644/-rw-r--r--)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/group are configured (Scored)")
         else:
             self.NotCompliant("Ensure permissions on /etc/group are configured (Scored)")
 
-
     def etcpasswdperm_6_1_6(self):
         cmdOne = r"stat /etc/passwd-"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/passwd- are configured (Scored)")
         else:
@@ -3411,8 +3422,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/shadow-"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (   42/  shadow)" in outputOne
+        if (
+                "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (   42/  shadow)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/shadow- are configured (Scored)")
         else:
@@ -3422,8 +3433,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/group-"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
+        if (
+                "Access: (0600/-rw-------)  Uid: (    0/    root)   Gid: (    0/    root)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/group- are configured (Scored)")
         else:
@@ -3433,8 +3444,8 @@ class Debian(Helper):
         cmdOne = r"stat /etc/gshadow"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (   42/  shadow)" in outputOne
+        if (
+                "Access: (0640/-rw-r-----)  Uid: (    0/    root)   Gid: (   42/  shadow)" in outputOne
         ):
             self.Compliant("Ensure permissions on /etc/gshadow are configured (Scored)")
         else:
@@ -3444,9 +3455,9 @@ class Debian(Helper):
         cmdOne = r"df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -type f -perm -0002"
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) == 0
+        if (
+                outputOne == "" or
+                len(outputOne) == 0
         ):
             self.Compliant("Ensure no world writable files exist (Scored)")
         else:
@@ -3456,9 +3467,9 @@ class Debian(Helper):
         cmdOne = r"df --local -P | awk {'if (NR!=1) print $6'} | xargs -I '{}' find '{}' -xdev -nouser"
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) == 0
+        if (
+                outputOne == "" or
+                len(outputOne) == 0
         ):
             self.Compliant("Ensure no unowned files or directories exist (Scored)")
         else:
@@ -3468,9 +3479,9 @@ class Debian(Helper):
         cmdOne = r"df --local -P | awk '{if (NR!=1) print $6}' | xargs -I '{}' find '{}' -xdev -nogroup"
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) == 0
+        if (
+                outputOne == "" or
+                len(outputOne) == 0
         ):
             self.Compliant("Ensure no ungrouped files or directories exist (Scored)")
 
@@ -3481,9 +3492,9 @@ class Debian(Helper):
         cmdOne = r"""awk -F: '($2 == "" ) { print $1 " does not have a password "}' /etc/shadow """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) == 0
+        if (
+                outputOne == "" or
+                len(outputOne) == 0
         ):
             self.Compliant("Ensure password fields are not empty (Scored)")
         else:
@@ -3493,9 +3504,9 @@ class Debian(Helper):
         cmdOne = r"grep '^\+:' /etc/passwd"
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) == 0
+        if (
+                outputOne == "" or
+                len(outputOne) == 0
         ):
             self.Compliant("Ensure no legacy \"+\" entries exist in /etc/passwd (Scored)")
         else:
@@ -3513,9 +3524,9 @@ class Debian(Helper):
 
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure all users' home directories exist (Scored)")
         else:
@@ -3525,9 +3536,9 @@ class Debian(Helper):
         cmdOne = r"grep '^\+:' /etc/shadow"
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) == 0
+        if (
+                outputOne == "" or
+                len(outputOne) == 0
         ):
             self.Compliant("Ensure no legacy \"+\" entries exist in /etc/shadow (Scored)")
         else:
@@ -3537,19 +3548,20 @@ class Debian(Helper):
         cmdOne = r"grep '^\+:' /etc/group"
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) == 0
+        if (
+                outputOne == "" or
+                len(outputOne) == 0
         ):
             self.Compliant("Ensure no legacy \"+\" entries exist in /etc/group (Scored)")
         else:
             self.NotCompliant("Ensure no legacy \"+\" entries exist in /etc/group (Scored)")
+
     def rootuid_6_2_6(self):
         cmdOne = r"awk -F: '($3 == 0) { print $1 }' /etc/passwd"
         outputOne = self.caller(cmdOne)
 
-        if(
-            "root" in outputOne
+        if (
+                "root" in outputOne
         ):
             self.Compliant("Ensure root is the only UID 0 account (Scored)")
         else:
@@ -3577,9 +3589,9 @@ class Debian(Helper):
             done
         """
         outputOne = self.caller(cmdOne)
-        if(
-            outputOne == "" or
-            len(outputOne) == 0
+        if (
+                outputOne == "" or
+                len(outputOne) == 0
         ):
             self.Compliant("Ensure root PATH Integrity (Scored)")
 
@@ -3611,11 +3623,296 @@ class Debian(Helper):
         """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure users' home directories permissions are 750 or more restrictive (Scored)")
         else:
             self.NotCompliant("Ensure users' home directories permissions are 750 or more restrictive (Scored)")
+
+    def usershome_6_2_9(self):
+        cmdOne = r"""
+        #!/bin/bash
+        grep -E -v '^(halt|sync|shutdown)' /etc/passwd | awk -F: '($7 != "'"$(which nologin)"'" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+                echo "The home directory ($dir) of user $user does not exist."
+            else
+                owner=$(stat -L -c "%U" "$dir")
+            if [ "$owner" != "$user" ]; then
+                echo "The home directory ($dir) of user $user is owned by $owner."
+            fi
+        fi
+        done
+        """
+        outputOne = self.caller(cmdOne)
+
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure users own their home directories (Scored)")
+        else:
+            self.NotCompliant("Ensure users own their home directories (Scored)")
+
+    def userdotfile_6_2_10(self):
+        cmdOne = r"""
+        #!/bin/bash
+        grep -E -v '^(halt|sync|shutdown)' /etc/passwd | awk -F: '($7 != "'"$(which nologin)"'" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+                echo "The home directory ($dir) of user $user does not exist."
+            else
+                for file in $dir/.[A-Za-z0-9]*; do
+                    if [ ! -h "$file" -a -f "$file" ]; then
+                        fileperm=$(ls -ld $file | cut -f1 -d" ")
+                        if [ $(echo $fileperm | cut -c6) != "-" ]; then
+                            echo "Group Write permission set on file $file"
+                        fi
+                        if [ $(echo $fileperm | cut -c9) != "-" ]; then
+                            echo "Other Write permission set on file $file"
+                        fi
+                    fi
+                done
+            fi
+        done
+        """
+
+        outputOne = self.caller(cmdOne)
+
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure users' dot files are not group or world writable (Scored)")
+        else:
+            self.NotCompliant("Ensure users' dot files are not group or world writable (Scored)")
+
+    def nouserforward_6_2_11(self):
+        cmdOne = r"""
+        #!/bin/bash
+        grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '($7 != "'"$(which nologin)"'" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+                echo "The home directory ($dir) of user $user does not exist."
+            else
+                if [ ! -h "$dir/.forward" -a -f "$dir/.forward" ]; then
+                    echo ".forward file $dir/.forward exists"
+                fi
+            fi
+        done
+        """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure no users have .forward files (Scored)")
+        else:
+            self.NotCompliant("Ensure no users have .forward files (Scored)")
+
+    def nousernetrc_6_2_12(self):
+        cmdOne = r"""
+        #!/bin/bash
+        grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '($7 != "'"$(which nologin)"'" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+                echo "The home directory ($dir) of user $user does not exist."
+            else
+                if [ ! -h "$dir/.netrc" -a -f "$dir/.netrc" ]; then
+                    echo ".netrc file $dir/.netrc exists"
+                fi
+            fi
+        done
+        """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure no users have .netrc files (Scored)")
+        else:
+            self.NotCompliant("Ensure no users have .netrc files (Scored)")
+
+    def usernetrc_6_2_13(self):
+        cmdOne = r"""
+        #!/bin/bash
+        grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '($7 != "'"$(which nologin)"'" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+                echo "The home directory ($dir) of user $user does not exist."
+            else
+                for file in $dir/.netrc; do
+                    if [ ! -h "$file" -a -f "$file" ]; then
+                        fileperm=$(ls -ld $file | cut -f1 -d" ")
+                        if [ $(echo $fileperm | cut -c5) != "-" ]; then
+                            echo "Group Read set on $file"
+                        fi
+                        if [ $(echo $fileperm | cut -c6) != "-" ]; then
+                            echo "Group Write set on $file"
+                        fi
+                        if [ $(echo $fileperm | cut -c7) != "-" ]; then
+                            echo "Group Execute set on $file"
+                        fi
+                        if [ $(echo $fileperm | cut -c8) != "-" ]; then
+                            echo "Other Read set on $file"
+                        fi
+                        if [ $(echo $fileperm | cut -c9) != "-" ]; then
+                            echo "Other Write set on $file"
+                        fi
+                        if [ $(echo $fileperm | cut -c10) != "-" ]; then
+                            echo "Other Execute set on $file"
+                        fi
+                    fi
+                done
+            fi
+        done
+        """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure users' .netrc Files are not group or world accessible (Scored)")
+        else:
+            self.NotCompliant("Ensure users' .netrc Files are not group or world accessible (Scored)")
+
+    def nouserrhosts_6_2_14(self):
+        cmdOne = r"""
+        #!/bin/bash
+        grep -E -v '^(root|halt|sync|shutdown)' /etc/passwd | awk -F: '($7 != "'"$(which nologin)"'" && $7 != "/bin/false") { print $1 " " $6 }' | while read user dir; do
+            if [ ! -d "$dir" ]; then
+                echo "The home directory ($dir) of user $user does not exist."
+            else
+                for file in $dir/.rhosts; do
+                    if [ ! -h "$file" -a -f "$file" ]; then
+                        echo ".rhosts file in $dir"
+                    fi
+                done
+            fi
+        done
+        """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure no users have .rhosts files (Scored)")
+        else:
+            self.NotCompliant("Ensure no users have .rhosts files (Scored)")
+
+    def groupsetcpasswd_6_2_15(self):
+        cmdOne = r"""
+        #!/bin/bash
+        for i in $(cut -s -d: -f4 /etc/passwd | sort -u); do
+            grep -q -P "^.*?:[^:]*:$i:" /etc/group
+            if [ $? -ne 0 ]; then
+                echo "Group $i is referenced by /etc/passwd but does not exist in
+        /etc/group"
+            fi
+        done
+        """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure all groups in /etc/passwd exist in /etc/group (Scored)")
+        else:
+            self.NotCompliant("Ensure all groups in /etc/passwd exist in /etc/group (Scored)")
+
+    def noduplicateuid_6_2_16(self):
+        cmdOne = r"""
+        #!/bin/bash
+        cut -f3 -d":" /etc/passwd | sort -n | uniq -c | while read x; do
+            [ -z "$x" ] && break
+            set - $x
+            if [ $1 -gt 1 ]; then
+                users=$(awk -F: '($3 == n) { print $1 }' n=$2 /etc/passwd | xargs)
+                echo "Duplicate UID ($2): $users"
+            fi
+        done
+        """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure no duplicate UIDs exist (Scored)")
+        else:
+            self.NotCompliant("Ensure no duplicate UIDs exist (Scored)")
+
+    def noduplicategid_6_2_17(self):
+        cmdOne = r"""
+        #!/bin/bash
+        cut -d: -f3 /etc/group | sort | uniq -d | while read x; do
+            echo "Duplicate GID ($x) in /etc/group"
+        done
+        """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure no duplicate GIDs exist (Scored)")
+        else:
+            self.NotCompliant("Ensure no duplicate GIDs exist (Scored)")
+
+    def noduplicateusernames_6_2_18(self):
+        cmdOne = r"""
+        #!/bin/bash
+        cut -d: -f1 /etc/passwd | sort | uniq -d | while read x; do
+            echo "Duplicate login name ${x} in /etc/passwd"
+        done
+        """
+
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure no duplicate user names exist (Scored)")
+        else:
+            self.NotCompliant("Ensure no duplicate user names exist (Scored)")
+
+    def noduplicategroupname_6_2_19(self):
+        cmdOne = r"""
+        #!/bin/bash
+        cut -d: -f1 /etc/group | sort | uniq -d | while read x; do
+            echo "Duplicate group name ${x} in /etc/group"
+        done
+        """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == "" or
+            len(outputOne) <= 2
+        ):
+            self.Compliant("Ensure no duplicate group names exist (Scored)")
+        else:
+            self.NotCompliant("Ensure no duplicate group names exist (Scored)")
+
+    def emptyshadow_6_2_20(self):
+        cmdOne = r"grep ^shadow:[^:]*:[^:]*:[^:]+ /etc/group"
+        cmdTwo = r"""awk -F: '($4 == "<shadow-gid>") { print }' /etc/passwd"""
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+                (
+                    outputOne == "" or
+                    len(outputOne) <= 2
+                ) and
+                (
+                    outputTwo == "" or
+                    len(outputTwo) <= 2
+                )
+        ):
+            self.Compliant("Ensure shadow group is empty (Scored)")
+        else:
+            self.NotCompliant("Ensure shadow group is empty (Scored)")
 
