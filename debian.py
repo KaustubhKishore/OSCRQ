@@ -3702,9 +3702,9 @@ class Debian(Helper):
         """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure no users have .forward files (Scored)")
         else:
@@ -3725,9 +3725,9 @@ class Debian(Helper):
         """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure no users have .netrc files (Scored)")
         else:
@@ -3768,9 +3768,9 @@ class Debian(Helper):
         """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure users' .netrc Files are not group or world accessible (Scored)")
         else:
@@ -3793,9 +3793,9 @@ class Debian(Helper):
         """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure no users have .rhosts files (Scored)")
         else:
@@ -3814,9 +3814,9 @@ class Debian(Helper):
         """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure all groups in /etc/passwd exist in /etc/group (Scored)")
         else:
@@ -3836,9 +3836,9 @@ class Debian(Helper):
         """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure no duplicate UIDs exist (Scored)")
         else:
@@ -3853,9 +3853,9 @@ class Debian(Helper):
         """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure no duplicate GIDs exist (Scored)")
         else:
@@ -3871,9 +3871,9 @@ class Debian(Helper):
 
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure no duplicate user names exist (Scored)")
         else:
@@ -3888,9 +3888,9 @@ class Debian(Helper):
         """
         outputOne = self.caller(cmdOne)
 
-        if(
-            outputOne == "" or
-            len(outputOne) <= 2
+        if (
+                outputOne == "" or
+                len(outputOne) <= 2
         ):
             self.Compliant("Ensure no duplicate group names exist (Scored)")
         else:
@@ -3902,17 +3902,16 @@ class Debian(Helper):
         outputOne = self.caller(cmdOne)
         outputTwo = self.caller(cmdTwo)
 
-        if(
+        if (
                 (
-                    outputOne == "" or
-                    len(outputOne) <= 2
+                        outputOne == "" or
+                        len(outputOne) <= 2
                 ) and
                 (
-                    outputTwo == "" or
-                    len(outputTwo) <= 2
+                        outputTwo == "" or
+                        len(outputTwo) <= 2
                 )
         ):
             self.Compliant("Ensure shadow group is empty (Scored)")
         else:
             self.NotCompliant("Ensure shadow group is empty (Scored)")
-
