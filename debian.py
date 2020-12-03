@@ -166,7 +166,30 @@ class Debian(Helper):
         "sshempty_5_2_11",
         "sshuserenv_5_2_12",
         "sshstrongcipher_5_2_13",
-        "strongmac_5_2_14"
+        "strongmac_5_2_14",
+        "strongkex_5_2_15",
+        "sshidle_5_2_16",
+        "sshlogingrace_5_2_17",  # Skip 5_2_18(Scored) - Manual
+        "sshbanner_5_2_19",
+        "sshpam_5_2_20",
+        "sshtcp_5_2_21",
+        "sshmax_5_2_22",
+        "sshmaxsessions_5_2_23",
+        "pwdreqs_5_3_1",
+        "lockout_5_3_2",
+        "passreuse_5_3_3",
+        "passhashing_5_3_4",
+        "passexp_5_4_1_1",
+        "passmindays_5_4_1_2",
+        "passexpwarn_5_4_1_3",
+        "inactivepass_5_4_1_4",
+        "lastpasschange_5_4_1_5",
+        "sysaccs_5_4_2",
+        "defgroupid_5_4_3",
+        "umask_5_4_4",
+        "shelltimeout_5_4_5",
+        "sucmd_5_6", #Skip 5_6 (Manual)
+
     ]
 
     def __init__(self):
@@ -2975,7 +2998,7 @@ class Debian(Helper):
         cmdOne = r"sshd -T | grep ciphers"
         outputOne = self.caller(cmdOne)
         found = False
-        weak = "3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,arcfour,arcfour128,arcfour256,"+\
+        weak = "3des-cbc,aes128-cbc,aes192-cbc,aes256-cbc,arcfour,arcfour128,arcfour256," + \
                "blowfish-cbc,cast128-cbc,rijndael-cbc@lysator.liu.se"
         weak = weak.split(",")
 
@@ -2993,9 +3016,9 @@ class Debian(Helper):
         outputOne = self.caller(cmdOne)
         found = False
 
-        weak = "hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1,hmac-sha1-96,umac-64@openssh.com,umac-128@openssh.com,"+\
-               "hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com,"+\
-               "hmac-sha1-etm@openssh.com,hmac-sha1-96-etm@openssh.com,"+\
+        weak = "hmac-md5,hmac-md5-96,hmac-ripemd160,hmac-sha1,hmac-sha1-96,umac-64@openssh.com,umac-128@openssh.com," + \
+               "hmac-md5-etm@openssh.com,hmac-md5-96-etm@openssh.com,hmac-ripemd160-etm@openssh.com," + \
+               "hmac-sha1-etm@openssh.com,hmac-sha1-96-etm@openssh.com," + \
                "umac-64-etm@openssh.com,umac-128-etm@openssh.com"
         weak = weak.split(',')
 
@@ -3006,3 +3029,307 @@ class Debian(Helper):
             self.Compliant("Ensure only strong MAC algorithms are used (Scored)")
         else:
             self.NotCompliant("Ensure only strong MAC algorithms are used (Scored)")
+
+    def strongkex_5_2_15(self):
+        cmdOne = r"sshd -T | grep kexalgorithms"
+        outputOne = self.caller(cmdOne)
+
+        found = False
+        weak = r"diffie-hellman-group1-sha1,diffie-hellman-group14-sha1,diffie-hellman-group-exchange-sha1"
+        weak = weak.split(",")
+
+        for i in weak:
+            if i in outputOne:
+                found = True
+        if not found and "command not found" not in outputOne:
+            self.Compliant("Ensure only strong Key Exchange algorithms are used (Scored)")
+        else:
+            self.NotCompliant("Ensure only strong Key Exchange algorithms are used (Scored)")
+
+    def sshidle_5_2_16(self):
+        cmdOne = r"sshd -T | grep clientaliveinterval"
+        cmdTwo = r"sshd -T | grep clientalivecountmax"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if (
+                "ClientAliveInterval 300" in outputOne and
+                "ClientAliveCountMax 0" in outputTwo
+        ):
+            self.Compliant("Ensure SSH Idle Timeout Interval is configured (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH Idle Timeout Interval is configured (Scored)")
+
+    def sshlogingrace_5_2_17(self):
+        cmdOne = r"sshd -T | grep logingracetime"
+        outputOne = self.caller(cmdOne)
+
+        try:
+            graceTime = int(outputOne.split(" "))
+            if (graceTime > 1 and graceTime <= 60):
+                self.Compliant("Ensure SSH LoginGraceTime is set to one minute or less (Scored)")
+            else:
+                self.NotCompliant("Ensure SSH LoginGraceTime is set to one minute or less (Scored)")
+        except:
+            self.NotCompliant("Ensure SSH LoginGraceTime is set to one minute or less (Scored)")
+
+    def sshbanner_5_2_19(self):
+        cmdOne = r"sshd -T | grep banner"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "Banner /etc/issue.net" in outputOne
+        ):
+            self.Compliant("Ensure SSH warning banner is configured (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH warning banner is configured (Scored)")
+
+    def sshpam_5_2_20(self):
+        cmdOne = r"sshd -T | grep -i usepam"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "usepam yes" in outputOne or
+                "usePAM yes" in outputOne
+        ):
+            self.Compliant("Ensure SSH PAM is enabled (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH PAM is enabled (Scored)")
+
+    def sshtcp_5_2_21(self):
+        cmdOne = r"sshd -T | grep -i allowtcpforwarding"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "AllowTcpForwarding no" in outputOne
+        ):
+            self.Compliant("Ensure SSH AllowTcpForwarding is disabled (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH AllowTcpForwarding is disabled (Scored)")
+
+    def sshmax_5_2_22(self):
+        cmdOne = r"sshd -T | grep -i maxstartups"
+        outputOne = self.caller(cmdOne)
+
+        if (
+                "maxstartups 10:30:60" in outputOne
+        ):
+            self.Compliant("Ensure SSH MaxStartups is configured (Scored)")
+        else:
+            self.NotCompliant("Ensure SSH MaxStartups is configured (Scored)")
+
+    def sshmaxsessions_5_2_23(self):
+        cmdOne = r"sshd -T | grep -i maxsessions"
+        outputOne = self.caller(cmdOne)
+
+        try:
+            maxSessions = int(outputOne.split(" "))
+            if maxSessions[1] <= 10:
+                self.Compliant("Ensure SSH MaxSessions is limited (Scored)")
+            else:
+                self.NotCompliant("Ensure SSH MaxSessions is limited (Scored)")
+        except:
+            self.NotCompliant("Ensure SSH MaxSessions is limited (Scored)")
+
+    def pwdreqs_5_3_1(self):
+        cmdOne = r"grep '^\s*minlen\s*' /etc/security/pwquality.conf"
+        cmdTwo = r"grep '^\s*minclass\s*' /etc/security/pwquality.conf"
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        cmdThree = r"grep -E '^\s*[duol]credit\s*' /etc/security/pwquality.conf"
+        outputThree = self.caller(cmdThree)
+
+        if (
+                (
+                        "minlen = 14" in outputOne and
+                        "minclass = 4" in outputTwo
+                ) or
+                (
+                        "dcredit = -1" in outputThree and
+                        "ucredit = -1" in outputThree and
+                        "lcredit = -1" in outputThree and
+                        "ocredit = -1" in outputThree
+                )
+        ):
+            self.Compliant("Ensure password creation requirements are configured (Scored)")
+        else:
+            self.NotCompliant("Ensure password creation requirements are configured (Scored)")
+
+    def lockout_5_3_2(self):
+        cmdOne = r"""grep "pam_tally2" /etc/pam.d/common-auth"""
+        cmdTwo = r"""grep -E "pam_(tally2|deny)\.so" /etc/pam.d/common-account"""
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+            "auth required pam_tally2.so onerr=fail audit silent deny=5 unlock_time=900" in outputOne and
+            "pam_deny.so" in outputTwo and
+            "pam_tally2.so"
+        ):
+            self.Compliant("Ensure lockout for failed password attempts is configured (Scored)")
+
+        else:
+            self.NotCompliant("Ensure lockout for failed password attempts is configured (Scored)")
+
+    def passreuse_5_3_3(self):
+        cmdOne = r"grep -E '^password\s+required\s+pam_pwhistory.so' /etc/pam.d/common-password"
+        outputOne = self.caller(cmdOne)
+
+        try:
+            if(
+                "password required pam_pwhistory.so remember=5" in outputOne or
+                int(outputOne[-1]) >= 5
+            ):
+                self.Compliant("Ensure password reuse is limited (Scored)")
+            else:
+                self.NotCompliant("Ensure password reuse is limited (Scored)")
+        except:
+            self.NotCompliant("Ensure password reuse is limited (Scored)")
+
+    def passhashing_5_3_4(self):
+        cmdOne = r"""grep -E '^\s*password\s+(\S+\s+)+pam_unix\.so\s+(\S+\s+)*sha512\s*(\S+\s*)*(\s+#.*)?$ ' /etc/pam.d/common-password """
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "sha512" in outputOne
+        ):
+            self.Compliant("Ensure password hashing algorithm is SHA-512 (Scored)")
+        else:
+            self.NotCompliant("Ensure password hashing algorithm is SHA-512 (Scored)")
+
+    def passexp_5_4_1_1(self):
+        cmdOne = r"grep PASS_MAX_DAYS /etc/login.defs"
+        outputOne = self.caller(cmdOne)
+
+        days = int(outputOne.split("\n")[1].split("\t")[1])
+        if(
+            days <= 365
+        ):
+            self.Compliant("Ensure password expiration is 365 days or less (Scored)")
+        else:
+            self.NotCompliant("Ensure password expiration is 365 days or less (Scored)")
+
+    def passmindays_5_4_1_2(self):
+        cmdOne = r"grep PASS_MIN_DAYS /etc/login.defs"
+        outputOne = self.caller(cmdOne)
+
+        days = int(outputOne.split("\n")[1].split("\t")[1])
+
+        if(
+            days >= 1
+        ):
+            self.Compliant("Ensure minimum days between password changes is configured (Scored)")
+        else:
+            self.NotCompliant("Ensure minimum days between password changes is configured (Scored)")
+
+    def passexpwarn_5_4_1_3(self):
+        cmdOne = r"grep PASS_WARN_AGE /etc/login.defs"
+        outputOne = self.caller(cmdOne)
+
+        days = int(outputOne.split("\n")[1].split("\t")[1])
+
+        if(
+            days >= 7
+        ):
+            self.Compliant("Ensure password expiration warning days is 7 or more (Scored)")
+        else:
+            self.NotCompliant("Ensure password expiration warning days is 7 or more (Scored)")
+
+    def inactivepass_5_4_1_4(self):
+        cmdOne = r"useradd -D | grep INACTIVE"
+        outputOne = self.caller(cmdOne)
+
+        try:
+            days = int(outputOne.split("=")[1])
+            if(days <= 30):
+                self.Compliant("Ensure inactive password lock is 30 days or less (Scored)")
+            else:
+                self.NotCompliant("Ensure inactive password lock is 30 days or less (Scored)")
+        except:
+            self.NotCompliant("Ensure inactive password lock is 30 days or less (Scored)")
+
+    def lastpasschange_5_4_1_5(self):
+        cmdOne = r"""for usr in $(cut -d: -f1 /etc/shadow); do [[ $(chage --list $usr | grep '^Last password change' | cut -d: -f2) > $(date) ]] && echo "$usr :$(chage --list $usr | grep '^Last password change' | cut -d: -f2)"; done"""
+        outputOne = self.caller(cmdOne)
+
+        if(
+            outputOne == ""
+        ):
+            self.Compliant("Ensure all users last password change date is in the past (Scored)")
+        else:
+            self.NotCompliant("Ensure all users last password change date is in the past (Scored)")
+
+    def sysaccs_5_4_2(self):
+        cmdOne = r"""awk -F: '($1!="root" && $1!="sync" && $1!="shutdown" && $1!="halt" && $1!~/^\+/ && $3<'"$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs)"' && $7!="'"$(which nologin)"'" && $7!="/bin/false") {print}' /etc/passwd """
+        cmdTwo = r"""awk -F: '($1!="root" && $1!~/^\+/ && $3<'"$(awk '/^\s*UID_MIN/{print $2}' /etc/login.defs)"') {print $1}' /etc/passwd | xargs -I '{}' passwd -S '{}' | awk '($2!="L" && $2!="LK") {print $1}' """
+
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+            outputOne == "" and
+            outputTwo == ""
+        ):
+            self.Compliant("Ensure system accounts are secured (Scored)")
+        else:
+            self.NotCompliant("Ensure system accounts are secured (Scored)")
+
+    def defgroupid_5_4_3(self):
+        cmdOne = r"""grep "^root:" /etc/passwd | cut -f4 -d:"""
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "0" in outputOne
+        ):
+            self.Compliant("Ensure default group for the root account is GID 0 (Scored)")
+        else:
+            self.NotCompliant("Ensure default group for the root account is GID 0 (Scored)")
+
+    def umask_5_4_4(self):
+        cmdOne = r"""grep "umask" /etc/bash.bashrc"""
+        cmdTwo = r"""grep "umask" /etc/profile /etc/profile.d/*.sh"""
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        try:
+            perm = int(outputOne.split(" ")[1])
+            perm2 = int(outputTwo.split("")[1])
+            if(
+                perm >= 27 or
+                perm2 >= 27
+            ):
+                self.Compliant("Ensure default user umask is 027 or more restrictive (Scored)")
+            else:
+                self.NotCompliant("Ensure default user umask is 027 or more restrictive (Scored)")
+
+        except:
+            self.NotCompliant("Ensure default user umask is 027 or more restrictive (Scored)")
+
+    def shelltimeout_5_4_5(self):
+        cmdOne = r"""grep "^TMOUT" /etc/bash.bashrc """
+        cmdTwo = r"""grep "^TMOUT" /etc/profile /etc/profile.d/*.sh """
+        outputOne = self.caller(cmdOne)
+        outputTwo = self.caller(cmdTwo)
+
+        if(
+            "TMOUT=900" in outputOne and
+            "TMOUT=900" in outputTwo
+        ):
+            self.Compliant("Ensure default user shell timeout is 900 seconds or less (Scored)")
+        else:
+            self.NotCompliant("Ensure default user shell timeout is 900 seconds or less (Scored)")
+
+    def sucmd_5_6(self):
+        cmdOne = r"grep pam_wheel.so /etc/pam.d/su"
+        outputOne = self.caller(cmdOne)
+
+        if(
+            "auth required pam_wheel.so use_uid group=" in outputOne
+        ):
+            self.Compliant("Ensure access to the su command is restricted (Scored)")
+        else:
+            self.NotCompliant("Ensure access to the su command is restricted (Scored)")
+
