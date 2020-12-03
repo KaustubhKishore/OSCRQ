@@ -1,28 +1,46 @@
 // Color Pallete
 $background: #2D283E;
+$backgroundLight: rgba(129,101,166,0.2);
+$shadow: #626262;
 
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap');
+@font-face {
+    font-family: "haas light";
+    src: url("NeueHaasDisplay-Light.ttf");
+  }
+  @font-face {
+    font-family: "haas thin";
+    src: url("NeueHaasDisplay-Thin.ttf");
+  }
+  @font-face {
+    font-family: "haas xthin";
+    src: url("NeueHaasDisplay-XThin.ttf");
+  }
+  @font-face {
+    font-family: "haas bold";
+    src: url("NeueHaasDisplay-Bold.ttf");
+  }
 
 body{
     width:100vw;
     height:100vh;
-    background-color: $background;
-    font-family: 'Oswald',sans-serif;
-    color:white;
+    font-family: 'haas light',sans-serif;
 }
 #logomain{
-    font-size: 80px;
+    font-size: 50px;
     position: absolute;
     top:10px;
     left:30px;
+    font-family: 'Oswald';
+    color:white;
 }
 #score{
-    position: absolute;
-    top:35%;
-    left:45%;
-    width:300px;
-    height:300px;
-    border-radius: 50%;
+    // position: absolute;
+    // top:35%;
+    // left:45%;
+    width:200px;
+    height:200px;
+    border-radius: 12px;
     background-color: white;
     display:flex;
     align-items: center;
@@ -32,16 +50,45 @@ body{
     font-size: 20px;
     transition-duration: 0.6s;
     cursor: pointer;
+    box-shadow: 2px 2px 5px $shadow;
 }
 
 #score:hover{
     transform: scale(2);
     transition-duration: 0.6s;
+    box-shadow: 6px 6px 6px $shadow;
+}
+
+#data{
+    width:500px;
+    height:200px;
+    background-color: rgba(256,256,256,0.8);
+    border-radius: 12px;
+    padding:20px;
+    color: $background;
+    font-size: 20px;
+}
+
+#container{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top:13%;
+    left:22%;
+    background-color: $backgroundLight;
+    border-radius: 12px;
+}
+
+#container div{
+    margin:20px;
 }
 
 hr{
-    border-top: 3px solid $background;
-    width:140px;
+    border-top: 1px solid $background;
+    width:240px;
+    margin-top:3px;
+    margin-bottom: 3px;
 }
 
 #nav{
@@ -58,4 +105,79 @@ hr{
 a{
     text-decoration: none;
     color:white;
+}
+
+#scoreVal{
+    font-size: 50px;
+}
+
+#main{
+    display: flex;
+}
+
+
+#sidebar{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    height:100vh;
+    width:20vw;
+    background-color: $background;
+    color:white;
+    padding-top: 12vh;
+    // padding-left:20px;
+    font-size: 20px;
+    font-family: "haas bold";
+}
+#sidebar div{
+    margin-bottom: 30px;
+
+}
+
+#devices{
+    @extend #container;
+    width:600px;
+    height:240px;
+    left: 65%;
+}
+
+#devices div{
+    @extend #data;
+}
+
+#details{
+    @extend #container;
+    width:1000px;
+    height:400px;
+    top:40%;
+}
+
+#details div{
+    @extend #data;
+    width:900px;
+    height:350px;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+#photo{
+    width:150px;
+    height:150px;
+    border-radius: 50%;
+    background-image: url('https://ih0.redbubble.net/image.521714413.4738/flat,1000x1000,075,f.u2.jpg');
+    background-size: cover;
+    align-self: center;
+    background-position: center;
+}
+
+button{
+    font-family: 'haas bold';
+}
+
+#sideDevice{
+    text-align: center;
+}
+
+li{
+    font-family: 'haas light';
 }

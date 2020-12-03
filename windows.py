@@ -1664,6 +1664,14 @@ print("Not Configured",NOTCONFIGURED,'\n')
 # 17.9 System
 
 from pymongo import MongoClient 
+from datetime import datetime
+import uuid,re,platform
+
+now = datetime.now()
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
+macAdd = ':'.join(re.findall('..', '%012x' % uuid.getnode()))
+platVer = platform.version()
   
 try: 
     conn = MongoClient("mongodb+srv://Sanya:4wUubuaMachwQ9rn@cluster0.9w3mr.mongodb.net/OSCARQ?retryWrites=true&w=majority") 
@@ -1676,6 +1684,9 @@ collection = db.Windows
   
 emp_rec1 = { 
         "Message":"This is a test! ~Vaibhav",
+        "DeviceID":macAdd,
+        "Platform":platVer,
+        "TestTime":dt_string,
         "Compliant":COMPLIANT,
         "Non Compliant":NONCOMPLIANT,
         "Not Configured":NOTCONFIGURED

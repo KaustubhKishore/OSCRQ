@@ -16,7 +16,7 @@ MongoClient.connect('mongodb://localhost:27017', function (err, client) {
 
   // generic get - gets all values 
   app.get("/", (req, res) => {
-    db.collection('Results').find().toArray(function (err, result) {
+    db.collection('Windows').find().toArray(function (err, result) {
       if (err) throw err
       res.send(result);
       // console.log(result)
@@ -33,7 +33,7 @@ MongoClient.connect('mongodb://localhost:27017', function (err, client) {
       "Non Compliant":NONCOMPLIANT,
       "Not Configured":NOTCONFIGURED
       }
-    db.collection('Results').insertOne(Results); 
+    db.collection('Windows').insertOne(Results); 
     res.end("Data Inserted");
   });
   

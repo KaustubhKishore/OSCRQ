@@ -1,26 +1,43 @@
 @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@700&display=swap");
+@font-face {
+  font-family: "haas light";
+  src: url("NeueHaasDisplay-Light.ttf");
+}
+
+@font-face {
+  font-family: "haas thin";
+  src: url("NeueHaasDisplay-Thin.ttf");
+}
+
+@font-face {
+  font-family: "haas xthin";
+  src: url("NeueHaasDisplay-XThin.ttf");
+}
+
+@font-face {
+  font-family: "haas bold";
+  src: url("NeueHaasDisplay-Bold.ttf");
+}
+
 body {
   width: 100vw;
   height: 100vh;
-  background-color: #2D283E;
-  font-family: 'Oswald',sans-serif;
-  color: white;
+  font-family: 'haas light',sans-serif;
 }
 
 #logomain {
-  font-size: 80px;
+  font-size: 50px;
   position: absolute;
   top: 10px;
   left: 30px;
+  font-family: 'Oswald';
+  color: white;
 }
 
 #score {
-  position: absolute;
-  top: 35%;
-  left: 45%;
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
+  width: 200px;
+  height: 200px;
+  border-radius: 12px;
   background-color: white;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -40,6 +57,8 @@ body {
   -webkit-transition-duration: 0.6s;
           transition-duration: 0.6s;
   cursor: pointer;
+  -webkit-box-shadow: 2px 2px 5px #626262;
+          box-shadow: 2px 2px 5px #626262;
 }
 
 #score:hover {
@@ -47,11 +66,46 @@ body {
           transform: scale(2);
   -webkit-transition-duration: 0.6s;
           transition-duration: 0.6s;
+  -webkit-box-shadow: 6px 6px 6px #626262;
+          box-shadow: 6px 6px 6px #626262;
+}
+
+#data, #devices div, #details div {
+  width: 500px;
+  height: 200px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 20px;
+  color: #2D283E;
+  font-size: 20px;
+}
+
+#container, #devices, #details {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  position: absolute;
+  top: 13%;
+  left: 22%;
+  background-color: rgba(129, 101, 166, 0.2);
+  border-radius: 12px;
+}
+
+#container div, #devices div, #details div {
+  margin: 20px;
 }
 
 hr {
-  border-top: 3px solid #2D283E;
-  width: 140px;
+  border-top: 1px solid #2D283E;
+  width: 240px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 
 #nav {
@@ -76,5 +130,82 @@ hr {
 a {
   text-decoration: none;
   color: white;
+}
+
+#scoreVal {
+  font-size: 50px;
+}
+
+#main {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#sidebar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100vh;
+  width: 20vw;
+  background-color: #2D283E;
+  color: white;
+  padding-top: 12vh;
+  font-size: 20px;
+  font-family: "haas bold";
+}
+
+#sidebar div {
+  margin-bottom: 30px;
+}
+
+#devices {
+  width: 600px;
+  height: 240px;
+  left: 65%;
+}
+
+#details {
+  width: 1000px;
+  height: 400px;
+  top: 40%;
+}
+
+#details div {
+  width: 900px;
+  height: 350px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+#photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-image: url("https://ih0.redbubble.net/image.521714413.4738/flat,1000x1000,075,f.u2.jpg");
+  background-size: cover;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center;
+  background-position: center;
+}
+
+button {
+  font-family: 'haas bold';
+}
+
+#sideDevice {
+  text-align: center;
+}
+
+li {
+  font-family: 'haas light';
 }
 /*# sourceMappingURL=style.css.map */
