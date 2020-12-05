@@ -131,7 +131,7 @@ class Debian(Helper):
         "auditdlogin_4_1_7",
         "auditdsession_4_1_8",
         "auditddac_4_1_9",
-        "auditdufa_4_1_10", # Skip 4_1_11 - Manual
+        "auditdufa_4_1_10",  # Skip 4_1_11 - Manual
         "auditdfsmount_4_1_12",
         "auditdfiledel_4_1_13",
         "auditdsudoers_4_1_14",
@@ -232,7 +232,8 @@ class Debian(Helper):
 
         print("--------- LOGS END HERE ---------")
         try:
-            conn = MongoClient("mongodb+srv://Sanya:4wUubuaMachwQ9rn@cluster0.9w3mr.mongodb.net/OSCARQ?retryWrites=true&w=majority")
+            conn = MongoClient(
+                "mongodb+srv://Sanya:4wUubuaMachwQ9rn@cluster0.9w3mr.mongodb.net/OSCARQ?retryWrites=true&w=majority")
             print("Connection Successful")
             db = conn.OSCARQ
             collection = db.Debian
@@ -252,7 +253,7 @@ class Debian(Helper):
             self.recordID = temp.inserted_id
             print("Pushed Successful: ", self.recordID)
         except Exception as e:
-            print("Failure: ",e)
+            print("Failure: ", e)
         self.printer()
 
     def freevxfs_1_1_1_1(self):

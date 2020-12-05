@@ -4,12 +4,11 @@ import platform
 from datetime import datetime
 from tabulate import tabulate
 
-class Helper:
 
+class Helper:
     nc = "\033[91m" + "[NC]" + "\033[0m" + " "
     c = "\033[92m" + "[C]" + "\033[0m" + " "
     info = "\033[94m" + "[INFO]" + "\033[0m" + " "
-
 
     def __init__(self):
         self.id = ""
@@ -81,13 +80,14 @@ class Helper:
         return self.ncInfoScore
 
     def caller(self, cmd):
-        p = sp.Popen("timeout 7 "+cmd, shell=True, stdin=sp.PIPE,
+        p = sp.Popen("timeout 7 " + cmd, shell=True, stdin=sp.PIPE,
                      stdout=sp.PIPE, stderr=sp.STDOUT, preexec_fn=os.setsid)
         outp = p.stdout.read().decode()
         p.kill()
         return (
             outp
         )
+
     def printer(self):
         finalList = list()
         headers = ["Audit", "Scored", "Compliant"]
@@ -113,11 +113,11 @@ class Helper:
             temp = [i, cross, "➖"]
             finalList.append(temp)
 
-        print(tabulate(finalList, headers=headers, tablefmt="presto", colalign=("left","center", "center")))
+        print(tabulate(finalList, headers=headers, tablefmt="presto", colalign=("left", "center", "center")))
         try:
             filename = self.actualDateTimeObject.strftime("%d_%m_%Y_%H_%M_%S") + ".html"
             f = open(filename, "w+")
-            html = tabulate(finalList, headers=headers, tablefmt="html", colalign=("left","center", "center"))
+            html = tabulate(finalList, headers=headers, tablefmt="html", colalign=("left", "center", "center"))
             f.write("""
             <h1>OSCARQ - Open Source Cyber Advanced Risk Quantification </h1>
             <b>Device Unique ID:</b> {} <br>
@@ -132,4 +132,3 @@ class Helper:
 
         except Exception as e:
             print("File Error! ", e)
-
