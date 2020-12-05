@@ -1763,7 +1763,7 @@ except Exception as e:
 db = conn.OSCARQ 
 collection = db.Windows
 
-userID = raw_input("Enter MailID")
+userID = raw_input("Enter MailID ")
   
 emp_rec1 = { 
         "UserID":userID,
