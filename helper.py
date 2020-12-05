@@ -16,6 +16,7 @@ class Helper:
         self.platform = ""
         self.dateAndTime = ""
         self.recordID = ""
+        self.actualDateTimeObject = datetime.now()
 
         self.score = 0
         self.infoScore = 0
@@ -36,8 +37,7 @@ class Helper:
         self.id = self.caller(cmdOne)
         self.platform = platform.version()
 
-        temp = datetime.now()
-        self.dateAndTime = temp.strftime("%d/%m/%Y %H:%M:%S")
+        self.dateAndTime = self.actualDateTimeObject.strftime("%d/%m/%Y %H:%M:%S")
 
     def Compliant(self, audit):
         self.COMPLIANT.append(audit)
@@ -113,7 +113,7 @@ class Helper:
 
         print(tabulate(finalList, headers=headers, tablefmt="fancy_grid"))
         try:
-            filename = self.dateAndTime + ".html"
+            filename = self.actualDateTimeObject.strftime("%d_%m_%Y_%H_%M_%S") + ".html"
             f = open(filename, "w+")
             html = tabulate(finalList, headers=headers, tablefmt="html")
             f.write("""
