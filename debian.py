@@ -1,4 +1,5 @@
 from helper import Helper
+from pymongo import MongoClient
 
 
 class Debian(Helper):
@@ -10,8 +11,8 @@ class Debian(Helper):
         "squashfs_1_1_1_5",
         "udf_1_1_1_6",
         "fat_1_1_1_7",
-        "tmp_1_1_2",  # Requires testing.
-        "nodev_1_1_3",  # Might need testing
+        "tmp_1_1_2",
+        "nodev_1_1_3",
         "nosuid_1_1_4",
         "noexec_1_1_5",
         "sepvar_1_1_6",
@@ -32,7 +33,7 @@ class Debian(Helper):
         "usbstorage_1_1_23",
         "packagemanager_1_2_1",
         "gpgkeys_1_2_2",
-        "sudoinstalled_1_3_1",  # Left optional LDAP check for now
+        "sudoinstalled_1_3_1",
         "sudopty_1_3_2",
         "sudolog_1_3_3",
         "aide_1_4_1",
@@ -40,11 +41,11 @@ class Debian(Helper):
         "bootloaderconfig_1_5_1",
         "bootloaderpassword_1_5_2",
         "authroot_1_5_3",
-        "xdnx_1_6_1",  # Leaving out one check which shouldn't be a problem
+        "xdnx_1_6_1",
         "aslr_1_6_2",
         "prelink_1_6_3",
         "coredumps_1_6_4",
-        "apparmor_1_7_1_1",  # Utils may not be useful. change or to and if imp. later on
+        "apparmor_1_7_1_1",
         "aabootloader_1_7_1_2",
         "aaprofiles_1_7_1_3",
         "aaenforce_1_7_1_4",
@@ -53,15 +54,15 @@ class Debian(Helper):
         "remotelogin_1_8_1_3",
         "permmotd_1_8_1_4",
         "permissue_1_8_1_5",
-        "permissuenet_1_8_1_6",  # gdm is optional
+        "permissuenet_1_8_1_6",
         "gdmconfig_1_8_2",
         "updates_1_9",
         "xinetd_2_1_1",
         "openbsdinetd_2_1_2",
         "timesync_2_2_1_1",
         "timesyncd_2_2_1_2",
-        "chronyconfig_2_2_1_3",  # optional check.
-        "ntpconfig_2_2_1_4",  # Left some additional checks
+        "chronyconfig_2_2_1_3",
+        "ntpconfig_2_2_1_4",
         "xwindow_2_2_2",
         "avahi_2_2_3",
         "cups_2_2_4",
@@ -224,12 +225,34 @@ class Debian(Helper):
 
     def __init__(self):
         super().__init__()
-        self.id = "unique id"
 
     def runner(self):
         for p in self.profile:
             call = getattr(Debian, p)
             call(self)
+        try:
+            conn = MongoClient("mongodb+srv://Sanya:4wUubuaMachwQ9rn@cluster0.9w3mr.mongodb.net/OSCARQ?retryWrites=true&w=majority")
+            print("Connection Successful")
+        except Exception as e:
+            print("Failure")
+
+        db = conn.OSCARQ
+        collection = db.Debian
+
+        benchmark = {
+            "DeviceID": self.id.strip(),
+            "Platform": self.platform.strip(),
+            "BenchmarkingTime": self.dateandtime,
+            "Compliant": self.COMPLIANT,
+            "Not Compliant": self.NOTCOMPLIANT,
+            "Info Compliant": self.INFOCOMPLIANT,
+            "Info NotCompliant": self.INFONOTCOMPLIANT,
+            "Info Manual": self.INFONOTSURE
+        }
+
+        recordID = collection.insert_one(benchmark)
+        print("Pushed Successful")
+        self.printer()
 
     def freevxfs_1_1_1_1(self):
         cmdOne = r"modprobe -n -v freevxfs"

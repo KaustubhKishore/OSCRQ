@@ -1,8 +1,8 @@
 import subprocess as sp
-from subprocess import check_output
 import os
-import signal
-
+import platform
+from datetime import datetime
+from tabulate import tabulate
 
 class Helper:
 
@@ -12,35 +12,57 @@ class Helper:
 
 
     def __init__(self):
-        self.id = "unique id"
-
+        self.id = ""
+        self.platform = ""
+        self.dateandtime = ""
         self.score = 0
         self.infoScore = 0
 
         self.ncScore = 0
         self.ncInfoScore = 0
 
+        self.COMPLIANT = list()
+        self.NOTCOMPLIANT = list()
+        self.INFOCOMPLIANT = list()
+        self.INFONOTCOMPLIANT = list()
+        self.INFONOTSURE = list()
+
+        self.getIdentifiers()
+
+    def getIdentifiers(self):
+        cmdOne = r"cat /sys/class/dmi/id/product_uuid"
+        self.id = self.caller(cmdOne)
+        self.platform = platform.version()
+
+        temp = datetime.now()
+        self.dateandtime = temp.strftime("%d/%m/%Y %H:%M:%S")
+
     def Compliant(self, audit):
+        self.COMPLIANT.append(audit)
         print("\n" + self.c + audit)
         print("-----------------")
         self.score += 1
 
     def NotCompliant(self, audit):
+        self.NOTCOMPLIANT.append(audit)
         print("\n" + self.nc + audit)
         print("-----------------")
         self.ncScore += 1
 
     def InfoCompliant(self, audit):
+        self.INFOCOMPLIANT.append(audit)
         print("\n" + self.info + self.c + audit)
         print("-----------------")
         self.infoScore += 1
 
     def InfoNotCompliant(self, audit):
+        self.INFONOTCOMPLIANT.append(audit)
         print("\n" + self.info + self.nc + audit)
         print("-----------------")
         self.ncInfoScore += 1
 
     def InfoNotSure(self, audit):
+        self.INFONOTSURE.append(audit)
         print("\n" + self.info + audit)
         print("-----------------")
 
@@ -64,3 +86,27 @@ class Helper:
         return (
             outp
         )
+    def printer(self):
+        finalList = list()
+        headers = ["Audit", "Scored", "Compliant"]
+        for i in self.COMPLIANT:
+            temp = [i, "✅", "✅"]
+            finalList.append(temp)
+
+        for i in self.NOTCOMPLIANT:
+            temp = [i, "✅", "❌"]
+            finalList.append(temp)
+
+        for i in self.INFOCOMPLIANT:
+            temp = [i, "❌", "✅"]
+            finalList.append(temp)
+
+        for i in self.INFONOTCOMPLIANT:
+            temp = [i, "❌", "❌"]
+            finalList.append(temp)
+
+        for i in self.INFONOTSURE:
+            temp = [i, "❌", "➖"]
+            finalList.append(temp)
+
+        print(tabulate(finalList, headers=headers, tablefmt="orgtbl"))
