@@ -126,6 +126,8 @@ class Helper:
             {}
             """.format(self.id, self.platform, self.dateAndTime, self.recordID, html))
 
+            f.close()
+
         except Exception as e:
             print("File Error! ", e)
 
