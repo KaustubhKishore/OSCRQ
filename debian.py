@@ -239,6 +239,7 @@ class Debian(Helper):
             collection = db.Debian
 
             benchmark = {
+                "UserID": self.emailID,
                 "DeviceID": self.id.strip(),
                 "Platform": self.platform.strip(),
                 "BenchmarkingTime": self.dateAndTime,

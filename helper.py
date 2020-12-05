@@ -16,6 +16,7 @@ class Helper:
         self.dateAndTime = ""
         self.recordID = ""
         self.actualDateTimeObject = datetime.now()
+        self.emailID = ""
 
         self.score = 0
         self.infoScore = 0
