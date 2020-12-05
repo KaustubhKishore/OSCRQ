@@ -229,6 +229,8 @@ class Debian(Helper):
         for p in self.profile:
             call = getattr(Debian, p)
             call(self)
+
+        print("--------- LOGS END HERE ---------")
         try:
             conn = MongoClient("mongodb+srv://Sanya:4wUubuaMachwQ9rn@cluster0.9w3mr.mongodb.net/OSCARQ?retryWrites=true&w=majority")
             print("Connection Successful")
