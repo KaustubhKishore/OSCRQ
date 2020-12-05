@@ -14,7 +14,9 @@ class Helper:
     def __init__(self):
         self.id = ""
         self.platform = ""
-        self.dateandtime = ""
+        self.dateAndTime = ""
+        self.recordID = ""
+
         self.score = 0
         self.infoScore = 0
 
@@ -35,7 +37,7 @@ class Helper:
         self.platform = platform.version()
 
         temp = datetime.now()
-        self.dateandtime = temp.strftime("%d/%m/%Y %H:%M:%S")
+        self.dateAndTime = temp.strftime("%d/%m/%Y %H:%M:%S")
 
     def Compliant(self, audit):
         self.COMPLIANT.append(audit)
@@ -109,4 +111,21 @@ class Helper:
             temp = [i, "❌", "➖"]
             finalList.append(temp)
 
-        print(tabulate(finalList, headers=headers, tablefmt="orgtbl"))
+        print(tabulate(finalList, headers=headers, tablefmt="fancy_grid"))
+        try:
+            filename = self.dateAndTime + ".html"
+            f = open(filename, "w+")
+            html = tabulate(finalList, headers=headers, tablefmt="html")
+            f.write("""
+            <h1>OSCARQ - Open Source Cyber Advanced Risk Quantification </h1>
+            <b>Device Unique ID:</b> {}
+            <b>Platform:</b> {}
+            <b>Time of Benchmarking:</b> {}
+            <b>MongoDB Record Reference</b>: {}
+            <br>
+            {}
+            """.format(self.id, self.platform, self.dateAndTime, self.recordID, html))
+
+        except Exception as e:
+            print("File Error!")
+

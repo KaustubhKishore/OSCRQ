@@ -238,7 +238,7 @@ class Debian(Helper):
             benchmark = {
                 "DeviceID": self.id.strip(),
                 "Platform": self.platform.strip(),
-                "BenchmarkingTime": self.dateandtime,
+                "BenchmarkingTime": self.dateAndTime,
                 "Compliant": self.COMPLIANT,
                 "Not Compliant": self.NOTCOMPLIANT,
                 "Info Compliant": self.INFOCOMPLIANT,
@@ -246,7 +246,7 @@ class Debian(Helper):
                 "Info Manual": self.INFONOTSURE
             }
 
-            recordID = collection.insert_one(benchmark)
+            self.recordID = collection.insert_one(benchmark)
             print("Pushed Successful")
         except Exception as e:
             print("Failure: ",e)
