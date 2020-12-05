@@ -111,7 +111,7 @@ class Helper:
             temp = [i, "❌", "➖"]
             finalList.append(temp)
 
-        print(tabulate(finalList, headers=headers, tablefmt="fancy_grid"))
+        print(tabulate(finalList, headers=headers, tablefmt="fancy_grid", colalign=("left","center", "center")))
         try:
             filename = self.actualDateTimeObject.strftime("%d_%m_%Y_%H_%M_%S") + ".html"
             f = open(filename, "w+")
