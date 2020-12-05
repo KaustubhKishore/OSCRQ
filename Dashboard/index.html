@@ -16,8 +16,8 @@
             <div><ul id="sideDevice">Devices</ul></div>
             <div>Settings</div>
             <div><a href="#about">About OSCARQ</a></div>
-            <div class="g-signin2" data-onsuccess="onSignIn"></div>
-            <a href="#" onclick="signOut();">Sign out</a>
+            <div class="g-signin2" data-onsuccess="onSignIn" id="signInButton"></div>
+            <a href="#" onclick="signOut();" id="signOutButton"><button class="button is-danger">Sign Out</button></a>
         </div>
         <div id="dash">
         <h1 id="logomain">OSCARQ</h1>
@@ -38,7 +38,7 @@
         <div id="status">
             <div><span>SYSTEM STATUS</span><br>
                 <div id="statusScore">NA</div>
-                <button class="button">Download Benchmark</button>
+                <a href="./CIS_Microsoft_Windows_10_Enterprise_Release_2004_Benchmark_v1.9.0.pdf" target="_blank"><button class="button is-primary">Download Benchmark</button></a>    
             </div>
         </div>
     </div>
@@ -58,6 +58,10 @@
             var username = document.getElementById("username");
             userImage.style.backgroundImage = 'url('+profile.getImageUrl()+')';
             username.innerHTML = profile.getName();
+            var signOutButton = document.getElementById("signOutButton");
+            var signInButton = document.getElementById("signInButton");
+            signInButton.style.display = 'none';
+            signOutButton.style.display = 'block';
           }
         
           
@@ -69,6 +73,10 @@
                 localStorage.removeItem('ImURL');
                 localStorage.removeItem('EmailID');
                 console.log('User signed out.');
+                var signOutButton = document.getElementById("signOutButton");
+                var signInButton = document.getElementById("signInButton");
+                signInButton.style.display = 'block';
+                signOutButton.style.display = 'none';
                 location.reload();
             });
         }

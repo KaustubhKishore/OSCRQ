@@ -265,6 +265,11 @@ tr {
 
 #statusScore {
   font-family: 'haas bold';
+  font-size: 26px !important;
   text-align: center;
+}
+
+#signOutButton {
+  display: none;
 }
 /*# sourceMappingURL=style.css.map */
