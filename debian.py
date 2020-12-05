@@ -247,7 +247,7 @@ class Debian(Helper):
             }
 
             temp = collection.insert_one(benchmark)
-            self.recordID = temp._id
+            self.recordID = temp.inserted_id
             print("Pushed Successful: ", self.recordID)
         except Exception as e:
             print("Failure: ",e)

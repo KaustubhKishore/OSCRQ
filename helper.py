@@ -91,24 +91,26 @@ class Helper:
     def printer(self):
         finalList = list()
         headers = ["Audit", "Scored", "Compliant"]
+        check = "✅".strip()
+        cross = "❌".strip()
         for i in self.COMPLIANT:
-            temp = [i, "✅", "✅"]
+            temp = [i, check, check]
             finalList.append(temp)
 
         for i in self.NOTCOMPLIANT:
-            temp = [i, "✅", "❌"]
+            temp = [i, check, cross]
             finalList.append(temp)
 
         for i in self.INFOCOMPLIANT:
-            temp = [i, "❌", "✅"]
+            temp = [i, cross, check]
             finalList.append(temp)
 
         for i in self.INFONOTCOMPLIANT:
-            temp = [i, "❌", "❌"]
+            temp = [i, cross, cross]
             finalList.append(temp)
 
         for i in self.INFONOTSURE:
-            temp = [i, "❌", "➖"]
+            temp = [i, cross, "➖"]
             finalList.append(temp)
 
         print(tabulate(finalList, headers=headers, tablefmt="fancy_grid", colalign=("left","center", "center")))
