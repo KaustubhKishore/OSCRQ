@@ -249,7 +249,7 @@ class Debian(Helper):
             recordID = collection.insert_one(benchmark)
             print("Pushed Successful")
         except Exception as e:
-            print("Failure")
+            print("Failure: ",e)
         self.printer()
 
     def freevxfs_1_1_1_1(self):
