@@ -45,7 +45,7 @@ req.onload = function(){
     data.innerHTML = "Test Conducted at:" + testTime + "<br>Plaform:" + platform + "<br>Device ID:" + devid;
     devicelist.innerHTML += devid;
     for(i=0 ; i<x.length; i++){
-        sideDevice.innerHTML += "<li>" + devid + "</li>";
+        sideDevice.innerHTML += "<li onclick=changeIndex("+ i +");>" + devid + "</li>";
     } 
     for(i=0 ; i<totalComp ; i++){
         detailsAnalysis.innerHTML += "<tr><td>" + x[LatestIndex]["Compliant"][i] + "</td><td><span class='compliant'>Compliant</span><br></td></tr>";
@@ -61,5 +61,6 @@ req.onload = function(){
     console.log(x);
 }
 req.send();
+
 
 
