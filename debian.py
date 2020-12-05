@@ -246,7 +246,7 @@ class Debian(Helper):
                 "Info Manual": self.INFONOTSURE
             }
 
-            self.recordID = collection.insert_one(benchmark)
+            self.recordID._id = collection.insert_one(benchmark)
             print("Pushed Successful: ", self.recordID)
         except Exception as e:
             print("Failure: ",e)

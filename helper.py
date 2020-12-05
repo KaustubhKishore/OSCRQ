@@ -92,15 +92,15 @@ class Helper:
         finalList = list()
         headers = ["Audit", "Scored", "Compliant"]
         for i in self.COMPLIANT:
-            temp = [i, "✅", "✅"]
+            temp = [i, "✔", "✔"]
             finalList.append(temp)
 
         for i in self.NOTCOMPLIANT:
-            temp = [i, "✅", "❌"]
+            temp = [i, "✔", "❌"]
             finalList.append(temp)
 
         for i in self.INFOCOMPLIANT:
-            temp = [i, "❌", "✅"]
+            temp = [i, "❌", "✔"]
             finalList.append(temp)
 
         for i in self.INFONOTCOMPLIANT:
