@@ -7,21 +7,22 @@ req.onload = function(){
     var devicelist = document.getElementById("devicelist");
     var sideDevice = document.getElementById("sideDevice");
     var detailsAnalysis = document.getElementById("detailsAnalysis");
-    var LatestIndex = 0;
     for( i=0; i<x.length; i++){
         var dateString = x[i]["TestTime"]; 
         var dateParts = dateString.split("/");
         var TempTime = new Date(dateParts[1]+'/'+dateParts[0]+'/'+dateParts[2]); 
-        var LatestTime = new Date(Date.now());
         if(i==0){
-            LatestTime = TempTime;
+            var LatestTime = TempTime;
+            var LatestIndex = 0;
         }else{
             if(TempTime > LatestTime)
             {
                 LatestTime = TempTime;
+                console.log(i);
                 LatestIndex = i;
             }
         }
+        console.log('herrrrrrrrrrrreeeee' + TempTime + " " + LatestTime + " " + LatestIndex);
     }
     var totalComp = x[LatestIndex]["Compliant"].length;
     var totalNonComp = x[LatestIndex]["Non Compliant"].length;
@@ -36,14 +37,14 @@ req.onload = function(){
         sideDevice.innerHTML += "<li>" + devid + "</li>";
     } 
     for(i=0 ; i<totalComp ; i++){
-        detailsAnalysis.innerHTML += x[0]["Compliant"][i] + " | Status: <span class='compliant'>Compliant</span><br>";
+        detailsAnalysis.innerHTML += "<tr><td>" + x[LatestIndex]["Compliant"][i] + "</td><td><span class='compliant'>Compliant</span><br></td></tr>";
     }
     for(i=0 ; i<totalNonComp ; i++){
-        if (x[0]["Not Configured"].includes(x[0]["Non Compliant"][i])){
-            detailsAnalysis.innerHTML += x[0]["Non Compliant"][i] + " | Status: <span class='notconfigured'>Not Configured</span> - <span class='noncompliant'>Non Compliant</span><br>";
+        if (x[LatestIndex]["Not Configured"].includes(x[LatestIndex]["Non Compliant"][i])){
+            detailsAnalysis.innerHTML += "<tr><td>" + x[LatestIndex]["Non Compliant"][i] + "</td><td><span class='notconfigured'>NotConfigured</span> <br> <span class='noncompliant'>NonCompliant</span><br></td></tr>";
         }
         else{
-            detailsAnalysis.innerHTML += x[0]["Non Compliant"][i] + " | Status: <span class='noncompliant'>Non Compliant</span><br>";
+            detailsAnalysis.innerHTML += "<tr><td>" + x[LatestIndex]["Non Compliant"][i] + "</td><td><span class='noncompliant'>NonCompliant</span><br></td></tr>";
         }
     }
     console.log(x);
