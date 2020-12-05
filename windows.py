@@ -1,14 +1,17 @@
 import os
 import win32com.shell.shell as shell
+import time
 
 # Checks if potentially outdated report already exists 
-# if os.path.exists("group-policy.inf"):
-#   os.remove("group-policy.inf")
+if os.path.exists("group-policy.inf"):
+  os.remove("group-policy.inf")
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 # Generates new GP report 
-# command = 'D: && cd Work\Capstone\oscarQ\OSCRQ && secedit /export /cfg group-policy2.inf /log export.log'
-# shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/c '+command)
+command = 'D: && cd '+dir_path+' && secedit /export /cfg group-policy.inf /log export.log'
+shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/c '+command)
 
+time.sleep(2)
 
 policyRep = open('group-policy.inf','rb')
 RepRead = policyRep.read()
@@ -1752,16 +1755,18 @@ macAdd = ':'.join(re.findall('..', '%012x' % uuid.getnode()))
 platVer = platform.version()
   
 try: 
-    conn = MongoClient("mongodb+srv://Sanya:4wUubuaMachwQ9rn@cluster0.9w3mr.mongodb.net/OSCARQ?retryWrites=true&w=majority") 
+    conn = MongoClient("mongodb://localhost:27017") 
     print("Connected to OSCARQ Database") 
 except Exception as e:   
     print("Could not connect ", e) 
   
 db = conn.OSCARQ 
 collection = db.Windows
+
+userID = raw_input("Enter MailID")
   
 emp_rec1 = { 
-        "Message":"This is a test! ~Vaibhav",
+        "UserID":userID,
         "DeviceID":macAdd,
         "Platform":platVer,
         "TestTime":dt_string,

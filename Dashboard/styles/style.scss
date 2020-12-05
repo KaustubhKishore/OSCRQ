@@ -190,7 +190,7 @@ a{
     width:150px;
     height:150px;
     border-radius: 50%;
-    background-image: url('https://ih0.redbubble.net/image.521714413.4738/flat,1000x1000,075,f.u2.jpg');
+    background-image: url('https://st3.depositphotos.com/6672868/13701/v/600/depositphotos_137014128-stock-illustration-user-profile-icon.jpg');
     background-size: cover;
     align-self: center;
     background-position: center;
@@ -230,4 +230,9 @@ span{
   
 tr {
     border-bottom: 0.5px solid $shadow;
+}
+
+#statusScore{
+    font-family: 'haas bold';
+    text-align: center;
 }

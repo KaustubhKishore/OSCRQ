@@ -15,14 +15,14 @@ req.onload = function(){
             var LatestTime = TempTime;
             var LatestIndex = 0;
         }else{
-            if(TempTime > LatestTime)
+            if(TempTime > LatestTime && x[i]["UserID"] == localStorage.getItem('EmailID'))
             {
                 LatestTime = TempTime;
                 console.log(i);
                 LatestIndex = i;
             }
         }
-        console.log('herrrrrrrrrrrreeeee' + TempTime + " " + LatestTime + " " + LatestIndex);
+        console.log('Test Times' + TempTime + " " + LatestTime + " " + LatestIndex);
     }
     var totalComp = x[LatestIndex]["Compliant"].length;
     var totalNonComp = x[LatestIndex]["Non Compliant"].length;
@@ -31,6 +31,17 @@ req.onload = function(){
     var devid = x[LatestIndex]["DeviceID"];
     var total = totalComp + totalNonComp;
     score.innerHTML = totalComp + "/" + total;
+    scorePercent = (totalComp/total)*100;
+    scorePercent = Math.round((scorePercent + Number.EPSILON) * 100) / 100
+    var statusScore = document.getElementById("statusScore");
+    statusScore.innerHTML = scorePercent + "%<br> Compliant";
+    if(scorePercent>=70){
+        statusScore.style.color = '#5fc88b';
+    }else if(scorePercent>=40 && scorePercent<70){
+        statusScore.style.color = '#eeb37c';
+    }else{
+        statusScore.style.color = '#f15b5b';
+    }
     data.innerHTML = "Test Conducted at:" + testTime + "<br>Plaform:" + platform + "<br>Device ID:" + devid;
     devicelist.innerHTML += devid;
     for(i=0 ; i<x.length; i++){
