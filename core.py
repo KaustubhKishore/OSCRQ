@@ -1,5 +1,5 @@
-import debian
-import windows
+from Linux import debian
+from Win import windows
 import random
 
 styleOne = """
