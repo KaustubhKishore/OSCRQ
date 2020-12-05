@@ -118,10 +118,10 @@ class Helper:
             html = tabulate(finalList, headers=headers, tablefmt="html")
             f.write("""
             <h1>OSCARQ - Open Source Cyber Advanced Risk Quantification </h1>
-            <b>Device Unique ID:</b> {}
-            <b>Platform:</b> {}
-            <b>Time of Benchmarking:</b> {}
-            <b>MongoDB Record Reference</b>: {}
+            <b>Device Unique ID:</b> {} <br>
+            <b>Platform:</b> {} <br>
+            <b>Time of Benchmarking:</b> {} <br>
+            <b>MongoDB Record Reference</b>: {} <br>
             <br>
             {}
             """.format(self.id, self.platform, self.dateAndTime, self.recordID, html))
