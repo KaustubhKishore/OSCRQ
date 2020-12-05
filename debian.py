@@ -232,25 +232,24 @@ class Debian(Helper):
         try:
             conn = MongoClient("mongodb+srv://Sanya:4wUubuaMachwQ9rn@cluster0.9w3mr.mongodb.net/OSCARQ?retryWrites=true&w=majority")
             print("Connection Successful")
+            db = conn.OSCARQ
+            collection = db.Debian
+
+            benchmark = {
+                "DeviceID": self.id.strip(),
+                "Platform": self.platform.strip(),
+                "BenchmarkingTime": self.dateandtime,
+                "Compliant": self.COMPLIANT,
+                "Not Compliant": self.NOTCOMPLIANT,
+                "Info Compliant": self.INFOCOMPLIANT,
+                "Info NotCompliant": self.INFONOTCOMPLIANT,
+                "Info Manual": self.INFONOTSURE
+            }
+
+            recordID = collection.insert_one(benchmark)
+            print("Pushed Successful")
         except Exception as e:
             print("Failure")
-
-        db = conn.OSCARQ
-        collection = db.Debian
-
-        benchmark = {
-            "DeviceID": self.id.strip(),
-            "Platform": self.platform.strip(),
-            "BenchmarkingTime": self.dateandtime,
-            "Compliant": self.COMPLIANT,
-            "Not Compliant": self.NOTCOMPLIANT,
-            "Info Compliant": self.INFOCOMPLIANT,
-            "Info NotCompliant": self.INFONOTCOMPLIANT,
-            "Info Manual": self.INFONOTSURE
-        }
-
-        recordID = collection.insert_one(benchmark)
-        print("Pushed Successful")
         self.printer()
 
     def freevxfs_1_1_1_1(self):
