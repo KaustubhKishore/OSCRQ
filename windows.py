@@ -646,7 +646,7 @@ for idx, word in enumerate(GPRsplit):
         found = 1
         benchVal = GPRsplit[idx+2]
         if benchVal == "*S-1-5-32-544":
-            COMPLIANT.append("SeTakeOwnershipPrivilege")
+            COMPLIANT.append("Ensure 'Take ownership of files or other objects' is set to 'Administrators' (Automated)")
         else:
             NONCOMPLIANT.append("Ensure 'Take ownership of files or other objects' is set to 'Administrators' (Automated)")
         break
