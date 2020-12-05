@@ -115,7 +115,7 @@ class Helper:
         try:
             filename = self.actualDateTimeObject.strftime("%d_%m_%Y_%H_%M_%S") + ".html"
             f = open(filename, "w+")
-            html = tabulate(finalList, headers=headers, tablefmt="html")
+            html = tabulate(finalList, headers=headers, tablefmt="html", colalign=("left","center", "center"))
             f.write("""
             <h1>OSCARQ - Open Source Cyber Advanced Risk Quantification </h1>
             <b>Device Unique ID:</b> {} <br>
