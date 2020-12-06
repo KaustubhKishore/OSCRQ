@@ -132,6 +132,8 @@ a{
     // padding-left:20px;
     font-size: 20px;
     font-family: "haas bold";
+    // overflow:scroll;
+    // overflow-x:hidden;
 }
 #sidebar div{
     margin-bottom: 30px;
@@ -227,6 +229,12 @@ span{
     font-size: 16px;
 }
 
+#sideDevice li{
+    cursor: pointer;
+    &:hover{
+        color: $success;
+    }
+}
   
 tr {
     border-bottom: 0.5px solid $shadow;
@@ -240,4 +248,13 @@ tr {
 
 #signOutButton{
     display: none;
+}
+
+table{
+    width:100%;
+}
+
+#logoHome{
+    font-size:140px;
+    font-family: 'Oswald';
 }

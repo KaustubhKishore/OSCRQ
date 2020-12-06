@@ -259,6 +259,14 @@ span {
   font-size: 16px;
 }
 
+#sideDevice li {
+  cursor: pointer;
+}
+
+#sideDevice li:hover {
+  color: #5fc88b;
+}
+
 tr {
   border-bottom: 0.5px solid #626262;
 }
@@ -271,5 +279,14 @@ tr {
 
 #signOutButton {
   display: none;
+}
+
+table {
+  width: 100%;
+}
+
+#logoHome {
+  font-size: 140px;
+  font-family: 'Oswald';
 }
 /*# sourceMappingURL=style.css.map */
