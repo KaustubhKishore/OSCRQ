@@ -1982,6 +1982,3 @@ class Windows:
         cursor = collection.find()
         for record in cursor:
             print(record)
-
-
-

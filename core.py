@@ -54,9 +54,10 @@ elif a == 1:
 else:
     print(styleThree)
 
-opt = 0
-emailID = input("Enter Email ID: ")
-print("Select Operating System:\n1.Debian\n2.Windows\n")
+opt = 1
+# emailID = input("Enter Email ID: ")
+emailID = "kaustubhkishorem@gmail.com"
+# opt = input("Select Operating System:\n1.Debian\n2.Windows\n")
 if opt == 1:
     obj = debian.Debian()
     obj.emailID = emailID

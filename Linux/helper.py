@@ -11,7 +11,7 @@ class Helper:
     info = "\033[94m" + "[INFO]" + "\033[0m" + " "
 
     def __init__(self):
-        self.id = ""
+        self.id = "Jenkins Test Push"
         self.platform = ""
         self.dateAndTime = ""
         self.recordID = ""
