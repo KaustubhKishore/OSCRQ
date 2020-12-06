@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/bulma@0.9.1/css/bulma.min.css,npm/bulma@0.9.1/css/bulma.min.css">
+    <meta name="google-signin-client_id" content="719111280308-8i9fqkgqvvhf9s3d5t9k9ar53pvmtkhp.apps.googleusercontent.com">
+    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="shortcut icon" href="https://pngimg.com/uploads/letter_q/letter_q_PNG44.png" type="image/x-icon">  
+    <title>OSCARQ | Windows</title>
+</head>
+<body>
+    <div id="main">
+        <div id="sidebar">
+            <div id="photo"></div>
+            <div id="username">UserName</div>
+            <div><ul id="sideDevice">Test History</ul></div>
+            <div><a href="./about.html">About OSCARQ</a></div>
+            <div class="g-signin2" data-onsuccess="onSignIn" id="signInButton"></div>
+            <a href="#" onclick="signOut();" id="signOutButton"><button class="button is-danger">Sign Out</button></a>
+        </div>
+        <div id="dash">
+            <a href="./index.html"><h1 id="logomain">OSCARQ</h1></a>
+        <div id="container">
+        <div id="score">
+            <div id="scoreVal">69/420</div>
+            <div><span>SYSTEM SCORE</span></div>
+        </div>
+        <div id="data"></div>
+        </div>
+        </div>
+        <div id="devices">
+            <div id="devicelist">
+                <span>Your Devices</span><br><hr>
+            </div>
+        </div>
+        <div id="details"><div><span>Details and Analysis</span><br><hr><table id="detailsAnalysis"></table></div></div>
+        <div id="status">
+            <div><span>SYSTEM STATUS</span><br>
+                <div id="statusScore">NA</div>
+                <a href="./CIS_Microsoft_Windows_10_Enterprise_Release_2004_Benchmark_v1.9.0.pdf" target="_blank"><button class="button is-primary">Download Benchmark</button></a>    
+            </div>
+        </div>
+    </div>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script>
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            localStorage.setItem("ID",profile.getId());
+            console.log('Name: ' + profile.getName());
+            localStorage.setItem('Name', profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            localStorage.setItem('ImURL', profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+            localStorage.setItem('EmailID', profile.getEmail());
+            var userImage = document.getElementById("photo");
+            var username = document.getElementById("username");
+            userImage.style.backgroundImage = 'url('+profile.getImageUrl()+')';
+            username.innerHTML = profile.getName();
+            var signOutButton = document.getElementById("signOutButton");
+            var signInButton = document.getElementById("signInButton");
+            signInButton.style.display = 'none';
+            signOutButton.style.display = 'block';
+          }
+        
+          
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                localStorage.removeItem("ID");
+                localStorage.removeItem('Name');
+                localStorage.removeItem('ImURL');
+                localStorage.removeItem('EmailID');
+                console.log('User signed out.');
+                var signOutButton = document.getElementById("signOutButton");
+                var signInButton = document.getElementById("signInButton");
+                signInButton.style.display = 'block';
+                signOutButton.style.display = 'none';
+                location.reload();
+            });
+        }
+    </script>
+    <script src="scripts.js"></script>
+</body>
+</html>

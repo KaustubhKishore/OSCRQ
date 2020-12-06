@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/combine/npm/bulma@0.9.1/css/bulma.min.css,npm/bulma@0.9.1/css/bulma.min.css">
+    <meta name="google-signin-client_id" content="719111280308-8i9fqkgqvvhf9s3d5t9k9ar53pvmtkhp.apps.googleusercontent.com">
+    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="shortcut icon" href="https://pngimg.com/uploads/letter_q/letter_q_PNG44.png" type="image/x-icon">  
+    <title>OSCARQ</title>
+</head>
+<body>
+    <style>
+        #containerHome{
+            color:white;
+            width:100vw;
+            height:100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        img{
+            max-width: 200px;
+        }
+        #debimg{
+            width:150px;
+        }
+        #platchoice{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #platchoice div{
+            margin:40px;
+            cursor: pointer;
+            transition-duration: 0.4s;
+        }
+        #platchoice div:hover{
+            transform: scale(1.2);
+            transition-duration: 0.4s;
+        }
+        #choose{
+            margin:20px;
+            font-size:30px;
+        }
+    </style>
+    <div id="containerHome">
+        <div id="logoHome">OSCARQ</div>
+        <div>Welcome to <em><b>OSCARQ</b></em>, an Open Source Cyber-Risk Quantification tool developed by <em>Kaustubh Kishore, Garima Pandita, Sanya Kapoor, Arnav Goel and Vaibhav Srivastava</em></div>
+        <div id="choose"><b>Choose your platform</b></div>
+        <div id="platchoice">
+            <a href="./windows.html"><div>
+                <img src="https://webstockreview.net/images/windows-10-png-9.png" alt="windows">
+            </div></a>
+            <a href="./debian.html"><div>
+                <img id="debimg" src="https://www.debian.org/logos/openlogo.svg" alt="debian">
+            </div></a>
+        </div>
+    </div>
+</body>
+</html>
