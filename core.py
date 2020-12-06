@@ -1,5 +1,5 @@
 from Linux import debian
-from Win import windows
+# from Win import windows
 import random
 
 styleOne = """
