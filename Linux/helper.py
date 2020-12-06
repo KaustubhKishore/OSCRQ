@@ -1,8 +1,8 @@
-# import subprocess as sp
-# import os
-# import platform
-# from datetime import datetime
-# from tabulate import tabulate
+import subprocess as sp
+import os
+import platform
+from datetime import datetime
+from tabulate import tabulate
 
 
 class Helper:
@@ -11,7 +11,7 @@ class Helper:
     info = "\033[94m" + "[INFO]" + "\033[0m" + " "
 
     def __init__(self):
-        self.id = "Jenkins Test Push - Intentional fail #4"
+        self.id = ""
         self.platform = ""
         self.dateAndTime = ""
         self.recordID = ""
