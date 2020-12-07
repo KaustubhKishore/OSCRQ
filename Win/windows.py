@@ -18,7 +18,7 @@ class Windows:
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
         # Generates new GP report 
-        command = 'cd '+dir_path+' && secedit /export /cfg group-policy.inf /log export.log'
+        command = ''+dir_path[0:2]+'&& cd '+dir_path+' && secedit /export /cfg group-policy.inf /log export.log'
         shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/c '+command)
 
         time.sleep(2)
