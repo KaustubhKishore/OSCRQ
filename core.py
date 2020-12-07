@@ -3,7 +3,7 @@ import random
 
 try:
     from Win import windows
-except ImportError as e:
+except:
     pass
 
 styleOne = """
