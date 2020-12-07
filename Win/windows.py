@@ -12,18 +12,18 @@ class Windows:
         self.userEmailID = ""
 
     def runner(self):
-        # Checks if potentially outdated report already exists
+        # Checks if potentially outdated report already exists 
         if os.path.exists("group-policy.inf"):
-            os.remove("group-policy.inf")
+          os.remove("group-policy.inf")
 
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        # Generates new GP report
-        command = 'cd ' + dir_path + ' && secedit /export /cfg group-policy.inf /log export.log'
-        shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/c ' + command)
+        # Generates new GP report 
+        command = ''+dir_path[0:2]+'&& cd '+dir_path+' && secedit /export /cfg group-policy.inf /log export.log'
+        shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/c '+command)
 
         time.sleep(2)
 
-        policyRep = open('group-policy.inf', 'rb')
+        policyRep = open('group-policy.inf','rb')
         RepRead = policyRep.read()
         GPR = RepRead.decode('utf-16')
         GPRsplit = GPR.split()
@@ -31,10 +31,6 @@ class Windows:
         COMPLIANT = []
         NONCOMPLIANT = []
         NOTCONFIGURED = []
-        # for idx, word in enumerate(GPRsplit):
-        #     if (GPRsplit[idx] == "LockoutBadCount"):
-        #         print(GPRsplit[idx+2])
-        # print(GPRsplit.find("LockoutBadCount"))
 
         # 1.1.1 (L1) Ensure 'Enforce password history' is set to '24 or more
         # password(s)' (Automated)
@@ -42,31 +38,29 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "PasswordHistorySize"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
+                benchVal = int(GPRsplit[idx+2])
                 if benchVal >= 24:
                     COMPLIANT.append("Ensure 'Enforce password history' is set to '24 or more password(s)' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Enforce password history' is set to '24 or more password(s)' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Enforce password history' is set to '24 or more password(s)' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Enforce password history' is set to '24 or more password(s)' (Automated)")
             NOTCONFIGURED.append("Ensure 'Enforce password history' is set to '24 or more password(s)' (Automated)")
+
 
         # 1.1.2 (L1) Ensure 'Maximum password age' is set to '60 or fewer days, but not 0' (Automated)
         for idx, word in enumerate(GPRsplit):
             found = 0
             if (GPRsplit[idx] == "MaximumPasswordAge"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
+                benchVal = int(GPRsplit[idx+2])
                 if benchVal <= 60:
-                    COMPLIANT.append(
-                        "Ensure 'Maximum password age' is set to '60 or fewer days, but not 0' (Automated)")
+                    COMPLIANT.append("Ensure 'Maximum password age' is set to '60 or fewer days, but not 0' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Maximum password age' is set to '60 or fewer days, but not 0' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Maximum password age' is set to '60 or fewer days, but not 0' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Maximum password age' is set to '60 or fewer days, but not 0' (Automated)")
             NOTCONFIGURED.append("Ensure 'Maximum password age' is set to '60 or fewer days, but not 0' (Automated)")
 
@@ -75,13 +69,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "MinimumPasswordAge"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
+                benchVal = int(GPRsplit[idx+2])
                 if benchVal >= 1:
                     COMPLIANT.append("Ensure 'Minimum password age' is set to '1 or more day(s)' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Minimum password age' is set to '1 or more day(s)' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Minimum password age' is set to '1 or more day(s)' (Automated)")
             NOTCONFIGURED.append("Ensure 'Minimum password age' is set to '1 or more day(s)' (Automated)")
 
@@ -90,14 +84,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "MinimumPasswordLength"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
+                benchVal = int(GPRsplit[idx+2])
                 if benchVal >= 14:
                     COMPLIANT.append("Ensure 'Minimum password length' is set to '14 or more character(s)' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Minimum password length' is set to '14 or more character(s)' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Minimum password length' is set to '14 or more character(s)' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Minimum password length' is set to '14 or more character(s)' (Automated)")
             NOTCONFIGURED.append("Ensure 'Minimum password length' is set to '14 or more character(s)' (Automated)")
 
@@ -106,28 +99,27 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "PasswordComplexity"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
+                benchVal = int(GPRsplit[idx+2])
                 if benchVal == 1:
-                    COMPLIANT.append(
-                        "Ensure 'Password must meet complexity requirements' is set to 'Enabled' (Automated)")
+                    COMPLIANT.append("Ensure 'Password must meet complexity requirements' is set to 'Enabled' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Password must meet complexity requirements' is set to 'Enabled' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Password must meet complexity requirements' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Password must meet complexity requirements' is set to 'Enabled' (Automated)")
             NOTCONFIGURED.append("Ensure 'Password must meet complexity requirements' is set to 'Enabled' (Automated)")
+
 
         # 1.1.6 (L1) Ensure 'Relax minimum password length limits' is set to 'Enabled' (Automated)
 
         # MACHINE\System\CurrentControlSet\Control\SAM\RelaxMinimumPasswordLengthLimits=4,1
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == 'MACHINE\System\CurrentControlSet\Control\SAM\RelaxMinimumPasswordLengthLimits=4,1'):
+            if (GPRsplit[idx] == r'MACHINE\System\CurrentControlSet\Control\SAM\RelaxMinimumPasswordLengthLimits=4,1'):
                 found = 1
                 COMPLIANT.append("Ensure 'Relax minimum password length limits' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Relax minimum password length limits' is set to 'Enabled' (Automated)")
             NOTCONFIGURED.append("Ensure 'Relax minimum password length limits' is set to 'Enabled' (Automated)")
 
@@ -137,18 +129,15 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "ClearTextPassword"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
+                benchVal = int(GPRsplit[idx+2])
                 if benchVal == 0:
-                    COMPLIANT.append(
-                        "Ensure 'Store passwords using reversible encryption' is set to 'Disabled' (Automated)")
+                    COMPLIANT.append("Ensure 'Store passwords using reversible encryption' is set to 'Disabled' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Store passwords using reversible encryption' is set to 'Disabled' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Store passwords using reversible encryption' is set to 'Disabled' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Store passwords using reversible encryption' is set to 'Disabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Store passwords using reversible encryption' is set to 'Disabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Store passwords using reversible encryption' is set to 'Disabled' (Automated)")
 
         # 1.2.1 (L1) Ensure 'Account lockout duration' is set to '15 or more minute(s)' (Automated)
 
@@ -156,14 +145,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "LockoutDuration"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
+                benchVal = int(GPRsplit[idx+2])
                 if benchVal >= 15:
                     COMPLIANT.append("Ensure 'Account lockout duration' is set to '15 or more minute(s)' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Account lockout duration' is set to '15 or more minute(s)' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Account lockout duration' is set to '15 or more minute(s)' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Account lockout duration' is set to '15 or more minute(s)' (Automated)")
             NOTCONFIGURED.append("Ensure 'Account lockout duration' is set to '15 or more minute(s)' (Automated)")
 
@@ -173,19 +161,15 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "LockoutBadCount"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
-                if benchVal >= 1 and benchVal <= 10:
-                    COMPLIANT.append(
-                        "Ensure 'Account lockout threshold' is set to '10 or fewer invalid logon attempt(s), but not 0' (Automated)")
+                benchVal = int(GPRsplit[idx+2])
+                if benchVal >= 1 and benchVal <=10:
+                    COMPLIANT.append("Ensure 'Account lockout threshold' is set to '10 or fewer invalid logon attempt(s), but not 0' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Account lockout threshold' is set to '10 or fewer invalid logon attempt(s), but not 0' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Account lockout threshold' is set to '10 or fewer invalid logon attempt(s), but not 0' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Account lockout threshold' is set to '10 or fewer invalid logon attempt(s), but not 0' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Account lockout threshold' is set to '10 or fewer invalid logon attempt(s), but not 0' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Account lockout threshold' is set to '10 or fewer invalid logon attempt(s), but not 0' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Account lockout threshold' is set to '10 or fewer invalid logon attempt(s), but not 0' (Automated)")
 
         # 1.2.3 (L1) Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)' (Automated)
 
@@ -193,19 +177,15 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "ResetLockoutCount"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
+                benchVal = int(GPRsplit[idx+2])
                 if benchVal >= 15:
-                    COMPLIANT.append(
-                        "Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)' (Automated)")
+                    COMPLIANT.append("Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Reset account lockout counter after' is set to '15 or more minute(s)' (Automated)")
 
         # Local Policies
 
@@ -234,18 +214,15 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeTrustedCredManAccessPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-0-0":
-                    COMPLIANT.append(
-                        "Ensure 'Access Credential Manager as a trusted caller' is set to 'No One' (Automated)")
+                    COMPLIANT.append("Ensure 'Access Credential Manager as a trusted caller' is set to 'No One' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Access Credential Manager as a trusted caller' is set to 'No One' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Access Credential Manager as a trusted caller' is set to 'No One' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Access Credential Manager as a trusted caller' is set to 'No One' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Access Credential Manager as a trusted caller' is set to 'No One' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Access Credential Manager as a trusted caller' is set to 'No One' (Automated)")
 
         # 2.2.2 (L1) Ensure 'Access this computer from the network' is set to 'Administrators, Remote Desktop Users' (Automated)
 
@@ -255,19 +232,15 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeNetworkLogonRight"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544,*S-1-5-32-555":
-                    COMPLIANT.append(
-                        "Ensure 'Access this computer from the network' is set to 'Administrators, Remote Desktop Users' (Automated)")
+                    COMPLIANT.append("Ensure 'Access this computer from the network' is set to 'Administrators, Remote Desktop Users' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Access this computer from the network' is set to 'Administrators, Remote Desktop Users' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Access this computer from the network' is set to 'Administrators, Remote Desktop Users' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Access this computer from the network' is set to 'Administrators, Remote Desktop Users' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Access this computer from the network' is set to 'Administrators, Remote Desktop Users' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Access this computer from the network' is set to 'Administrators, Remote Desktop Users' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Access this computer from the network' is set to 'Administrators, Remote Desktop Users' (Automated)")
 
         # 2.2.3 (L1) Ensure 'Act as part of the operating system' is set to 'No One' (Automated)
 
@@ -277,13 +250,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeTcbPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-0-0":
                     COMPLIANT.append("Ensure 'Act as part of the operating system' is set to 'No One' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Act as part of the operating system' is set to 'No One' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Act as part of the operating system' is set to 'No One' (Automated)")
             NOTCONFIGURED.append("Ensure 'Act as part of the operating system' is set to 'No One' (Automated)")
 
@@ -310,13 +283,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeBackupPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
                     COMPLIANT.append("Ensure 'Back up files and directories' is set to 'Administrators' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Back up files and directories' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Back up files and directories' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Back up files and directories' is set to 'Administrators' (Automated)")
 
@@ -338,13 +311,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeCreatePagefilePrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
                     COMPLIANT.append("Ensure 'Create a pagefile' is set to 'Administrators' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Create a pagefile' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Create a pagefile' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Create a pagefile' is set to 'Administrators' (Automated)")
 
@@ -356,13 +329,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeCreateTokenPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-0-0":
                     COMPLIANT.append("Ensure 'Create a token object' is set to 'No One' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Create a token object' is set to 'No One' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Create a token object' is set to 'No One' (Automated)")
             NOTCONFIGURED.append("Ensure 'Create a token object' is set to 'No One' (Automated)")
 
@@ -379,13 +352,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeCreatePermanentPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-0-0":
                     COMPLIANT.append("Ensure 'Create permanent shared objects' is set to 'No One' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Create permanent shared objects' is set to 'No One' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Create permanent shared objects' is set to 'No One' (Automated)")
             NOTCONFIGURED.append("Ensure 'Create permanent shared objects' is set to 'No One' (Automated)")
 
@@ -401,13 +374,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeDebugPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
                     COMPLIANT.append("Ensure 'Debug programs' is set to 'Administrators' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Debug programs' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Debug programs' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Debug programs' is set to 'Administrators' (Automated)")
 
@@ -443,19 +416,15 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeEnableDelegationPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-0-0":
-                    COMPLIANT.append(
-                        "Ensure 'Enable computer and user accounts to be trusted for delegation' is set to 'No One' (Automated)")
+                    COMPLIANT.append("Ensure 'Enable computer and user accounts to be trusted for delegation' is set to 'No One' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Enable computer and user accounts to be trusted for delegation' is set to 'No One' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Enable computer and user accounts to be trusted for delegation' is set to 'No One' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Enable computer and user accounts to be trusted for delegation' is set to 'No One' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Enable computer and user accounts to be trusted for delegation' is set to 'No One' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Enable computer and user accounts to be trusted for delegation' is set to 'No One' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Enable computer and user accounts to be trusted for delegation' is set to 'No One' (Automated)")
 
         # 2.2.22 (L1) Ensure 'Force shutdown from a remote system' is set to 'Administrators' (Automated)
 
@@ -465,15 +434,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeRemoteShutdownPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
-                    COMPLIANT.append(
-                        "Ensure 'Force shutdown from a remote system' is set to 'Administrators' (Automated)")
+                    COMPLIANT.append("Ensure 'Force shutdown from a remote system' is set to 'Administrators' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Force shutdown from a remote system' is set to 'Administrators' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Force shutdown from a remote system' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Force shutdown from a remote system' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Force shutdown from a remote system' is set to 'Administrators' (Automated)")
 
@@ -501,14 +468,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeLoadDriverPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
                     COMPLIANT.append("Ensure 'Load and unload device drivers' is set to 'Administrators' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Load and unload device drivers' is set to 'Administrators' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Load and unload device drivers' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Load and unload device drivers' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Load and unload device drivers' is set to 'Administrators' (Automated)")
 
@@ -520,13 +486,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeLockMemoryPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-0-0":
                     COMPLIANT.append("SeLockMemoryPrivilege")
                 else:
                     NONCOMPLIANT.append("Ensure 'Lock pages in memory' is set to 'No One' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Lock pages in memory' is set to 'No One' (Automated)")
             NOTCONFIGURED.append("Ensure 'Lock pages in memory' is set to 'No One' (Automated)")
 
@@ -538,13 +504,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeBatchLogonRight"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
                     COMPLIANT.append("Ensure 'Log on as a batch job' is set to 'Administrators' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Log on as a batch job' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Log on as a batch job' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Log on as a batch job' is set to 'Administrators' (Automated)")
 
@@ -560,14 +526,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeSecurityPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
                     COMPLIANT.append("Ensure 'Manage auditing and security log' is set to 'Administrators' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Manage auditing and security log' is set to 'Administrators' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Manage auditing and security log' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Manage auditing and security log' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Manage auditing and security log' is set to 'Administrators' (Automated)")
 
@@ -579,13 +544,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeRelabelPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-0-0":
                     COMPLIANT.append("Ensure 'Modify an object label' is set to 'No One' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Modify an object label' is set to 'No One' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Modify an object label' is set to 'No One' (Automated)")
             NOTCONFIGURED.append("Ensure 'Modify an object label' is set to 'No One' (Automated)")
 
@@ -597,17 +562,16 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeSystemEnvironmentPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
-                    COMPLIANT.append(
-                        "Ensure 'Modify firmware environment values' is set to 'Administrators' (Automated)")
+                    COMPLIANT.append("Ensure 'Modify firmware environment values' is set to 'Administrators' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Modify firmware environment values' is set to 'Administrators' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Modify firmware environment values' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Modify firmware environment values' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Modify firmware environment values' is set to 'Administrators' (Automated)")
+
 
         # 2.2.33 (L1) Ensure 'Perform volume maintenance tasks' is set to 'Administrators' (Automated)
 
@@ -617,14 +581,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeManageVolumePrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
                     COMPLIANT.append("Ensure 'Perform volume maintenance tasks' is set to 'Administrators' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Perform volume maintenance tasks' is set to 'Administrators' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Perform volume maintenance tasks' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Perform volume maintenance tasks' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Perform volume maintenance tasks' is set to 'Administrators' (Automated)")
 
@@ -636,13 +599,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeProfileSingleProcessPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
                     COMPLIANT.append("Ensure 'Profile single process' is set to 'Administrators' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Profile single process' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Profile single process' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Profile single process' is set to 'Administrators' (Automated)")
 
@@ -664,13 +627,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeRestorePrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
                     COMPLIANT.append("Ensure 'Restore files and directories' is set to 'Administrators' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Restore files and directories' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Restore files and directories' is set to 'Administrators' (Automated)")
             NOTCONFIGURED.append("Ensure 'Restore files and directories' is set to 'Administrators' (Automated)")
 
@@ -687,19 +650,15 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "SeTakeOwnershipPrivilege"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "*S-1-5-32-544":
-                    COMPLIANT.append(
-                        "Ensure 'Take ownership of files or other objects' is set to 'Administrators' (Automated)")
+                    COMPLIANT.append("Ensure 'Take ownership of files or other objects' is set to 'Administrators' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Take ownership of files or other objects' is set to 'Administrators' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Take ownership of files or other objects' is set to 'Administrators' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Take ownership of files or other objects' is set to 'Administrators' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Take ownership of files or other objects' is set to 'Administrators' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Take ownership of files or other objects' is set to 'Administrators' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Take ownership of files or other objects' is set to 'Administrators' (Automated)")
 
         # Security Options
 
@@ -710,33 +669,28 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "EnableAdminAccount"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "0":
                     COMPLIANT.append("Ensure 'Accounts: Administrator account status' is set to 'Disabled' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Accounts: Administrator account status' is set to 'Disabled' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Accounts: Administrator account status' is set to 'Disabled' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Accounts: Administrator account status' is set to 'Disabled' (Automated)")
             NOTCONFIGURED.append("Ensure 'Accounts: Administrator account status' is set to 'Disabled' (Automated)")
 
         # 2.3.1.2 (L1) Ensure 'Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts' (Automated)
         # MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\NoConnectedUser=4,3
-        # NEEDS TO BE CONFIGURED
+        # NEEDS TO BE CONFIGURED 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\NoConnectedUser=4,3"):
+            if (GPRsplit[idx] == r"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\NoConnectedUser=4,3"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts' (Automated)")
+                COMPLIANT.append("Ensure 'Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Accounts: Block Microsoft accounts' is set to 'Users can't add or log on with Microsoft accounts' (Automated)")
 
         # 2.3.1.3 (L1) Ensure 'Accounts: Guest account status' is set to 'Disabled' (Automated)
 
@@ -746,13 +700,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "EnableGuestAccount"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
+                benchVal = int(GPRsplit[idx+2])
                 if benchVal == 0:
                     COMPLIANT.append("Ensure 'Accounts: Guest account status' is set to 'Disabled' (Automated)")
                 else:
                     NONCOMPLIANT.append("Ensure 'Accounts: Guest account status' is set to 'Disabled' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Accounts: Guest account status' is set to 'Disabled' (Automated)")
             NOTCONFIGURED.append("Ensure 'Accounts: Guest account status' is set to 'Disabled' (Automated)")
 
@@ -761,16 +715,13 @@ class Windows:
         # MACHINE\System\CurrentControlSet\Control\Lsa\LimitBlankPasswordUse=4,1
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\Lsa\LimitBlankPasswordUse=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\Lsa\LimitBlankPasswordUse=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Accounts: Limit local account use of blank passwords to console logon only' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Accounts: Limit local account use of blank passwords to console logon only' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Accounts: Limit local account use of blank passwords to console logon only' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Accounts: Limit local account use of blank passwords to console logon only' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Accounts: Limit local account use of blank passwords to console logon only' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Accounts: Limit local account use of blank passwords to console logon only' is set to 'Enabled' (Automated)")
 
         # 2.3.1.5 (L1) Configure 'Accounts: Rename administrator account' (Automated)
 
@@ -780,13 +731,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "NewAdministratorName"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "Administrator":
                     COMPLIANT.append("Configure 'Accounts: Rename administrator account' (Automated)")
                 else:
                     NONCOMPLIANT.append("Configure 'Accounts: Rename administrator account' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Configure 'Accounts: Rename administrator account' (Automated)")
             NOTCONFIGURED.append("Configure 'Accounts: Rename administrator account' (Automated)")
 
@@ -798,13 +749,13 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "NewGuestName"):
                 found = 1
-                benchVal = GPRsplit[idx + 2]
+                benchVal = GPRsplit[idx+2]
                 if benchVal == "Guest":
                     COMPLIANT.append("Configure 'Accounts: Rename guest account' (Automated)")
                 else:
                     NONCOMPLIANT.append("Configure 'Accounts: Rename guest account' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Configure 'Accounts: Rename guest account' (Automated)")
             NOTCONFIGURED.append("Configure 'Accounts: Rename guest account' (Automated)")
 
@@ -816,32 +767,26 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\Lsa\SCENoApplyLegacyAuditPolicy=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\Lsa\SCENoApplyLegacyAuditPolicy=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings' is set to 'Enabled' (Automated)")
 
         # 2.3.2.2 (L1) Ensure 'Audit: Shut down system immediately if unable to log security audits' is set to 'Disabled' (Automated)
 
         # MACHINE\System\CurrentControlSet\Control\Lsa\CrashOnAuditFail=4,0
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\Lsa\CrashOnAuditFail=4,0"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\Lsa\CrashOnAuditFail=4,0"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Audit: Shut down system immediately if unable to log security audits' is set to 'Disabled' (Automated)")
+                COMPLIANT.append("Ensure 'Audit: Shut down system immediately if unable to log security audits' is set to 'Disabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Audit: Shut down system immediately if unable to log security audits' is set to 'Disabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Audit: Shut down system immediately if unable to log security audits' is set to 'Disabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Audit: Shut down system immediately if unable to log security audits' is set to 'Disabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Audit: Shut down system immediately if unable to log security audits' is set to 'Disabled' (Automated)")
 
         # 2.3.4 Devices
 
@@ -851,16 +796,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == 'MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\AllocateDASD=1,"2"'):
+            if (GPRsplit[idx] == r'MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\AllocateDASD=1,"2"'):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Devices: Allowed to format and eject removable media' is set to 'Administrators and Interactive Users' (Automated)")
+                COMPLIANT.append("Ensure 'Devices: Allowed to format and eject removable media' is set to 'Administrators and Interactive Users' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Devices: Allowed to format and eject removable media' is set to 'Administrators and Interactive Users' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Devices: Allowed to format and eject removable media' is set to 'Administrators and Interactive Users' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Devices: Allowed to format and eject removable media' is set to 'Administrators and Interactive Users' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Devices: Allowed to format and eject removable media' is set to 'Administrators and Interactive Users' (Automated)")
 
         # 2.3.4.2 (L2) Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled' (Automated)
 
@@ -868,17 +810,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers\AddPrinterDrivers=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers\AddPrinterDrivers=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Devices: Prevent users from installing printer drivers' is set to 'Enabled' (Automated)")
 
         # 2.3.6 Domain member
 
@@ -888,16 +826,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireSignOrSeal=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Domain member: Digitally encrypt or sign secure channel data (always)' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Domain member: Digitally encrypt or sign secure channel data (always)' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Domain member: Digitally encrypt or sign secure channel data (always)' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Domain member: Digitally encrypt or sign secure channel data (always)' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Domain member: Digitally encrypt or sign secure channel data (always)' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Domain member: Digitally encrypt or sign secure channel data (always)' is set to 'Enabled' (Automated)")
 
         # 2.3.6.2 (L1) Ensure 'Domain member: Digitally encrypt secure channel data (when possible)' is set to 'Enabled' (Automated)
 
@@ -905,16 +840,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SealSecureChannel=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SealSecureChannel=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Domain member: Digitally encrypt secure channel data (when possible)' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Domain member: Digitally encrypt secure channel data (when possible)' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Domain member: Digitally encrypt secure channel data (when possible)' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Domain member: Digitally encrypt secure channel data (when possible)' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Domain member: Digitally encrypt secure channel data (when possible)' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Domain member: Digitally encrypt secure channel data (when possible)' is set to 'Enabled' (Automated)")
 
         # 2.3.6.3 (L1) Ensure 'Domain member: Digitally sign secure channel data (when possible)' is set to 'Enabled' (Automated)
 
@@ -922,16 +854,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\SignSecureChannel=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Domain member: Digitally sign secure channel data (when possible)' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Domain member: Digitally sign secure channel data (when possible)' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Domain member: Digitally sign secure channel data (when possible)' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Domain member: Digitally sign secure channel data (when possible)' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Domain member: Digitally sign secure channel data (when possible)' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Domain member: Digitally sign secure channel data (when possible)' is set to 'Enabled' (Automated)")
 
         # 2.3.6.4 (L1) Ensure 'Domain member: Disable machine account password changes' is set to 'Disabled' (Automated)
 
@@ -939,17 +868,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange=4,0"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\DisablePasswordChange=4,0"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Domain member: Disable machine account password changes' is set to 'Disabled' (Automated)")
+                COMPLIANT.append("Ensure 'Domain member: Disable machine account password changes' is set to 'Disabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Domain member: Disable machine account password changes' is set to 'Disabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Domain member: Disable machine account password changes' is set to 'Disabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Domain member: Disable machine account password changes' is set to 'Disabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Domain member: Disable machine account password changes' is set to 'Disabled' (Automated)")
 
         # 2.3.6.5 (L1) Ensure 'Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0' (Automated)
 
@@ -957,22 +882,17 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\MaximumPasswordAge=4,29"):
+            if (GPRsplit[idx].find(r"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\MaximumPasswordAge=4,") != -1):
                 benchVal = int(GPRsplit[idx].split(',')[1])
                 found = 1
-                if benchval > 0 and benchVal <= 30:
-                    COMPLIANT.append(
-                        "Ensure 'Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0' (Automated)")
+                if benchVal > 0 and benchVal <=30:
+                    COMPLIANT.append("Ensure 'Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Domain member: Maximum machine account password age' is set to '30 or fewer days, but not 0' (Automated)")
 
         # 2.3.6.6 (L1) Ensure 'Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled' (Automated)
 
@@ -980,16 +900,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireStrongKey=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\Netlogon\Parameters\RequireStrongKey=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Domain member: Require strong (Windows 2000 or later) session key' is set to 'Enabled' (Automated)")
 
         # 2.3.7 Interactive logon
 
@@ -999,16 +916,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD=4,0"):
+            if (GPRsplit[idx] == r"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD=4,0"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Interactive logon: Do not require CTRL+ALT+DEL' is set to 'Disabled' (Automated)")
+                COMPLIANT.append("Ensure 'Interactive logon: Do not require CTRL+ALT+DEL' is set to 'Disabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Interactive logon: Do not require CTRL+ALT+DEL' is set to 'Disabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Interactive logon: Do not require CTRL+ALT+DEL' is set to 'Disabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Interactive logon: Do not require CTRL+ALT+DEL' is set to 'Disabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Interactive logon: Do not require CTRL+ALT+DEL' is set to 'Disabled' (Automated)")
 
         # 2.3.7.2 (L1) Ensure 'Interactive logon: Don't display last signed-in' is set to 'Enabled' (Automated)
 
@@ -1016,42 +930,33 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Interactive logon: Don't display last signed-in' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Interactive logon: Don't display last signed-in' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Interactive logon: Don't display last signed-in' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Interactive logon: Don't display last signed-in' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Interactive logon: Don't display last signed-in' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Interactive logon: Don't display last signed-in' is set to 'Enabled' (Automated)")
 
         # 2.3.7.3 (BL) Ensure 'Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0' (Automated)
 
         # MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts=4,9
 
-        # Has to be configured
+        # Has to be configured 
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts=4,9"):
+            if (GPRsplit[idx].find(r"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts=4,") != -1):
                 benchVal = int(GPRsplit[idx].split(',')[1])
                 found = 1
-                if benchval > 0 and benchVal <= 10:
-                    COMPLIANT.append(
-                        "Ensure 'Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0' (Automated)")
+                if benchVal > 0 and benchVal <=10:
+                    COMPLIANT.append("Ensure 'Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Interactive logon: Machine account lockout threshold' is set to '10 or fewer invalid logon attempts, but not 0' (Automated)")
 
         # 2.3.7.4 (L1) Ensure 'Interactive logon: Machine inactivity limit' is set to '900 or fewer second(s), but not 0' (Automated)
 
@@ -1059,22 +964,17 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs=4,899"):
+            if (GPRsplit[idx].find(r"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs=4,") != -1):
                 benchVal = int(GPRsplit[idx].split(',')[1])
                 found = 1
-                if benchval > 0 and benchVal <= 900:
-                    COMPLIANT.append(
-                        "Ensure 'Interactive logon: Machine inactivity limit' is set to '900 or fewer second(s), but not 0' (Automated)")
+                if benchVal > 0 and benchVal <=900:
+                    COMPLIANT.append("Ensure 'Interactive logon: Machine inactivity limit' is set to '900 or fewer second(s), but not 0' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Interactive logon: Machine inactivity limit' is set to '900 or fewer second(s), but not 0' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Interactive logon: Machine inactivity limit' is set to '900 or fewer second(s), but not 0' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Interactive logon: Machine inactivity limit' is set to '900 or fewer second(s), but not 0' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Interactive logon: Machine inactivity limit' is set to '900 or fewer second(s), but not 0' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Interactive logon: Machine inactivity limit' is set to '900 or fewer second(s), but not 0' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Interactive logon: Machine inactivity limit' is set to '900 or fewer second(s), but not 0' (Automated)")
 
         # 2.3.7.5 (L1) Configure 'Interactive logon: Message text for users attempting to log on' (Automated)
 
@@ -1082,22 +982,17 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeText=7,Configured"):
+            if (GPRsplit[idx].find(r"MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeText=7,") != -1):
                 benchVal = GPRsplit[idx].split(',')[1]
                 found = 1
-                if benchval != "" or benchVal != " ":
-                    COMPLIANT.append(
-                        "Configure 'Interactive logon: Message text for users attempting to log on' (Automated)")
+                if benchVal != "" or benchVal != " ":
+                    COMPLIANT.append("Configure 'Interactive logon: Message text for users attempting to log on' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Configure 'Interactive logon: Message text for users attempting to log on' (Automated)")
+                    NONCOMPLIANT.append("Configure 'Interactive logon: Message text for users attempting to log on' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Configure 'Interactive logon: Message text for users attempting to log on' (Automated)")
-            NOTCONFIGURED.append(
-                "Configure 'Interactive logon: Message text for users attempting to log on' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Configure 'Interactive logon: Message text for users attempting to log on' (Automated)")
+            NOTCONFIGURED.append("Configure 'Interactive logon: Message text for users attempting to log on' (Automated)")
 
         # 2.3.7.6 (L1) Configure 'Interactive logon: Message title for users attempting to log on' (Automated)
 
@@ -1105,22 +1000,17 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == 'MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeCaption=1,"Configured"'):
+            if (GPRsplit[idx].find(r'MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\LegalNoticeCaption=1,') != -1):
                 benchVal = GPRsplit[idx].split(',')[1]
                 found = 1
-                if benchval != "" or benchVal != " ":
-                    COMPLIANT.append(
-                        "Configure 'Interactive logon: Message title for users attempting to log on' (Automated)")
+                if benchVal != "" or benchVal != " ":
+                    COMPLIANT.append("Configure 'Interactive logon: Message title for users attempting to log on' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Configure 'Interactive logon: Message title for users attempting to log on' (Automated)")
+                    NONCOMPLIANT.append("Configure 'Interactive logon: Message title for users attempting to log on' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Configure 'Interactive logon: Message title for users attempting to log on' (Automated)")
-            NOTCONFIGURED.append(
-                "Configure 'Interactive logon: Message title for users attempting to log on' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Configure 'Interactive logon: Message title for users attempting to log on' (Automated)")
+            NOTCONFIGURED.append("Configure 'Interactive logon: Message title for users attempting to log on' (Automated)")
 
         # 2.3.7.7 (L2) Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)' (Automated)
 
@@ -1128,22 +1018,17 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == 'MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount=1,"3"'):
+            if (GPRsplit[idx].find(r'MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\CachedLogonsCount=1,') != -1):
                 benchVal = int(GPRsplit[idx].split(',')[1].strip('"'))
                 found = 1
-                if benchval <= 4:
-                    COMPLIANT.append(
-                        "Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)' (Automated)")
+                if benchVal <= 4:
+                    COMPLIANT.append("Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Interactive logon: Number of previous logons to cache (in case domain controller is not available)' is set to '4 or fewer logon(s)' (Automated)")
 
         # 2.3.7.8 (L1) Ensure 'Interactive logon: Prompt user to change password before expiration' is set to 'between 5 and 14 days' (Automated)
 
@@ -1151,22 +1036,17 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\PasswordExpiryWarning=4,13"):
+            if (GPRsplit[idx].find(r"MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\PasswordExpiryWarning=4,") != -1):
                 benchVal = int(GPRsplit[idx].split(',')[1])
                 found = 1
-                if benchval >= 5 and benchVal <= 14:
-                    COMPLIANT.append(
-                        "Ensure 'Interactive logon: Prompt user to change password before expiration' is set to 'between 5 and 14 days' (Automated)")
+                if benchVal >= 5 and benchVal <=14:
+                    COMPLIANT.append("Ensure 'Interactive logon: Prompt user to change password before expiration' is set to 'between 5 and 14 days' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Interactive logon: Prompt user to change password before expiration' is set to 'between 5 and 14 days' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Interactive logon: Prompt user to change password before expiration' is set to 'between 5 and 14 days' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Interactive logon: Prompt user to change password before expiration' is set to 'between 5 and 14 days' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Interactive logon: Prompt user to change password before expiration' is set to 'between 5 and 14 days' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Interactive logon: Prompt user to change password before expiration' is set to 'between 5 and 14 days' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Interactive logon: Prompt user to change password before expiration' is set to 'between 5 and 14 days' (Automated)")
 
         # 2.3.7.9 (L1) Ensure 'Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher (Automated)
 
@@ -1174,21 +1054,17 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == 'MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ScRemoveOption=1,"1"'):
+            if (GPRsplit[idx].find(r'MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\ScRemoveOption=1,') != -1):
                 benchVal = int(GPRsplit[idx].split(',')[1].strip('"'))
                 found = 1
-                if benchval > 0 and benchVal <= 3:
-                    COMPLIANT.append(
-                        "Ensure 'Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher (Automated)")
+                if benchVal > 0 and benchVal <= 3:
+                    COMPLIANT.append("Ensure 'Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher (Automated)")
+            NOTCONFIGURED.append("Ensure 'Interactive logon: Smart card removal behavior' is set to 'Lock Workstation' or higher (Automated)")
 
         # 2.3.8 Microsoft network client
 
@@ -1198,17 +1074,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Microsoft network client: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Microsoft network client: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Microsoft network client: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Microsoft network client: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Microsoft network client: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Microsoft network client: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
 
         # 2.3.8.2 (L1) Ensure 'Microsoft network client: Digitally sign communications (if server agrees)' is set to 'Enabled' (Automated)
 
@@ -1216,17 +1088,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnableSecuritySignature=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnableSecuritySignature=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Microsoft network client: Digitally sign communications (if server agrees)' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Microsoft network client: Digitally sign communications (if server agrees)' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Microsoft network client: Digitally sign communications (if server agrees)' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Microsoft network client: Digitally sign communications (if server agrees)' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Microsoft network client: Digitally sign communications (if server agrees)' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Microsoft network client: Digitally sign communications (if server agrees)' is set to 'Enabled' (Automated)")
 
         # 2.3.8.3 (L1) Ensure 'Microsoft network client: Send unencrypted password to third-party SMB servers' is set to 'Disabled' (Automated)
 
@@ -1234,17 +1102,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnablePlainTextPassword=4,0"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\LanmanWorkstation\Parameters\EnablePlainTextPassword=4,0"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Microsoft network client: Send unencrypted password to third-party SMB servers' is set to 'Disabled' (Automated)")
+                COMPLIANT.append("Ensure 'Microsoft network client: Send unencrypted password to third-party SMB servers' is set to 'Disabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Microsoft network client: Send unencrypted password to third-party SMB servers' is set to 'Disabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Microsoft network client: Send unencrypted password to third-party SMB servers' is set to 'Disabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Microsoft network client: Send unencrypted password to third-party SMB servers' is set to 'Disabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Microsoft network client: Send unencrypted password to third-party SMB servers' is set to 'Disabled' (Automated)")
 
         # 2.3.9 Microsoft network server
 
@@ -1254,22 +1118,17 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\AutoDisconnect=4,14"):
+            if (GPRsplit[idx].find(r"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\AutoDisconnect=4,") != -1):
                 benchVal = int(GPRsplit[idx].split(',')[1])
                 found = 1
-                if benchval <= 15:
-                    COMPLIANT.append(
-                        "Ensure 'Microsoft network server: Amount of idle time required before suspending session' is set to '15 or fewer minute(s)' (Automated)")
+                if benchVal <= 15:
+                    COMPLIANT.append("Ensure 'Microsoft network server: Amount of idle time required before suspending session' is set to '15 or fewer minute(s)' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Microsoft network server: Amount of idle time required before suspending session' is set to '15 or fewer minute(s)' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Microsoft network server: Amount of idle time required before suspending session' is set to '15 or fewer minute(s)' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Microsoft network server: Amount of idle time required before suspending session' is set to '15 or fewer minute(s)' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Microsoft network server: Amount of idle time required before suspending session' is set to '15 or fewer minute(s)' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Microsoft network server: Amount of idle time required before suspending session' is set to '15 or fewer minute(s)' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Microsoft network server: Amount of idle time required before suspending session' is set to '15 or fewer minute(s)' (Automated)")
 
         # 2.3.9.2 (L1) Ensure 'Microsoft network server: Digitally sign communications (always)' is set to 'Enabled' (Automated)
 
@@ -1277,17 +1136,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RequireSecuritySignature=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Microsoft network server: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Microsoft network server: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Microsoft network server: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Microsoft network server: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Microsoft network server: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Microsoft network server: Digitally sign communications (always)' is set to 'Enabled' (Automated)")
 
         # 2.3.9.3 (L1) Ensure 'Microsoft network server: Digitally sign communications (if client agrees)' is set to 'Enabled' (Automated)
 
@@ -1295,17 +1150,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableSecuritySignature=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableSecuritySignature=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Microsoft network server: Digitally sign communications (if client agrees)' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Microsoft network server: Digitally sign communications (if client agrees)' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Microsoft network server: Digitally sign communications (if client agrees)' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Microsoft network server: Digitally sign communications (if client agrees)' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Microsoft network server: Digitally sign communications (if client agrees)' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Microsoft network server: Digitally sign communications (if client agrees)' is set to 'Enabled' (Automated)")
 
         # 2.3.9.4 (L1) Ensure 'Microsoft network server: Disconnect clients when logon hours expire' is set to 'Enabled' (Automated)
 
@@ -1313,17 +1164,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableForcedLogOff=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\EnableForcedLogOff=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Microsoft network server: Disconnect clients when logon hours expire' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Microsoft network server: Disconnect clients when logon hours expire' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Microsoft network server: Disconnect clients when logon hours expire' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Microsoft network server: Disconnect clients when logon hours expire' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Microsoft network server: Disconnect clients when logon hours expire' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Microsoft network server: Disconnect clients when logon hours expire' is set to 'Enabled' (Automated)")
 
         # 2.3.9.5 (L1) Ensure 'Microsoft network server: Server SPN target name validation level' is set to 'Accept if provided by client' or higher (Automated)
 
@@ -1331,22 +1178,17 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\SmbServerNameHardeningLevel=4,1"):
+            if (GPRsplit[idx].find(r"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\SmbServerNameHardeningLevel=4,") != -1):
                 benchVal = int(GPRsplit[idx].split(',')[1])
                 found = 1
-                if benchval >= 1 and benchVal <= 2:
-                    COMPLIANT.append(
-                        "Ensure 'Microsoft network server: Server SPN target name validation level' is set to 'Accept if provided by client' or higher (Automated)")
+                if benchVal >= 1 and benchVal <= 2:
+                    COMPLIANT.append("Ensure 'Microsoft network server: Server SPN target name validation level' is set to 'Accept if provided by client' or higher (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Microsoft network server: Server SPN target name validation level' is set to 'Accept if provided by client' or higher (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Microsoft network server: Server SPN target name validation level' is set to 'Accept if provided by client' or higher (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Microsoft network server: Server SPN target name validation level' is set to 'Accept if provided by client' or higher (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Microsoft network server: Server SPN target name validation level' is set to 'Accept if provided by client' or higher (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Microsoft network server: Server SPN target name validation level' is set to 'Accept if provided by client' or higher (Automated)")
+            NOTCONFIGURED.append("Ensure 'Microsoft network server: Server SPN target name validation level' is set to 'Accept if provided by client' or higher (Automated)")
 
         # 2.3.10 Network access
 
@@ -1358,19 +1200,15 @@ class Windows:
             found = 0
             if (GPRsplit[idx] == "LSAAnonymousNameLookup"):
                 found = 1
-                benchVal = int(GPRsplit[idx + 2])
+                benchVal = int(GPRsplit[idx+2])
                 if benchVal == 0:
-                    COMPLIANT.append(
-                        "Ensure 'Network access: Allow anonymous SID/Name translation' is set to 'Disabled' (Automated)")
+                    COMPLIANT.append("Ensure 'Network access: Allow anonymous SID/Name translation' is set to 'Disabled' (Automated)")
                 else:
-                    NONCOMPLIANT.append(
-                        "Ensure 'Network access: Allow anonymous SID/Name translation' is set to 'Disabled' (Automated)")
+                    NONCOMPLIANT.append("Ensure 'Network access: Allow anonymous SID/Name translation' is set to 'Disabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Network access: Allow anonymous SID/Name translation' is set to 'Disabled' (Automated)")
-            NOTCONFIGURED.append(
-                "CEnsure 'Network access: Allow anonymous SID/Name translation' is set to 'Disabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Network access: Allow anonymous SID/Name translation' is set to 'Disabled' (Automated)")
+            NOTCONFIGURED.append("CEnsure 'Network access: Allow anonymous SID/Name translation' is set to 'Disabled' (Automated)")
 
         # 2.3.10.2 (L1) Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled' (Automated)
 
@@ -1378,16 +1216,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymousSAM=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymousSAM=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts' is set to 'Enabled' (Automated)")
 
         # 2.3.10.3 (L1) Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts and shares' is set to 'Enabled' (Automated)
 
@@ -1395,16 +1230,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymous=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\Lsa\RestrictAnonymous=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts and shares' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts and shares' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts and shares' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts and shares' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts and shares' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Network access: Do not allow anonymous enumeration of SAM accounts and shares' is set to 'Enabled' (Automated)")
 
         # 2.3.10.4 (L1) Ensure 'Network access: Do not allow storage of passwords and credentials for network authentication' is set to 'Enabled' (Automated)
 
@@ -1412,16 +1244,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\Lsa\DisableDomainCreds=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\Lsa\DisableDomainCreds=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Network access: Do not allow storage of passwords and credentials for network authentication' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Network access: Do not allow storage of passwords and credentials for network authentication' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Network access: Do not allow storage of passwords and credentials for network authentication' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Network access: Do not allow storage of passwords and credentials for network authentication' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Network access: Do not allow storage of passwords and credentials for network authentication' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Network access: Do not allow storage of passwords and credentials for network authentication' is set to 'Enabled' (Automated)")
 
         # 2.3.10.5 (L1) Ensure 'Network access: Let Everyone permissions apply to anonymous users' is set to 'Disabled' (Automated)
 
@@ -1429,16 +1258,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\Lsa\EveryoneIncludesAnonymous=4,0"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\Lsa\EveryoneIncludesAnonymous=4,0"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Network access: Let Everyone permissions apply to anonymous users' is set to 'Disabled' (Automated)")
+                COMPLIANT.append("Ensure 'Network access: Let Everyone permissions apply to anonymous users' is set to 'Disabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Network access: Let Everyone permissions apply to anonymous users' is set to 'Disabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Network access: Let Everyone permissions apply to anonymous users' is set to 'Disabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Network access: Let Everyone permissions apply to anonymous users' is set to 'Disabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Network access: Let Everyone permissions apply to anonymous users' is set to 'Disabled' (Automated)")
 
         # 2.3.10.6 (L1) Ensure 'Network access: Named Pipes that can be accessed anonymously' is set to 'None' (Automated)
 
@@ -1446,17 +1272,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionPipes=7,"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionPipes=7,"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Network access: Named Pipes that can be accessed anonymously' is set to 'None' (Automated)")
+                COMPLIANT.append("Ensure 'Network access: Named Pipes that can be accessed anonymously' is set to 'None' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Network access: Named Pipes that can be accessed anonymously' is set to 'None' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Network access: Named Pipes that can be accessed anonymously' is set to 'None' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Network access: Named Pipes that can be accessed anonymously' is set to 'None' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Network access: Named Pipes that can be accessed anonymously' is set to 'None' (Automated)")
 
         # 2.3.10.7 (L1) Ensure 'Network access: Remotely accessible registry paths' (Automated)
 
@@ -1464,12 +1286,11 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine=7,System\CurrentControlSet\Control\ProductOptions,System\CurrentControlSet\Control\Server Applications,Software\Microsoft\Windows NT\CurrentVersion"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine=7,System\CurrentControlSet\Control\ProductOptions,System\CurrentControlSet\Control\Server Applications,Software\Microsoft\Windows NT\CurrentVersion"):
                 found = 1
                 COMPLIANT.append("Ensure 'Network access: Remotely accessible registry paths' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Network access: Remotely accessible registry paths' (Automated)")
             NOTCONFIGURED.append("Ensure 'Network access: Remotely accessible registry paths' (Automated)")
 
@@ -1479,16 +1300,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine=7,System\CurrentControlSet\Control\Print\Printers,System\CurrentControlSet\Services\Eventlog,Software\Microsoft\OLAP Server,Software\Microsoft\Windows NT\CurrentVersion\Print,Software\Microsoft\Windows NT\CurrentVersion\Windows,System\CurrentControlSet\Control\ContentIndex,System\CurrentControlSet\Control\Terminal Server,System\CurrentControlSet\Control\Terminal Server\UserConfig,System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration,Software\Microsoft\Windows NT\CurrentVersion\Perflib,System\CurrentControlSet\Services\SysmonLog"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine=7,System\CurrentControlSet\Control\Print\Printers,System\CurrentControlSet\Services\Eventlog,Software\Microsoft\OLAP Server,Software\Microsoft\Windows NT\CurrentVersion\Print,Software\Microsoft\Windows NT\CurrentVersion\Windows,System\CurrentControlSet\Control\ContentIndex,System\CurrentControlSet\Control\Terminal Server,System\CurrentControlSet\Control\Terminal Server\\UserConfig,System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration,Software\Microsoft\Windows NT\CurrentVersion\Perflib,System\CurrentControlSet\Services\SysmonLog"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Network access: Remotely accessible registry paths and sub-paths' (Automated)")
+                COMPLIANT.append("Ensure 'Network access: Remotely accessible registry paths and sub-paths' (Automated)")
                 break
-        if (found == 0):
+        if(found == 0):
             NONCOMPLIANT.append("Ensure 'Network access: Remotely accessible registry paths and sub-paths' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Network access: Remotely accessible registry paths and sub-paths' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Network access: Remotely accessible registry paths and sub-paths' (Automated)")
 
         # 2.3.10.9 (L1) Ensure 'Network access: Restrict anonymous access to Named Pipes and Shares' is set to 'Enabled' (Automated)
 
@@ -1496,17 +1314,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RestrictNullSessAccess=4,1"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\RestrictNullSessAccess=4,1"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Network access: Restrict anonymous access to Named Pipes and Shares' is set to 'Enabled' (Automated)")
+                COMPLIANT.append("Ensure 'Network access: Restrict anonymous access to Named Pipes and Shares' is set to 'Enabled' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Network access: Restrict anonymous access to Named Pipes and Shares' is set to 'Enabled' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Network access: Restrict anonymous access to Named Pipes and Shares' is set to 'Enabled' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Network access: Restrict anonymous access to Named Pipes and Shares' is set to 'Enabled' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Network access: Restrict anonymous access to Named Pipes and Shares' is set to 'Enabled' (Automated)")
 
         # 2.3.10.10 (L1) Ensure 'Network access: Restrict clients allowed to make remote calls to SAM' is set to 'Administrators: Remote Access: Allow' (Automated)
 
@@ -1514,17 +1328,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == 'MACHINE\System\CurrentControlSet\Control\Lsa\RestrictRemoteSAM=1,"O:BAG:BAD:(A;;RC;;;BA)"'):
+            if (GPRsplit[idx] == r'MACHINE\System\CurrentControlSet\Control\Lsa\RestrictRemoteSAM=1,"O:BAG:BAD:(A;;RC;;;BA)"'):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Network access: Restrict clients allowed to make remote calls to SAM' is set to 'Administrators: Remote Access: Allow' (Automated)")
+                COMPLIANT.append("Ensure 'Network access: Restrict clients allowed to make remote calls to SAM' is set to 'Administrators: Remote Access: Allow' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Network access: Restrict clients allowed to make remote calls to SAM' is set to 'Administrators: Remote Access: Allow' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Network access: Restrict clients allowed to make remote calls to SAM' is set to 'Administrators: Remote Access: Allow' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Network access: Restrict clients allowed to make remote calls to SAM' is set to 'Administrators: Remote Access: Allow' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Network access: Restrict clients allowed to make remote calls to SAM' is set to 'Administrators: Remote Access: Allow' (Automated)")
 
         # 2.3.10.11 (L1) Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None' (Automated)
 
@@ -1532,17 +1342,13 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[
-                idx] == "MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionShares=7,"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Services\LanManServer\Parameters\NullSessionShares=7,"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None' (Automated)")
+                COMPLIANT.append("Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Network access: Shares that can be accessed anonymously' is set to 'None' (Automated)")
 
         # 2.3.10.12 (L1) Ensure 'Network access: Sharing and security model for local accounts' is set to 'Classic - local users authenticate as themselves' (Automated)
 
@@ -1550,20 +1356,17 @@ class Windows:
 
         for idx, word in enumerate(GPRsplit):
             found = 0
-            if (GPRsplit[idx] == "MACHINE\System\CurrentControlSet\Control\Lsa\ForceGuest=4,0"):
+            if (GPRsplit[idx] == r"MACHINE\System\CurrentControlSet\Control\Lsa\ForceGuest=4,0"):
                 found = 1
-                COMPLIANT.append(
-                    "Ensure 'Network access: Sharing and security model for local accounts' is set to 'Classic - local users authenticate as themselves' (Automated)")
+                COMPLIANT.append("Ensure 'Network access: Sharing and security model for local accounts' is set to 'Classic - local users authenticate as themselves' (Automated)")
                 break
-        if (found == 0):
-            NONCOMPLIANT.append(
-                "Ensure 'Network access: Sharing and security model for local accounts' is set to 'Classic - local users authenticate as themselves' (Automated)")
-            NOTCONFIGURED.append(
-                "Ensure 'Network access: Sharing and security model for local accounts' is set to 'Classic - local users authenticate as themselves' (Automated)")
+        if(found == 0):
+            NONCOMPLIANT.append("Ensure 'Network access: Sharing and security model for local accounts' is set to 'Classic - local users authenticate as themselves' (Automated)")
+            NOTCONFIGURED.append("Ensure 'Network access: Sharing and security model for local accounts' is set to 'Classic - local users authenticate as themselves' (Automated)")
 
-        print("Compliant", COMPLIANT, '\n')
-        print("Non Compliant", NONCOMPLIANT, '\n')
-        print("Not Configured", NOTCONFIGURED, '\n')
+        print(("Compliant",COMPLIANT,'\n'))
+        print(("Non Compliant",NONCOMPLIANT,'\n'))
+        print(("Not Configured",NOTCONFIGURED,'\n'))
 
         # 2.3.11 Network security
         # ---------------------------------------------------------------------------
@@ -1947,42 +1750,42 @@ class Windows:
 
         # 17.9 System
 
-        from pymongo import MongoClient
+        from pymongo import MongoClient 
         from datetime import datetime
-        import uuid, re, platform
+        import uuid,re,platform
 
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
-        macAdd = ':'.join(re.findall('../..', '%012x' % uuid.getnode()))
+        macAdd = ':'.join(re.findall('..', '%012x' % uuid.getnode()))
         platVer = platform.version()
 
-        try:
-            conn = MongoClient(
-                "mongodb+srv://Sanya:4wUubuaMachwQ9rn@cluster0.9w3mr.mongodb.net/OSCARQ?retryWrites=true&w=majority")
-            print("Connected to OSCARQ Database")
-        except Exception as e:
-            print("Could not connect ", e)
+        try: 
+            conn = MongoClient("mongodb+srv://Sanya:4wUubuaMachwQ9rn@cluster0.9w3mr.mongodb.net/OSCARQ?retryWrites=true&w=majority") 
+            print("Connected to OSCARQ Database") 
+        except Exception as e:   
+            print(("Could not connect ", e)) 
 
-        db = conn.OSCARQ
+        db = conn.OSCARQ 
         collection = db.Windows
 
-        # userID = input("Enter MailID ")
+        userID = input("Enter MailID ")
 
-        emp_rec1 = {
-            "UserID": self.userEmailID,
-            "DeviceID": macAdd,
-            "Platform": platVer,
-            "TestTime": dt_string,
-            "Compliant": COMPLIANT,
-            "Non Compliant": NONCOMPLIANT,
-            "Not Configured": NOTCONFIGURED
-        }
+        emp_rec1 = { 
+                "UserID":userID,
+                "DeviceID":macAdd,
+                "Platform":platVer,
+                "TestTime":dt_string,
+                "Compliant":COMPLIANT,
+                "Non Compliant":NONCOMPLIANT,
+                "Not Configured":NOTCONFIGURED
+                } 
 
-        rec_id1 = collection.insert_one(emp_rec1)
+        rec_id1 = collection.insert_one(emp_rec1) 
 
-        print("Data inserted with record id", rec_id1)
+        print(("Data inserted with record id",rec_id1)) 
 
-        cursor = collection.find()
-        for record in cursor:
-            print(record)
+        cursor = collection.find() 
+        for record in cursor: 
+            print(record) 
+
