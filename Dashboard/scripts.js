@@ -91,7 +91,7 @@ function changeIndex(LatestIndex){
     devicelist.innerHTML += devid;
     sideDevice.innerHTML = "Test History";
     for(i=0 ; i<x.length; i++){
-        sideDevice.innerHTML += "<li onclick=changeIndex("+ i +");>" + devid + "</li>";
+        sideDevice.innerHTML += "<li onclick=changeIndex("+ i +");>" + x[i]["DeviceID"] + "</li>";
     } 
     detailsAnalysis.innerHTML="";
     for(i=0 ; i<totalComp ; i++){
