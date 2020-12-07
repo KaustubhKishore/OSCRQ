@@ -1,7 +1,10 @@
 import os
-import win32com.shell.shell as shell
 import time
 
+try:
+    import win32com.shell.shell as shell
+except ImportError as e:
+    pass
 
 class Windows:
     def __init__(self):
