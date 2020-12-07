@@ -1,5 +1,6 @@
 var req = new XMLHttpRequest();
-req.open('GET', ''+ location.hostname +':3000/windowsdata');
+const PORT = process.env.PORT || 3000;
+req.open('GET', ''+ PORT +'/windowsdata');
 req.onload = function(){
     var x = JSON.parse(req.response);
     var data = document.getElementById("data");
