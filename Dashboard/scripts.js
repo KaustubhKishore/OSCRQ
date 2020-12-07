@@ -46,7 +46,7 @@ req.onload = function(){
     data.innerHTML = "Test Conducted at:" + testTime + "<br>Plaform:" + platform + "<br>Device ID:" + devid;
     devicelist.innerHTML += devid;
     for(i=0 ; i<x.length; i++){
-        sideDevice.innerHTML += "<li onclick=changeIndex("+ i +");>" + devid + "</li>";
+        sideDevice.innerHTML += "<li onclick=changeIndex("+ i +");>" + x[i]["DeviceID"] + "</li>";
     } 
     for(i=0 ; i<totalComp ; i++){
         detailsAnalysis.innerHTML += "<tr><td>" + x[LatestIndex]["Compliant"][i] + "</td><td><span class='compliant'>Compliant</span><br></td></tr>";
