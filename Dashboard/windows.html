@@ -23,7 +23,7 @@
             <a href="./index.html"><h1 id="logomain">OSCARQ</h1></a>
         <div id="container">
         <div id="score">
-            <div id="scoreVal">69/420</div>
+            <div id="scoreVal">0/0</div>
             <div><span>SYSTEM SCORE</span></div>
         </div>
         <div id="data"></div>
@@ -53,7 +53,10 @@
             console.log('Image URL: ' + profile.getImageUrl());
             localStorage.setItem('ImURL', profile.getImageUrl());
             console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-            localStorage.setItem('EmailID', profile.getEmail());
+            if(localStorage.getItem('EmailID') == null){
+                localStorage.setItem('EmailID', profile.getEmail());
+                location.reload();
+            }
             var userImage = document.getElementById("photo");
             var username = document.getElementById("username");
             userImage.style.backgroundImage = 'url('+profile.getImageUrl()+')';

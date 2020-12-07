@@ -1,6 +1,10 @@
 var req = new XMLHttpRequest();
 req.open('GET', '/debiandata');
 req.onload = function(){
+    var user = localStorage.getItem('EmailID');
+    if(user == null || user == undefined || user == ""){
+        plsLogIn();
+    }else{
     var x = JSON.parse(req.response);
     var data = document.getElementById("data");
     var score = document.getElementById("scoreVal");
@@ -64,6 +68,7 @@ req.onload = function(){
         detailsAnalysis.innerHTML += "<tr><td>" + x[LatestIndex]["Info Manual"][i] + "</td><td><span class='notconfigured'>InfoManual</span><br></td></tr>";
     }
     console.log(x);
+    }
 }
 function changeIndex(LatestIndex){
     var x = JSON.parse(req.response);
@@ -114,6 +119,20 @@ function changeIndex(LatestIndex){
         detailsAnalysis.innerHTML += "<tr><td>" + x[LatestIndex]["Info Manual"][i] + "</td><td><span class='notconfigured'>InfoManual</span><br></td></tr>";
     }
     console.log(x);
+}
+function plsLogIn(){
+    var data = document.getElementById("data");
+    var score = document.getElementById("scoreVal");
+    var devicelist = document.getElementById("devicelist");
+    var sideDevice = document.getElementById("sideDevice");
+    var detailsAnalysis = document.getElementById("detailsAnalysis");
+    var statusScore = document.getElementById("statusScore");
+    data.innerHTML="Sign-In to view data";
+    score.innerHTML="NA";
+    devicelist.innerHTML="";
+    sideDevice.innerHTML="Please Sign-In";
+    detailsAnalysis.innerHTML="";
+    statusScore.innerHTML="NA";
 }
 req.send();
 

@@ -1,6 +1,10 @@
 var req = new XMLHttpRequest();
 req.open('GET', '/windowsdata');
 req.onload = function(){
+    var user = localStorage.getItem('EmailID');
+    if(user == null || user == undefined || user == ""){
+        plsLogIn();
+    }else{
     var x = JSON.parse(req.response);
     var data = document.getElementById("data");
     var score = document.getElementById("scoreVal");
@@ -60,6 +64,7 @@ req.onload = function(){
         }
     }
     console.log(x);
+    }
 }
 function changeIndex(LatestIndex){
     var x = JSON.parse(req.response);
@@ -106,6 +111,20 @@ function changeIndex(LatestIndex){
         }
     }
     console.log(x);
+}
+function plsLogIn(){
+    var data = document.getElementById("data");
+    var score = document.getElementById("scoreVal");
+    var devicelist = document.getElementById("devicelist");
+    var sideDevice = document.getElementById("sideDevice");
+    var detailsAnalysis = document.getElementById("detailsAnalysis");
+    var statusScore = document.getElementById("statusScore");
+    data.innerHTML="Sign-In to view data";
+    score.innerHTML="NA";
+    devicelist.innerHTML="";
+    sideDevice.innerHTML="Please Sign-In";
+    detailsAnalysis.innerHTML="";
+    statusScore.innerHTML="NA";
 }
 req.send();
 
