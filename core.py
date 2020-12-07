@@ -1,5 +1,5 @@
 from Linux import debian
-# from Win import windows
+from Win import windows
 import random
 
 styleOne = """
@@ -64,6 +64,6 @@ if opt == 1:
     obj.runner()
     print("Score: " + str(obj.score_getter()))
     print("Non Compliant Score loss: " + str(obj.ncScore_getter()))
-# elif opt == 2:
-#     obj = windows.Windows()
-#     obj.userEmailID = emailID
+elif opt == 2:
+    obj = windows.Windows()
+    obj.userEmailID = emailID
