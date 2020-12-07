@@ -1,5 +1,5 @@
 var req = new XMLHttpRequest();
-req.open('GET', 'http://localhost:3000/windowsdata');
+req.open('GET', ''+ location.hostname +':3000/windowsdata');
 req.onload = function(){
     var x = JSON.parse(req.response);
     var data = document.getElementById("data");
