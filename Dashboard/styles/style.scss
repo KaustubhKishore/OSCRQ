@@ -204,6 +204,15 @@ button{
 
 #sideDevice{
     text-align: center;
+    overflow: scroll;
+    overflow-x: hidden;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* IE 10+ */
+    &::-webkit-scrollbar {
+        width: 0px;
+        background: transparent; /* Chrome/Safari/Webkit */
+    }
+    max-height: 40vh;
 }
 
 li{
