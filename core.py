@@ -1,6 +1,10 @@
 from Linux import debian
-from Win import windows
 import random
+
+try:
+    from Win import windows
+except Exception as e:
+    pass
 
 styleOne = """
  .d88888b.  .d8888b.  .d8888b.        d88888888888b.  .d88888b.  
