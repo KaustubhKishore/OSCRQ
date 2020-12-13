@@ -2,3 +2,9 @@
 __pycache__/*
 **/__pycache__
 /Dashboard/node_modules/
+/Android/*.iml
+/Android/.gradle
+/Android/local.properties
+/Android/DS_Store
+/Android/build
+/Android/captures
