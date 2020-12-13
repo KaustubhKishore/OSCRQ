@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout tools:context=".MainActivity"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_height="match_parent"
+     android:layout_width="match_parent"
+    android:background="@color/design_default_color_primary_variant">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="129dp"
+            android:layout_height="100dp"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:text="OSCARQ\nFOR\nANDROID"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textColor="@color/design_default_color_surface"
+            android:textSize="29dp"
+            android:layout_marginTop="150dp"
+            android:layout_marginLeft="128dp"/>
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="200dp"
+        android:layout_height="73dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="Making Metrics Meaningful!"
+        android:textStyle="italic"
+        android:textColor="@color/design_default_color_surface"
+        android:textAlignment="center"
+        android:textSize="15dp"
+        android:layout_marginTop="279dp"
+        android:layout_marginLeft="100dp"/>
+
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/design_default_color_primary_variant"
+            android:text="Perform Compliance Checks"
+            android:textColor="@color/cardview_light_background"
+            android:layout_marginTop="285dp"
+            android:layout_marginLeft="85dp"/>
+
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+    <TextView
+        android:id="@+id/textView0"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:layout_gravity="left"
+        android:textColor="@color/cardview_light_background"
+        android:lineSpacingExtra="5dp"
+        android:textSize="15dp"
+        android:layout_marginTop="240dp"
+        android:layout_marginLeft="10dp"/>
+
+
+    </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/loadingPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:layout_marginTop="600dp"
+            android:layout_marginLeft="160dp"
+            />
+
+<!--        <Button-->
+<!--            android:id="@+id/button3"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="@color/colorPrimary"-->
+<!--            android:text="WiFi Networks"-->
+<!--            android:textColor="@color/cardview_light_background"-->
+<!--            android:layout_marginTop="300dp"-->
+<!--            android:layout_marginLeft="130dp"-->
+<!-- />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView3"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="250dp"-->
+<!--        android:fontFamily="sans-serif-condensed-medium"-->
+<!--        android:text=" "-->
+<!--        android:textAlignment="center"-->
+
+<!--        android:textColor="@color/colorAccent"-->
+<!--        android:textSize="15dp"-->
+<!--        android:layout_marginTop="350dp"-->
+<!--        android:layout_marginLeft="125dp"/>-->
+
+
+<!--    <ImageView-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:layout_marginLeft="30dp"-->
+<!--        android:alpha="0.4"-->
+<!--        android:layout_marginTop="380dp"-->
+<!--        android:background="@drawable/ic_phonelink_lock_black_24dp"-->
+<!--        android:backgroundTint="@color/cardview_light_background"/>-->
+
+    <View
+        android:layout_width="6dp"
+        android:layout_height="220dp"
+        android:layout_marginTop="385dp"
+        android:layout_marginLeft="152dp"
+        android:background="@color/design_default_color_surface" />
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="0dp"
+            android:textSize="13.5dp"
+            android:backgroundTint="@color/R"
+            android:text="Scores →"
+            android:textColor="@color/cardview_light_background"
+            android:layout_marginTop="380dp"
+            android:layout_marginLeft="155dp" />
+
+        <Button
+            android:id="@+id/button200"
+            android:layout_width="wrap_content"
+            android:textSize="13.5dp"
+            android:elevation="0dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/CPP"
+            android:text="Security →"
+            android:textColor="@color/cardview_light_background"
+            android:layout_marginTop="430dp"
+            android:layout_marginLeft="155dp" />
+
+
+    <Button
+        android:id="@+id/button420"
+        android:layout_width="wrap_content"
+        android:textSize="13.5dp"
+        android:shadowRadius=""
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/Java"
+        android:text="Privacy →"
+        android:textColor="@color/cardview_light_background"
+        android:layout_marginTop="480dp"
+        android:layout_marginLeft="155dp" />
+
+    <View
+        android:layout_width="150dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="605dp"
+        android:layout_marginLeft="80dp"
+        android:background="@color/R" />
+
+    <View
+        android:layout_width="100dp"
+        android:layout_height="2dp"
+        android:layout_marginTop="613dp"
+        android:layout_marginLeft="104dp"
+        android:background="@color/Java" />
+
+<!--    <View-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="2dp"-->
+<!--        android:layout_marginTop="615dp"-->
+<!--        android:layout_marginLeft="128dp"-->
+<!--        android:background="@color/Java" />-->
+
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView2"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:textColor="@color/design_default_color_error"-->
+<!--        android:fontFamily="sans-serif-condensed-medium"-->
+<!--        android:text=" "-->
+<!--        android:textAlignment="center"-->
+<!--        android:textSize="15dp"-->
+<!--        android:layout_marginTop="450dp"-->
+<!--        android:layout_marginLeft="125dp"/>-->
+
+
+    <TextView
+        android:id="@+id/textViewmohalla"
+        android:layout_width="200dp"
+        android:layout_height="73dp"
+        android:fontFamily="sans-serif-condensed-medium"
+        android:text="Copyright © 2020 OSCARQ"
+        android:textColor="@color/design_default_color_surface"
+        android:textAlignment="center"
+        android:textSize="10dp"
+        android:layout_marginTop="720dp"
+        android:layout_marginLeft="100dp"/>
+
+
+</RelativeLayout>
+
+
